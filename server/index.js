@@ -2,8 +2,13 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import session from 'express-session';
+import createMySQLStore from 'express-mysql-session';
+import createSocket from 'socket.io';
+import config from './config';
+import createSocketNamespaces from './sockets';
 
-const app = express();
+const app = module.exports = express();
 
 app.use(cors({
 	credentials: true,
@@ -17,14 +22,48 @@ app.use(express.static('server/public'));
 app.use(express.static('dist'));
 app.use('/uploads', express.static('server/uploads'));
 
+//create a session mysql store and save it in the app so that can be accessed from the other modules
+const MySQLStore = createMySQLStore(session);
+const sessionStore = new MySQLStore({
+	host: config.db.host,
+	database: config.db.database,
+	user: config.db.user,
+	password: config.db.password,
+	schema: {
+		tableName: config.session.tableName
+	}
+});
+
+app.set('sessionStore', sessionStore);
+
+app.use(session({
+	store: sessionStore,
+	secret: config.session.secret,
+	name: config.session.sessionId,
+	resave: true,
+	saveUninitialized: false,
+	//the session will expire if no activity in the next 72 hours
+	rolling: true,
+	cookie: {
+		maxAge: 72 * 60 * 60 * 1000
+	}
+}));
+
 //routes
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));
 });
 
-app.listen(4000, () => {
-	console.log(`listening on port ${4000}`);
+const server = app.listen(config.port, () => {
+	console.log(`listening on port ${config.port}`);
 });
+
+//setup the socket.io listeners
+const io = createSocket(server);
+const socketNamespaces = createSocketNamespaces(io, app);
+
+//save the socket namespaces
+app.set('socketNamespaces', socketNamespaces);
 
 //error handler
 app.use((err, req, res, next) => {
