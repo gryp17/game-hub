@@ -7,6 +7,7 @@ import createMySQLStore from 'express-mysql-session';
 import createSocket from 'socket.io';
 import config from './config';
 import createSocketNamespaces from './sockets';
+import { sendApiError } from './utils';
 
 const app = module.exports = express();
 
@@ -65,7 +66,14 @@ const socketNamespaces = createSocketNamespaces(io, app);
 //save the socket namespaces
 app.set('socketNamespaces', socketNamespaces);
 
+//catch 404 and forward to error handler
+app.use((req, res, next) => {
+	const err = new Error('Not Found');
+	err.status = 404;
+	next(err);
+});
+
 //error handler
 app.use((err, req, res, next) => {
-	console.log(err);
+	sendApiError(res, err);
 });

@@ -1,6 +1,8 @@
-export default {
-	port: 4000,
-	cdn: 'http://127.0.0.1:4000',
+const port = 4000;
+
+module.exports = {
+	port,
+	cdn: `http://127.0.0.1:${port}`,
 	session: {
 		secret: 'EXxCP8sDAfPM7vJ4z6MQeN7oJzSBSh8NKGuSiNCs32qjngaRPC0IgiABV7MpCYu',
 		sessionId: 'gamehub.sid',
