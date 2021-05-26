@@ -1,4 +1,12 @@
 .tabs-component {
+	$border-color: $purple;
+	$body-color: $gray;
+	$tabs-border: solid 3px $border-color;
+
+	border-left: $tabs-border;
+	border-right: $tabs-border;
+	border-bottom: $tabs-border;
+
 	.tabs-component-tabs {
 		margin: 0;
 		padding: 0px;
@@ -9,12 +17,14 @@
 	}
 
 	.tabs-component-tab {
-		background-color: $gray;
-		color: lighten($text-color, 20%);
+		flex: 1;
+		border: none;
+		border-top: $tabs-border;
+		background-color: $border-color;
+		color: darken($text-color, 15%);
 		font-size: 14px;
 		font-weight: 600;
 		list-style: none;
-		transform: translateY(1px);
 		transition: transform 0.3s ease;
 
 		&:hover {
@@ -23,19 +33,18 @@
 
 		&.is-active {
 			color: $text-color;
-			border: solid 1px $gray;
-			background-color: $white;
-			border-bottom: solid 1px $white;
+			background-color: $body-color;
 			z-index: 2;
 		}
 
 		&.is-disabled * {
-			color: lighten($text-color, 50%);;
+			color: darken($text-color, 50%);;
 			cursor: not-allowed !important;
 		}
 
 		.tabs-component-tab-a {
 			align-items: center;
+			justify-content: center;
 			color: inherit;
 			display: flex;
 			padding: 10px 15px;
@@ -45,9 +54,7 @@
 
 	.tabs-component-panels {
 		border-top-left-radius: 0;
-		background-color: $white;
-		border: solid 1px $gray;
-		box-shadow: 0 0 10px rgba(0, 0, 0, .05);
+		background-color: $body-color;
 		padding: 10px;
 	}
 }
