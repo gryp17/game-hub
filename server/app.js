@@ -8,6 +8,7 @@ import createSocket from 'socket.io';
 import config from './config';
 import createSocketNamespaces from './sockets';
 import { sendApiError } from './utils';
+import authRoutes from './routes/auth';
 
 const app = module.exports = express();
 
@@ -51,6 +52,8 @@ app.use(session({
 }));
 
 //routes
+app.use('/auth', authRoutes);
+
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));
 });

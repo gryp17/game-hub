@@ -14,6 +14,7 @@ module.exports = {
 		__static: true
 	},
 	rules: {
+		'import/no-cycle': 0,
 		'global-require': 0,
 		'import/no-unresolved': 0,
 		'no-shadow': 0,
