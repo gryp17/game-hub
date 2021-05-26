@@ -10,7 +10,7 @@
 		<div class="tabs-wrapper">
 			<Tabs cache-lifetime="0" :options="{ useUrlFragment: false }">
 				<Tab name="Login">
-					login form
+					<LoginForm />
 				</Tab>
 				<Tab name="Sign Up">
 					signup form
@@ -22,11 +22,13 @@
 
 <script>
 	import { Tabs, Tab } from 'vue-tabs-component';
+	import LoginForm from '@/components/LoginForm';
 
 	export default {
 		components: {
 			Tabs,
-			Tab
+			Tab,
+			LoginForm
 		}
 	};
 </script>
