@@ -1,1 +1,24 @@
-$color: red;
+//base colors
+$purple: #b47afd;
+$gray: #35393e;
+$gray-dark: #2f3136;
+$gray-darkest: #252628;
+$gray-light: #8e9297;
+$black: #1b1b1b;
+$white: #ffffff;
+
+//additional colors
+$green: #43b581;
+$pink: #ff88de;
+$orange: #ffa78b;
+$red: #f04747;
+$blue: #7289da;
+
+//text
+$text-color: $white;
+$font-family: 'Arial';
+
+$background: $gray-darkest;
+
+//breakpoints
+$small: 700px;

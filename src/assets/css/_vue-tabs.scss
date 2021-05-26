@@ -1,0 +1,53 @@
+.tabs-component {
+	.tabs-component-tabs {
+		margin: 0;
+		padding: 0px;
+		border: 0;
+		align-items: stretch;
+		display: flex;
+		justify-content: flex-start;
+	}
+
+	.tabs-component-tab {
+		background-color: $gray;
+		color: lighten($text-color, 20%);
+		font-size: 14px;
+		font-weight: 600;
+		list-style: none;
+		transform: translateY(1px);
+		transition: transform 0.3s ease;
+
+		&:hover {
+			color: $text-color;
+		}
+
+		&.is-active {
+			color: $text-color;
+			border: solid 1px $gray;
+			background-color: $white;
+			border-bottom: solid 1px $white;
+			z-index: 2;
+		}
+
+		&.is-disabled * {
+			color: lighten($text-color, 50%);;
+			cursor: not-allowed !important;
+		}
+
+		.tabs-component-tab-a {
+			align-items: center;
+			color: inherit;
+			display: flex;
+			padding: 10px 15px;
+			text-decoration: none;
+		}
+	}
+
+	.tabs-component-panels {
+		border-top-left-radius: 0;
+		background-color: $white;
+		border: solid 1px $gray;
+		box-shadow: 0 0 10px rgba(0, 0, 0, .05);
+		padding: 10px;
+	}
+}
