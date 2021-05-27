@@ -48,7 +48,9 @@
 </template>
 
 <script>
+	import SocketIO from 'socket.io-client';
 	import { mapState, mapGetters, mapActions } from 'vuex';
+	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
 
@@ -59,7 +61,8 @@
 		},
 		data() {
 			return {
-				loading: true
+				loading: true,
+				socket: null
 			};
 		},
 		computed: {
@@ -72,7 +75,11 @@
 		},
 		async created() {
 			await this.getUsers();
+			this.connectToSocket();
 			this.loading = false;
+		},
+		beforeDestroy() {
+			this.disconnectFromSocket();
 		},
 		methods: {
 			...mapActions('lobby', [
@@ -80,7 +87,41 @@
 			]),
 			challengeUser(id) {
 				if (id !== this.userSession.id) {
-					console.log('challenge user', id);
+					this.socket.emit('challengePlayer', id);
+
+					this.$router.push({
+						name: 'pong'
+					});
+				}
+			},
+			/**
+			 * Connects to the socket.io server and listens for it's events
+			 */
+			connectToSocket() {
+				//initialize the socket connection
+				this.socket = SocketIO(`${config.apiUrl}/lobby`, {
+					transports: ['websocket'],
+					upgrade: false
+				});
+
+				this.socket.on('error', (error) => {
+					this.$toasted.global.apiError({
+						message: this.$options.filters.errorsMap(error)
+					});
+				});
+
+				this.socket.on('challengeReceived', (user) => {
+					this.$router.push({
+						name: 'pong'
+					});
+				});
+			},
+			/**
+			 * Disconnects from the socket.io server
+			 */
+			disconnectFromSocket() {
+				if (this.socket) {
+					this.socket.disconnect();
 				}
 			}
 		}
