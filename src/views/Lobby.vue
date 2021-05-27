@@ -35,9 +35,12 @@
 					</div>
 				</div>
 				<div class="users-list">
-					<div v-for="user in users" :key="user.id">
-						{{ user.username }}
-					</div>
+					<UserItem
+						v-for="user in users"
+						:key="user.id"
+						:user="user"
+						@click="challengeUser"
+					/>
 				</div>
 			</div>
 		</template>
@@ -45,12 +48,14 @@
 </template>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex';
+	import { mapState, mapGetters, mapActions } from 'vuex';
 	import LoadingIndicator from '@/components/LoadingIndicator';
+	import UserItem from '@/components/users-list/UserItem';
 
 	export default {
 		components: {
-			LoadingIndicator
+			LoadingIndicator,
+			UserItem
 		},
 		data() {
 			return {
@@ -58,6 +63,9 @@
 			};
 		},
 		computed: {
+			...mapState('auth', [
+				'userSession'
+			]),
 			...mapGetters('lobby', [
 				'users'
 			])
@@ -69,7 +77,12 @@
 		methods: {
 			...mapActions('lobby', [
 				'getUsers'
-			])
+			]),
+			challengeUser(id) {
+				if (id !== this.userSession.id) {
+					console.log('challenge user', id);
+				}
+			}
 		}
 	};
 </script>
@@ -131,10 +144,6 @@
 				width: 250px;
 				background-color: $gray-dark;
 				overflow-y: auto;
-
-				> div {
-					padding: 10px;
-				}
 			}
 		}
 	}
