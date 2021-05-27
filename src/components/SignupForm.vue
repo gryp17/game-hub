@@ -1,10 +1,8 @@
 <template>
-	<div class="login-form">
+	<div class="signup-form">
 		<FormInput
 			v-model="email"
 			:error="errors.email"
-			@keyup.enter="submit"
-			@keyup="clearError"
 			@focus="clearError"
 			type="text"
 			name="email"
@@ -13,10 +11,18 @@
 		></FormInput>
 
 		<FormInput
+			v-model="username"
+			:error="errors.username"
+			@focus="clearError"
+			type="text"
+			name="username"
+			floating-label
+			placeholder="Username"
+		></FormInput>
+
+		<FormInput
 			v-model="password"
 			:error="errors.password"
-			@keyup.enter="submit"
-			@keyup="clearError"
 			@focus="clearError"
 			type="password"
 			name="password"
@@ -24,10 +30,20 @@
 			placeholder="Password"
 		></FormInput>
 
+		<FormInput
+			v-model="repeatPassword"
+			:error="errors.repeatPassword"
+			@focus="clearError"
+			type="password"
+			name="repeatPassword"
+			floating-label
+			placeholder="Repeat password"
+		></FormInput>
+
 		<FormButton
 			:disabled="submitting"
 			@click="submit">
-			Login
+			Sign up
 		</FormButton>
 	</div>
 </template>
@@ -35,13 +51,15 @@
 <script>
 	import { mapState, mapActions } from 'vuex';
 
-	const formName = 'login';
+	const formName = 'signup';
 
 	export default {
 		data() {
 			return {
 				email: '',
+				username: '',
 				password: '',
+				repeatPassword: '',
 				submitting: false
 			};
 		},
@@ -55,7 +73,7 @@
 		},
 		methods: {
 			...mapActions('auth', [
-				'login'
+				'signup'
 			]),
 			...mapActions('forms', [
 				'setFormErrors',
@@ -63,7 +81,7 @@
 				'resetFormErrors'
 			]),
 			/**
-			 * Submits the login form
+			 * Submits the signup form
 			 */
 			async submit() {
 				if (this.submitting) {
@@ -74,10 +92,12 @@
 
 				const params = {
 					email: this.email,
-					password: this.password
+					username: this.username,
+					password: this.password,
+					repeatPassword: this.repeatPassword
 				};
 
-				const data = await this.login(params);
+				const data = await this.signup(params);
 
 				if (data && data.user) {
 					this.$router.push({
@@ -108,7 +128,7 @@
 </script>
 
 <style lang="scss">
-	.login-form {
+	.signup-form {
 		.form-button {
 			display: block;
 			margin: auto;

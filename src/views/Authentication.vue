@@ -13,7 +13,7 @@
 					<LoginForm />
 				</Tab>
 				<Tab name="Sign Up">
-					signup form
+					<SignupForm />
 				</Tab>
 			</Tabs>
 		</div>
@@ -23,12 +23,14 @@
 <script>
 	import { Tabs, Tab } from 'vue-tabs-component';
 	import LoginForm from '@/components/LoginForm';
+	import SignupForm from '@/components/SignupForm';
 
 	export default {
 		components: {
 			Tabs,
 			Tab,
-			LoginForm
+			LoginForm,
+			SignupForm
 		}
 	};
 </script>

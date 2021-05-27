@@ -18,11 +18,10 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('server/public'));
 
 //use both dist and uploads as static dirs
 app.use(express.static('dist'));
-app.use('/uploads', express.static('server/uploads'));
+app.use('/avatars', express.static('server/uploads/avatars'));
 
 //create a session mysql store and save it in the app so that can be accessed from the other modules
 const MySQLStore = createMySQLStore(session);
