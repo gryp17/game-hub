@@ -44,6 +44,13 @@ export default {
 		return API.get('/auth/session');
 	},
 	/**
+	 * Fetches all users
+	 * @returns {Promise}
+	 */
+	getUsers() {
+		return API.get('/user/all');
+	},
+	/**
 	 * Updates the user profile
 	 * @param {Object} data
 	 * @returns {Promise}
