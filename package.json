@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+		"postinstall": "link-module-alias",
 		"build": "vue-cli-service build",
 		"build-dev": "vue-cli-service build --mode development --watch",
 		"start": "cross-env NODE_ENV=production babel-node server/app.js",
@@ -12,6 +13,9 @@
 		"lint:client": "vue-cli-service lint --fix",
 		"lint:server": "eslint \"server/**/*.js\" --fix",
 		"lint:games": "eslint \"games/**/*.js\" --fix"
+	},
+	"_moduleAliases": {
+		"~pong": "games/pong"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.11.2",
@@ -55,6 +59,7 @@
 		"eslint": "^6.7.2",
 		"eslint-plugin-import": "^2.20.2",
 		"eslint-plugin-vue": "^6.2.2",
+		"link-module-alias": "^1.2.0",
 		"node-sass": "^4.12.0",
 		"sass-loader": "^8.0.2",
 		"vue-template-compiler": "^2.6.11"
