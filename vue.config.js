@@ -1,4 +1,22 @@
+const webpack = require('webpack');
+const path = require('path');
+
 module.exports = {
+	configureWebpack: {
+		plugins: [
+			new webpack.ProvidePlugin({
+				_: 'lodash',
+				jQuery: 'jquery',
+				$: 'jquery',
+				'global.jQuery': 'jquery'
+			})
+		],
+		resolve: {
+			alias: {
+				'@pong': path.resolve(__dirname, 'games/pong')
+			}
+		}
+	},
 	//change the app/html title
 	chainWebpack: (config) => {
 		config
