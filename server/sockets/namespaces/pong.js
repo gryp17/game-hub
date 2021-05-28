@@ -4,6 +4,7 @@ import { User } from '../../models';
 
 export default function (io, server) {
 	const pong = io.of('/pong');
+	const maxPlayers = 2;
 
 	pong.use(socketIsLoggedIn(server));
 
@@ -28,19 +29,19 @@ export default function (io, server) {
 
 		//join the game room
 		socket.join(gameRoomId);
-		pong.to(gameRoomId).emit('gameMessage', 'it works');
 
 		//get the number of connected players in the game room
 		const roomClients = pong.adapter.rooms.get(gameRoomId);
 		const playersCount = roomClients ? roomClients.size : 0;
 
 		//once both players have joined the room - mark it as in progress
-		if (playersCount === 2) {
+		if (playersCount === maxPlayers) {
 			gameInstance.update({
 				status: 'in-progress'
 			});
 
 			//TODO: start the actual game
+			pong.to(gameRoomId).emit('startGame');
 		}
 
 		//disconnect event handler

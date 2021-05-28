@@ -40,8 +40,8 @@
 					});
 				});
 
-				this.socket.on('gameMessage', (message) => {
-					console.log('GOT GAME MESSAGE', message);
+				this.socket.on('startGame', () => {
+					console.log('########### START GAME');
 				});
 			},
 			/**

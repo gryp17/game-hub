@@ -21,7 +21,7 @@
 		left: 5px;
 		padding: 0px 5px;
 		background-color: $white;
-		color: $black;
+		color: $text-color-dark;
 		border: solid 1px $purple;
 		font-size: 10px;
 		font-weight: bold;

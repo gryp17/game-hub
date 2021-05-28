@@ -10,26 +10,49 @@ export default function (io, server) {
 	lobby.on('connection', (socket) => {
 		console.log('--- user connected to lobby');
 
-		socket.on('challengePlayer', async (id) => {
-			const targetUser = lobby.getConnectedUsers().find((user) => {
-				return user.id === id;
-			});
+		socket.on('challengePlayer', async (challengedUserId) => {
+			const challengedUser = lobby.getUserById(challengedUserId);
 
 			//send the challenge to the target user
-			if (targetUser) {
-				// TODO: do this only if both players have accepted the challenge
-				//create a pending game waiting for both players to join
+			if (challengedUser) {
+				lobby.to(challengedUser.socketId).emit('challenge', socket.user);
+			}
+		});
+
+		socket.on('cancelChallenge', (challengedUserId) => {
+			const challengedUser = lobby.getUserById(challengedUserId);
+
+			if (challengedUser) {
+				lobby.to(challengedUser.socketId).emit('cancelChallenge');
+			}
+		});
+
+		socket.on('declineChallenge', (challengerId) => {
+			const challenger = lobby.getUserById(challengerId);
+
+			if (challenger) {
+				lobby.to(challenger.socketId).emit('declineChallenge');
+			}
+		});
+
+		socket.on('acceptChallenge', async (challengerId) => {
+			const challenger = lobby.getUserById(challengerId);
+
+			if (challenger) {
+				//create the game with both users
 				const gameInstance = await Game.create({
 					type: 'pong',
 					status: 'pending'
 				});
 
 				await gameInstance.setUsers([
-					socket.user.id,
-					targetUser.id
+					challenger.id,
+					socket.user.id
 				]);
 
-				lobby.to(targetUser.socketId).emit('challengeReceived', socket.user);
+				//send the go to game event to both players
+				lobby.to(challenger.socketId).emit('goToGame');
+				lobby.to(socket.id).emit('goToGame');
 			}
 		});
 
@@ -54,6 +77,18 @@ export default function (io, server) {
 		});
 
 		return users;
+	};
+
+	/**
+	 * Returns the user object that matches the provided userId
+	 * @param {Number} userId
+	 * @returns {Object}
+	 */
+	lobby.getUserById = (userId) => {
+		const connectedUsers = lobby.getConnectedUsers();
+		return connectedUsers.find((user) => {
+			return user.id === userId;
+		});
 	};
 
 	return lobby;

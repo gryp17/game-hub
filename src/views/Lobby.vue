@@ -5,7 +5,7 @@
 			full-screen
 		/>
 		<template v-else>
-			<div class="header">
+			<div class="page-header">
 				<div class="column">
 
 				</div>
@@ -39,11 +39,19 @@
 						v-for="user in users"
 						:key="user.id"
 						:user="user"
-						@click="challengeUser"
+						@click="challengePlayer"
 					/>
 				</div>
 			</div>
 		</template>
+
+		<ChallengeModal
+			@accept="onChallengeAccepted"
+			@decline="onChallengeDeclined"
+		/>
+		<ChallengePendingModal
+			@cancel="onChallengeCanceled"
+		/>
 	</div>
 </template>
 
@@ -53,11 +61,15 @@
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
+	import ChallengeModal from '@/components/modals/ChallengeModal';
+	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 
 	export default {
 		components: {
 			LoadingIndicator,
-			UserItem
+			UserItem,
+			ChallengeModal,
+			ChallengePendingModal
 		},
 		data() {
 			return {
@@ -85,13 +97,12 @@
 			...mapActions('lobby', [
 				'getUsers'
 			]),
-			challengeUser(id) {
-				if (id !== this.userSession.id) {
-					this.socket.emit('challengePlayer', id);
+			challengePlayer(user) {
+				//TODO: check user status as well
 
-					this.$router.push({
-						name: 'pong'
-					});
+				if (user.id !== this.userSession.id) {
+					this.socket.emit('challengePlayer', user.id);
+					this.$modal.show('challenge-pending-modal', user);
 				}
 			},
 			/**
@@ -110,7 +121,19 @@
 					});
 				});
 
-				this.socket.on('challengeReceived', (user) => {
+				this.socket.on('challenge', (user) => {
+					this.$modal.show('challenge-modal', user);
+				});
+
+				this.socket.on('cancelChallenge', () => {
+					this.$modal.hide('challenge-modal');
+				});
+
+				this.socket.on('declineChallenge', () => {
+					this.$modal.hide('challenge-pending-modal');
+				});
+
+				this.socket.on('goToGame', () => {
 					this.$router.push({
 						name: 'pong'
 					});
@@ -123,6 +146,15 @@
 				if (this.socket) {
 					this.socket.disconnect();
 				}
+			},
+			onChallengeAccepted(user) {
+				this.socket.emit('acceptChallenge', user.id);
+			},
+			onChallengeDeclined(user) {
+				this.socket.emit('declineChallenge', user.id);
+			},
+			onChallengeCanceled(user) {
+				this.socket.emit('cancelChallenge', user.id);
 			}
 		}
 	};
@@ -134,7 +166,7 @@
 	.lobby-page {
 		height: 100%;
 
-		.header {
+		.page-header {
 			display: flex;
 			height: $header-height;
 			padding: 15px;

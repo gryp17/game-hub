@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="user-item"
-		@click="$emit('click', user.id)"
+		@click="$emit('click', user)"
 	>
 		{{ user.username }}
 	</div>
