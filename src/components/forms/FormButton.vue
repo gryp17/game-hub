@@ -1,6 +1,6 @@
 <template>
 	<button
-		:class="['form-button', {active, outline, transparent}, className]"
+		:class="['form-button', {active, outline, transparent, danger, success}, className]"
 		:type="type"
 		v-on="{
 			...$listeners
@@ -27,6 +27,14 @@
 				default: false
 			},
 			transparent: {
+				type: Boolean,
+				default: false
+			},
+			danger: {
+				type: Boolean,
+				default: false
+			},
+			success: {
 				type: Boolean,
 				default: false
 			}
@@ -76,6 +84,22 @@
 			&:hover, &.active {
 				background-color: $gray-light;
 				opacity: 1;
+			}
+		}
+
+		&.success {
+			background-color: $green;
+
+			&:hover, &:active, &:focus, &.active {
+				background-color: darken($green, 15%);
+			}
+		}
+
+		&.danger {
+			background-color: $red;
+
+			&:hover, &:active, &:focus, &.active {
+				background-color: darken($red, 15%);
 			}
 		}
 

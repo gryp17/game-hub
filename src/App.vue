@@ -26,6 +26,7 @@
 <style lang="scss">
 	@import '~@/assets/css/_vue-tabs';
 	@import '~@/assets/css/_vue-toasted';
+	@import '~@/assets/css/_vue-modal';
 
 	*,
 	:after,

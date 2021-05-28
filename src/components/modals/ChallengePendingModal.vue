@@ -20,6 +20,7 @@
 
 				<div class="buttons-wrapper">
 					<FormButton
+						danger
 						@click="cancel"
 					>
 						Cancel
@@ -63,11 +64,6 @@
 
 <style lang="scss">
 	.challenge-pending-modal {
-		.vm--modal {
-			border-radius: 0px;
-			border: solid 1px $gray-light;
-		}
-
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;

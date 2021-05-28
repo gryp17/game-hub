@@ -20,12 +20,13 @@
 
 				<div class="buttons-wrapper">
 					<FormButton
+						success
 						@click="accept"
 					>
 						Accept
 					</FormButton>
 					<FormButton
-						transparent
+						danger
 						@click="decline"
 					>
 						Decline
@@ -67,11 +68,6 @@
 
 <style lang="scss">
 	.challenge-modal {
-		.vm--modal {
-			border-radius: 0px;
-			border: solid 1px $gray-light;
-		}
-
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;
