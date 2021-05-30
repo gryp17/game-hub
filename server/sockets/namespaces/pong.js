@@ -3,11 +3,13 @@ import { sendSocketError } from '../../utils';
 import { User } from '../../models';
 import cache from '../../cache';
 
-export default function (io, server) {
+export default function (io, app) {
 	const pong = io.of('/pong');
+	const lobby = io.of('/lobby');
+
 	const maxPlayers = 2;
 
-	pong.use(socketIsLoggedIn(server));
+	pong.use(socketIsLoggedIn(app));
 
 	pong.on('connection', async (socket) => {
 		console.log('--- user connected to pong');
@@ -67,7 +69,6 @@ export default function (io, server) {
 	});
 
 	pong.setUserStatus = (userId, status) => {
-		const lobby = server.get('socketNamespaces').lobby;
 		cache.setUserStatus(userId, status);
 
 		//call the lobby updateOnlineUsers function

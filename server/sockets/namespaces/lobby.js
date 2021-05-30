@@ -3,11 +3,11 @@ import { socketIsLoggedIn } from '../../middleware/authentication';
 import { Game } from '../../models';
 import cache from '../../cache';
 
-export default function (io, server) {
+export default function (io, app) {
 	const lobby = io.of('/lobby');
 	let pendingChallenges = [];
 
-	lobby.use(socketIsLoggedIn(server));
+	lobby.use(socketIsLoggedIn(app));
 
 	lobby.on('connection', async (socket) => {
 		console.log('--- user connected to lobby');

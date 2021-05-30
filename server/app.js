@@ -4,9 +4,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import session from 'express-session';
 import createMySQLStore from 'express-mysql-session';
-import createSocket from 'socket.io';
 import config from './config';
-import createSocketNamespaces from './sockets';
+import { initSockets } from './sockets';
 import { sendApiError } from './utils';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
@@ -64,11 +63,7 @@ const server = app.listen(config.port, () => {
 });
 
 //setup the socket.io listeners
-const io = createSocket(server);
-const socketNamespaces = createSocketNamespaces(io, app);
-
-//save the socket namespaces
-app.set('socketNamespaces', socketNamespaces);
+initSockets(server, app);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
