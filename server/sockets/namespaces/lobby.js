@@ -4,6 +4,7 @@ import { Game } from '../../models';
 
 export default function (io, server) {
 	const lobby = io.of('/lobby');
+	let pendingChallenges = [];
 
 	lobby.use(socketIsLoggedIn(server));
 
@@ -15,6 +16,9 @@ export default function (io, server) {
 
 			//send the challenge to the target user
 			if (challengedUser) {
+				//set the pending challenge data
+				lobby.addPendingChallenge(socket.id, challengedUser.socketId);
+
 				lobby.to(challengedUser.socketId).emit('challenge', socket.user);
 			}
 		});
@@ -23,6 +27,7 @@ export default function (io, server) {
 			const challengedUser = lobby.getUserById(challengedUserId);
 
 			if (challengedUser) {
+				lobby.removePendingChallenges(socket.id);
 				lobby.to(challengedUser.socketId).emit('cancelChallenge');
 			}
 		});
@@ -31,6 +36,7 @@ export default function (io, server) {
 			const challenger = lobby.getUserById(challengerId);
 
 			if (challenger) {
+				lobby.removePendingChallenges(socket.id);
 				lobby.to(challenger.socketId).emit('declineChallenge');
 			}
 		});
@@ -50,6 +56,8 @@ export default function (io, server) {
 					socket.user.id
 				]);
 
+				lobby.removePendingChallenges(socket.id);
+
 				//send the go to game event to both players
 				lobby.to(challenger.socketId).emit('goToGame');
 				lobby.to(socket.id).emit('goToGame');
@@ -58,6 +66,9 @@ export default function (io, server) {
 
 		//disconnect event handler
 		socket.on('disconnect', () => {
+			//when the user disconnects cancel any pending game challenges that he is part of
+			lobby.cancelPendingChallenges(socket.id);
+
 			console.log('--- user disconnected from lobby');
 		});
 	});
@@ -88,6 +99,31 @@ export default function (io, server) {
 		const connectedUsers = lobby.getConnectedUsers();
 		return connectedUsers.find((user) => {
 			return user.id === userId;
+		});
+	};
+
+	lobby.addPendingChallenge = (from, to) => {
+		pendingChallenges.push({
+			from,
+			to
+		});
+	};
+
+	lobby.cancelPendingChallenges = (socketId) => {
+		pendingChallenges = pendingChallenges.filter(({ from, to }) => {
+			if (from === socketId || to === socketId) {
+				lobby.to(to).emit('cancelChallenge');
+				lobby.to(from).emit('declineChallenge');
+				return false;
+			}
+
+			return true;
+		});
+	};
+
+	lobby.removePendingChallenges = (socketId) => {
+		pendingChallenges = pendingChallenges.filter(({ from, to }) => {
+			return (from !== socketId && to !== socketId);
 		});
 	};
 
