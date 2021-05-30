@@ -13,7 +13,7 @@ module.exports = {
 		],
 		resolve: {
 			alias: {
-				'~pong': path.resolve(__dirname, 'games/pong')
+				'@pong': path.resolve(__dirname, 'games/pong')
 			}
 		}
 	},

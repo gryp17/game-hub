@@ -7,7 +7,7 @@
 <script>
 	import SocketIO from 'socket.io-client';
 	import config from '@/config';
-	import Keyboard from '~pong/keyboard';
+	import Keyboard from '@pong/keyboard';
 
 	console.log(Keyboard);
 
