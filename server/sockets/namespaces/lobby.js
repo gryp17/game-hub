@@ -1,6 +1,7 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 // import { sendSocketError } from '../../utils';
 import { Game } from '../../models';
+import cache from '../../cache';
 
 export default function (io, server) {
 	const lobby = io.of('/lobby');
@@ -8,8 +9,11 @@ export default function (io, server) {
 
 	lobby.use(socketIsLoggedIn(server));
 
-	lobby.on('connection', (socket) => {
+	lobby.on('connection', async (socket) => {
 		console.log('--- user connected to lobby');
+
+		//update the user status
+		lobby.setUserStatus(socket.user.id, 'online');
 
 		socket.on('challengePlayer', async (challengedUserId) => {
 			const challengedUser = lobby.getUserById(challengedUserId);
@@ -69,6 +73,9 @@ export default function (io, server) {
 			//when the user disconnects cancel any pending game challenges that he is part of
 			lobby.cancelPendingChallenges(socket.id);
 
+			//update the user status
+			lobby.setUserStatus(socket.user.id, 'offline');
+
 			console.log('--- user disconnected from lobby');
 		});
 	});
@@ -100,6 +107,16 @@ export default function (io, server) {
 		return connectedUsers.find((user) => {
 			return user.id === userId;
 		});
+	};
+
+	lobby.updateOnlineUsers = () => {
+		const statuses = cache.getUserStatuses();
+		lobby.emit('updateOnlineUsers', statuses);
+	};
+
+	lobby.setUserStatus = (userId, status) => {
+		cache.setUserStatus(userId, status);
+		lobby.updateOnlineUsers();
 	};
 
 	lobby.addPendingChallenge = (from, to) => {

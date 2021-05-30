@@ -124,6 +124,11 @@
 					});
 				});
 
+				this.socket.on('updateOnlineUsers', (statuses) => {
+					// TODO: hook the statuses to the Vuex store and update the user objects
+					console.log(statuses);
+				});
+
 				this.socket.on('challenge', (user) => {
 					this.$modal.show('challenge-modal', {
 						game: 'Pong',
