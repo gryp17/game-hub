@@ -65,6 +65,10 @@
 			color: $purple;
 		}
 
+		.bold {
+			font-weight: bold;
+		}
+
 		#app {
 			display: flex;
 			flex-direction: column;

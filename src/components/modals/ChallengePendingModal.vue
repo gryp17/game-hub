@@ -7,16 +7,20 @@
 			:height="'auto'"
 			name="challenge-pending-modal"
 			@before-open="onBeforeOpen"
+			@opened="startCountdown"
+			@before-close="stopCountdown"
 			@closed="onClose"
 		>
 			<div class="header">
 				Game challenge
 			</div>
 			<div class="content">
-				You have challenged ... in a game of ...
-				<div class="counter">
-					10
-				</div>
+				You have challenged <span class="bold">{{ user.username }}</span> in a game of <span class="bold">{{ game }}</span>
+
+				<ChallengeTimeoutCountdown
+					ref="countdown"
+					@timeout="cancel"
+				/>
 
 				<div class="buttons-wrapper">
 					<FormButton
@@ -32,10 +36,16 @@
 </template>
 
 <script>
+	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
+
 	export default {
+		components: {
+			ChallengeTimeoutCountdown
+		},
 		data() {
 			return {
-				user: null
+				user: {},
+				game: null
 			};
 		},
 		methods: {
@@ -44,7 +54,18 @@
 			 * @param {Object} e
 			 */
 			onBeforeOpen(e) {
-				this.user = e.params;
+				this.user = e.params.user;
+				this.game = e.params.game;
+			},
+			startCountdown() {
+				if (this.$refs.countdown) {
+					this.$refs.countdown.startCountdown();
+				}
+			},
+			stopCountdown() {
+				if (this.$refs.countdown) {
+					this.$refs.countdown.stopCountdown();
+				}
 			},
 			/**
 			 * Closes the modal
@@ -76,8 +97,11 @@
 			text-align: center;
 			color: $text-color-dark;
 
+			.bold {
+				font-weight: bold;
+			}
+
 			.buttons-wrapper {
-				padding-top: 10px;
 				text-align: center;
 
 				.form-button {

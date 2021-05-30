@@ -7,16 +7,20 @@
 			:height="'auto'"
 			name="challenge-modal"
 			@before-open="onBeforeOpen"
+			@opened="startCountdown"
+			@before-close="stopCountdown"
 			@closed="onClose"
 		>
 			<div class="header">
 				Game challenge
 			</div>
 			<div class="content">
-				You have been challenged in a game of ... by...
-				<div class="counter">
-					10
-				</div>
+				You have been challenged in a game of <span class="bold">{{ game }}</span> by <span class="bold">{{ user.username }}</span>
+
+				<ChallengeTimeoutCountdown
+					ref="countdown"
+					@timeout="decline"
+				/>
 
 				<div class="buttons-wrapper">
 					<FormButton
@@ -38,14 +42,36 @@
 </template>
 
 <script>
+	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
+
 	export default {
+		components: {
+			ChallengeTimeoutCountdown
+		},
+		data() {
+			return {
+				user: {},
+				game: null
+			};
+		},
 		methods: {
 			/**
 			 * Sets the file object
 			 * @param {Object} e
 			 */
 			onBeforeOpen(e) {
-				this.user = e.params;
+				this.user = e.params.user;
+				this.game = e.params.game;
+			},
+			startCountdown() {
+				if (this.$refs.countdown) {
+					this.$refs.countdown.startCountdown();
+				}
+			},
+			stopCountdown() {
+				if (this.$refs.countdown) {
+					this.$refs.countdown.stopCountdown();
+				}
 			},
 			/**
 			 * Closes the modal
@@ -57,6 +83,7 @@
 				this.$emit('decline', this.user);
 			},
 			accept() {
+				this.stopCountdown();
 				this.$emit('accept', this.user);
 			},
 			decline() {
@@ -81,7 +108,6 @@
 			color: $text-color-dark;
 
 			.buttons-wrapper {
-				padding-top: 10px;
 				text-align: center;
 
 				.form-button {

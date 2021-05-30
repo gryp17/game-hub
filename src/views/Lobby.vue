@@ -102,7 +102,10 @@
 
 				if (user.id !== this.userSession.id) {
 					this.socket.emit('challengePlayer', user.id);
-					this.$modal.show('challenge-pending-modal', user);
+					this.$modal.show('challenge-pending-modal', {
+						game: 'Pong',
+						user
+					});
 				}
 			},
 			/**
@@ -122,7 +125,10 @@
 				});
 
 				this.socket.on('challenge', (user) => {
-					this.$modal.show('challenge-modal', user);
+					this.$modal.show('challenge-modal', {
+						game: 'Pong',
+						user
+					});
 				});
 
 				this.socket.on('cancelChallenge', () => {
