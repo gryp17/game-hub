@@ -46,8 +46,15 @@ export default function (io, app) {
 				status: 'in-progress'
 			});
 
-			//TODO: start the actual game
-			pong.to(gameRoomId).emit('startGame');
+			//TODO: start the actual game with the real parameters
+			pong.to(gameRoomId).emit('startGame', {
+				fps: 60,
+				canvas: {
+					width: 1000,
+					height: 600
+				},
+				player: 1
+			});
 		}
 
 		//disconnect event handler
