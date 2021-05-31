@@ -52,6 +52,7 @@ module.exports = {
 		'no-prototype-builtins': 0,
 		'operator-assignment': 0,
 		'import/no-mutable-exports': 0,
+		'no-unused-expressions': 0,
 		indent: ['error', 'tab'],
 		'vue/html-indent': ['error', 'tab'],
 		'vue/script-indent': ['error', 'tab', {

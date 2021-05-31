@@ -1,23 +1,29 @@
 <template>
 	<div class="pong-page">
 		pong
+
+		<canvas id="game-canvas" class="canvas">
+			Your browser does not support HTML5 Canvas.
+		</canvas>
 	</div>
 </template>
 
 <script>
 	import SocketIO from 'socket.io-client';
 	import config from '@/config';
-	import Keyboard from '@pong/keyboard';
-
-	console.log(Keyboard);
+	import Pong from '@/game-clients/pong';
 
 	export default {
 		data() {
 			return {
-				socket: null
+				socket: null,
+				game: null
 			};
 		},
-		async created() {
+		async mounted() {
+			this.game = new Pong({
+				onUpdateInputs: this.updateInputs
+			});
 			this.connectToSocket();
 		},
 		beforeDestroy() {
@@ -40,9 +46,18 @@
 					});
 				});
 
-				this.socket.on('startGame', () => {
+				this.socket.on('startGame', ({ fps, canvas, player }) => {
 					console.log('########### START GAME');
+
+					this.game.start(fps, canvas, player);
 				});
+
+				this.socket.on('updateData', (data) => {
+					this.game.updateData(data);
+				});
+			},
+			updateInputs(inputs) {
+				this.socket.emit('updateInputs', inputs);
 			},
 			/**
 			 * Disconnects from the socket.io server
@@ -55,3 +70,12 @@
 		}
 	};
 </script>
+
+<style lang="scss">
+	.pong-page {
+		#game-canvas {
+			display: none;
+			border: solid 1px $purple;
+		}
+	}
+</style>
