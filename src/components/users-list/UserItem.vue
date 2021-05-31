@@ -3,7 +3,7 @@
 		class="user-item"
 		@click="$emit('click', user)"
 	>
-		{{ user.username }}
+		{{ user.username }} ({{ user.status }})
 	</div>
 </template>
 

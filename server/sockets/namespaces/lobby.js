@@ -109,14 +109,14 @@ export default function (io, app) {
 		});
 	};
 
-	lobby.updateOnlineUsers = () => {
+	lobby.updateUserStatuses = () => {
 		const statuses = cache.getUserStatuses();
-		lobby.emit('updateOnlineUsers', statuses);
+		lobby.emit('updateUserStatuses', statuses);
 	};
 
 	lobby.setUserStatus = (userId, status) => {
 		cache.setUserStatus(userId, status);
-		lobby.updateOnlineUsers();
+		lobby.updateUserStatuses();
 	};
 
 	lobby.addPendingChallenge = (from, to) => {

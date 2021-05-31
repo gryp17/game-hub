@@ -102,7 +102,8 @@
 				'logout'
 			]),
 			...mapActions('lobby', [
-				'getUsers'
+				'getUsers',
+				'updateUserStatuses'
 			]),
 			async onLogout() {
 				await this.logout();
@@ -137,9 +138,8 @@
 					});
 				});
 
-				this.socket.on('updateOnlineUsers', (statuses) => {
-					// TODO: hook the statuses to the Vuex store and update the user objects
-					console.log(statuses);
+				this.socket.on('updateUserStatuses', (statuses) => {
+					this.updateUserStatuses(statuses);
 				});
 
 				this.socket.on('challenge', (user) => {

@@ -38,13 +38,13 @@ const mutations = {
 
 		Vue.set(state.users, user.id, updatedUser);
 	},
-	UPDATE_ONLINE_USERS(state, onlineUsers) {
+	UPDATE_USER_STATUSES(state, statuses) {
 		Object.keys(state.users).forEach((userId) => {
-			const online = onlineUsers.includes(parseInt(userId));
+			const status = statuses[userId] || 'offline';
 
 			const updatedUser = {
 				...state.users[userId],
-				online
+				status
 			};
 
 			Vue.set(state.users, userId, updatedUser);
@@ -78,20 +78,12 @@ const actions = {
 		}
 	},
 	/**
-	 * Sets the online users
-	 * @param {Object} context
-	 * @param {Array} onlineUsers
-	 */
-	setOnlineUsers(context, onlineUsers) {
-		context.commit('UPDATE_ONLINE_USERS', onlineUsers);
-	},
-	/**
 	 * Updates the online users
 	 * @param {Object} context
-	 * @param {Array} onlineUsers
+	 * @param {Object} statuses
 	 */
-	updateOnlineUsers(context, onlineUsers) {
-		context.commit('UPDATE_ONLINE_USERS', onlineUsers);
+	updateUserStatuses(context, statuses) {
+		context.commit('UPDATE_USER_STATUSES', statuses);
 	},
 	/**
 	 * Handles the new user event

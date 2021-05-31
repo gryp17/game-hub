@@ -71,8 +71,8 @@ export default function (io, app) {
 	pong.setUserStatus = (userId, status) => {
 		cache.setUserStatus(userId, status);
 
-		//call the lobby updateOnlineUsers function
-		lobby.updateOnlineUsers();
+		//call the lobby updateUserStatuses function
+		lobby.updateUserStatuses();
 	};
 
 	return pong;
