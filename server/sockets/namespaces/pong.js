@@ -1,7 +1,6 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 import { sendSocketError } from '../../utils';
 import { User } from '../../models';
-import cache from '../../cache';
 
 export default function (io, app) {
 	const pong = io.of('/pong');
@@ -17,7 +16,7 @@ export default function (io, app) {
 		const userInstance = await User.findByPk(socket.user.id);
 
 		//update the user status
-		pong.setUserStatus(socket.user.id, 'pong');
+		lobby.setUserStatus(socket.user.id, 'pong');
 
 		const pendingGames = await userInstance.getGames({
 			where: {
@@ -56,7 +55,7 @@ export default function (io, app) {
 			console.log('--- user disconnected from pong');
 
 			//update the user status
-			pong.setUserStatus(socket.user.id, 'offline');
+			lobby.setUserStatus(socket.user.id, 'offline');
 
 			if (gameInstance) {
 				gameInstance.update({
@@ -67,13 +66,6 @@ export default function (io, app) {
 			}
 		});
 	});
-
-	pong.setUserStatus = (userId, status) => {
-		cache.setUserStatus(userId, status);
-
-		//call the lobby updateUserStatuses function
-		lobby.updateUserStatuses();
-	};
 
 	return pong;
 }
