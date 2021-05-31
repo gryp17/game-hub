@@ -1,22 +1,36 @@
 import NodeCache from 'node-cache';
+import _ from 'lodash';
 
 const cache = new NodeCache();
-cache.set('userStatuses', {});
+const userStatusPrefix = 'user-status:';
 
 function getUserStatuses() {
-	return cache.get('userStatuses');
+	const statuses = {};
+
+	//get all user-status: keys
+	const keys = cache.keys().filter((key) => {
+		return key.indexOf(userStatusPrefix) === 0;
+	});
+
+	const results = cache.mget(keys);
+
+	//format the data and add it to the statuses object
+	_.forOwn(results, (value, key) => {
+		const id = key.replace(userStatusPrefix, '');
+		statuses[id] = value;
+	});
+
+	return statuses;
 }
 
 function setUserStatus(userId, status) {
-	const statuses = getUserStatuses();
+	const key = userStatusPrefix + userId;
 
 	if (status === 'offline') {
-		delete statuses[userId];
+		cache.del(key);
 	} else {
-		statuses[userId] = status;
+		cache.set(key, status);
 	}
-
-	cache.set('userStatuses', statuses);
 }
 
 export default {

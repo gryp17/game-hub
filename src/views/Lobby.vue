@@ -19,6 +19,10 @@
 				</div>
 				<div class="column">
 					<!-- user menu goes here -->
+					{{ userSession.username }}
+					<button @click="onLogout">
+						Logout
+					</button>
 				</div>
 			</div>
 			<div class="content-wrapper">
@@ -94,9 +98,18 @@
 			this.disconnectFromSocket();
 		},
 		methods: {
+			...mapActions('auth', [
+				'logout'
+			]),
 			...mapActions('lobby', [
 				'getUsers'
 			]),
+			async onLogout() {
+				await this.logout();
+				this.$router.push({
+					name: 'authentication'
+				});
+			},
 			challengePlayer(user) {
 				//TODO: check user status as well
 
