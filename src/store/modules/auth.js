@@ -38,15 +38,14 @@ const actions = {
 	 * @returns {Promise}
 	 */
 	async getUserSession(context) {
-		context.commit('SET_USER_SESSION', null);
-
 		try {
 			const { data } = await UserHttpService.getSession();
-			if (data && data.user) {
-				context.commit('SET_USER_SESSION', data.user);
-			}
+			const user = data && data.user ? data.user : null;
+			context.commit('SET_USER_SESSION', user);
+
 			return data;
 		} catch (err) {
+			context.commit('SET_USER_SESSION', null);
 			return false;
 		}
 	},
