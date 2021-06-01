@@ -1,36 +1,29 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { sendSocketError } from '../../utils';
-import { User } from '../../models';
+import { User, Game } from '../../models';
+import Pong from '../../game-servers/pong';
 
 export default function (io, app) {
 	const pong = io.of('/pong');
 	const lobby = io.of('/lobby');
 
+	const games = {};
+
+	const fps = 60; // TODO: need to get the FPS and the width and height from a config or something
+	const canvas = {
+		width: 1000,
+		height: 620
+	};
 	const maxPlayers = 2;
 
 	pong.use(socketIsLoggedIn(app));
 
 	pong.on('connection', async (socket) => {
-		console.log('--- user connected to pong');
+		const gameInstance = await pong.getPendingGame(socket.user.id);
 
-		const userInstance = await User.findByPk(socket.user.id);
-
-		//update the user status
-		lobby.setUserStatus(socket.user.id, 'pong');
-
-		const pendingGames = await userInstance.getGames({
-			where: {
-				type: 'pong',
-				status: 'pending'
-			}
-		});
-
-		if (!pendingGames || pendingGames.length === 0) {
-			// maybe send a message to make the user go back to the lobby instead?
-			return sendSocketError(pong, 'The game doesnt exist');
+		if (!gameInstance) {
+			return pong.to(socket.id).emit('exitGame');
 		}
 
-		const gameInstance = pendingGames.pop();
 		const gameRoomId = gameInstance.id;
 
 		//join the game room
@@ -46,21 +39,37 @@ export default function (io, app) {
 				status: 'in-progress'
 			});
 
-			//TODO: start the actual game with the real parameters
-			pong.to(gameRoomId).emit('startGame', {
-				fps: 60,
-				canvas: {
-					width: 1000,
-					height: 600
-				},
-				player: 1
+			const players = [...roomClients];
+			const gameId = gameInstance.id;
+
+			const game = new Pong(gameId, fps, canvas, players, {
+				onUpdate(data) {
+					pong.to(gameRoomId).emit('updateData', data);
+				}
+			});
+
+			game.start();
+
+			games[gameId] = game;
+
+			//start the game sending a separate event to each player
+			players.forEach((socketId, index) => {
+				pong.to(socketId).emit('startGame', {
+					fps,
+					canvas,
+					player: index + 1
+				});
 			});
 		}
 
+		socket.on('updateInputs', (inputs) => {
+			//find the game that this player belongs to and update it's inputs
+			const game = pong.getGameByPlayer(socket.id);
+			game.updateInputs({ socketId: socket.id, inputs });
+		});
+
 		//disconnect event handler
 		socket.on('disconnect', () => {
-			console.log('--- user disconnected from pong');
-
 			//update the user status
 			lobby.setUserStatus(socket.user.id, 'offline');
 
@@ -69,10 +78,50 @@ export default function (io, app) {
 					status: 'finished'
 				});
 
-				//TODO: send a redirect message to the other user?
+				pong.stopGame(gameInstance.id);
 			}
 		});
 	});
+
+	pong.getPendingGame = async (userId) => {
+		const userInstance = await User.findByPk(userId, {
+			include: {
+				model: Game,
+				required: false,
+				where: {
+					type: 'pong',
+					status: 'pending'
+				}
+			}
+		});
+
+		const pendingGames = userInstance.games;
+
+		if (!pendingGames || pendingGames.length === 0) {
+			return null;
+		}
+
+		return pendingGames.pop();
+	};
+
+	pong.getGameByPlayer = (socketId) => {
+		const game = Object.values(games).find((game) => {
+			return game.playerBelongsToGame(socketId);
+		});
+
+		return game;
+	};
+
+	pong.stopGame = (gameId) => {
+		const game = games[gameId];
+
+		if (game) {
+			game.stop();
+			delete games[gameId];
+		}
+
+		pong.to(gameId).emit('exitGame');
+	};
 
 	return pong;
 }

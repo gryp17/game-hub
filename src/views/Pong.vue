@@ -47,13 +47,17 @@
 				});
 
 				this.socket.on('startGame', ({ fps, canvas, player }) => {
-					console.log('########### START GAME');
-
 					this.game.start(fps, canvas, player);
 				});
 
 				this.socket.on('updateData', (data) => {
 					this.game.updateData(data);
+				});
+
+				this.socket.on('exitGame', () => {
+					this.$router.push({
+						name: 'lobby'
+					});
 				});
 			},
 			updateInputs(inputs) {
