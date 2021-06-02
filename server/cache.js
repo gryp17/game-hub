@@ -34,9 +34,9 @@ function setUserStatus(userId, status) {
 	}
 }
 
-function getPendingChallenge(id) {
+function getPendingChallenge(userId) {
 	const key = cache.keys().find((key) => {
-		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${id}]`) !== -1;
+		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${userId}]`) !== -1;
 	});
 
 	if (!key) {
@@ -47,16 +47,16 @@ function getPendingChallenge(id) {
 }
 
 function addPendingChallenge(from, to) {
-	const key = `${pendingChallengePrefix}[${from}]-[${to}]`;
+	const key = `${pendingChallengePrefix}[${from.id}]-[${to.id}]`;
 	cache.set(key, {
 		from,
 		to
 	}, 60);
 }
 
-function deletePendingChallenge(id) {
+function deletePendingChallenge(userId) {
 	const key = cache.keys().find((key) => {
-		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${id}]`) !== -1;
+		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${userId}]`) !== -1;
 	});
 
 	if (key) {

@@ -19,10 +19,11 @@
 				</div>
 				<div class="column">
 					<!-- user menu goes here -->
-					{{ userSession.username }}
-					<button @click="onLogout">
-						Logout
-					</button>
+					<div class="user-menu">
+						<button @click="onLogout">
+							Logout
+						</button>
+					</div>
 				</div>
 			</div>
 			<div class="content-wrapper">
@@ -205,6 +206,10 @@
 				margin: auto;
 				margin-top: -10px;
 				width: 115px;
+			}
+
+			.user-menu {
+				text-align: right;
 			}
 		}
 

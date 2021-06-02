@@ -18,9 +18,20 @@ export default function (io, app) {
 			//send the challenge to the target user
 			if (challengedUser) {
 				//set the pending challenge data
-				cache.addPendingChallenge(socket.id, challengedUser.socketId);
+
+				cache.addPendingChallenge({
+					id: socket.user.id,
+					socketId: socket.id
+				}, {
+					id: challengedUser.id,
+					socketId: challengedUser.socketId
+				});
 
 				lobby.to(challengedUser.socketId).emit('challenge', socket.user);
+
+				//set both users status to busy while the challenge is still active
+				lobby.setUserStatus(socket.user.id, 'busy');
+				lobby.setUserStatus(challengedUser.id, 'busy');
 			}
 		});
 
@@ -28,8 +39,11 @@ export default function (io, app) {
 			const challengedUser = lobby.getUserById(challengedUserId);
 
 			if (challengedUser) {
-				cache.deletePendingChallenge(socket.id);
+				cache.deletePendingChallenge(socket.user.id);
 				lobby.to(challengedUser.socketId).emit('cancelChallenge');
+
+				lobby.setUserStatus(socket.user.id, 'online');
+				lobby.setUserStatus(challengedUser.id, 'online');
 			}
 		});
 
@@ -37,8 +51,11 @@ export default function (io, app) {
 			const challenger = lobby.getUserById(challengerId);
 
 			if (challenger) {
-				cache.deletePendingChallenge(socket.id);
+				cache.deletePendingChallenge(socket.user.id);
 				lobby.to(challenger.socketId).emit('declineChallenge');
+
+				lobby.setUserStatus(socket.user.id, 'online');
+				lobby.setUserStatus(challenger.id, 'online');
 			}
 		});
 
@@ -57,7 +74,7 @@ export default function (io, app) {
 					socket.user.id
 				]);
 
-				cache.deletePendingChallenge(socket.id);
+				cache.deletePendingChallenge(socket.user.id);
 
 				//send the go to game event to both players
 				lobby.to(challenger.socketId).emit('goToGame');
@@ -68,7 +85,7 @@ export default function (io, app) {
 		//disconnect event handler
 		socket.on('disconnect', () => {
 			//when the user disconnects cancel any pending game challenges that he is part of
-			lobby.cancelPendingChallenges(socket.id);
+			lobby.cancelPendingChallenges(socket.user.id);
 
 			//update the user status
 			lobby.setUserStatus(socket.user.id, 'offline');
@@ -114,13 +131,17 @@ export default function (io, app) {
 		lobby.updateUserStatuses();
 	};
 
-	lobby.cancelPendingChallenges = (socketId) => {
-		const challenge = cache.getPendingChallenge(socketId);
+	lobby.cancelPendingChallenges = (userId) => {
+		const challenge = cache.getPendingChallenge(userId);
 
 		if (challenge) {
-			lobby.to(challenge.to).emit('cancelChallenge');
-			lobby.to(challenge.from).emit('declineChallenge');
-			cache.deletePendingChallenge(socketId);
+			lobby.to(challenge.from.socketId).emit('declineChallenge');
+			lobby.to(challenge.to.socketId).emit('cancelChallenge');
+			cache.deletePendingChallenge(userId);
+
+			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
+			const targetUserId = challenge.from.id !== userId ? challenge.from.id : challenge.to.id;
+			lobby.setUserStatus(targetUserId, 'online');
 		}
 	};
 
