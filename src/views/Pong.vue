@@ -1,6 +1,9 @@
 <template>
 	<div class="pong-page">
-		pong
+		<LoadingIndicator
+			v-if="loading"
+			full-screen
+		/>
 
 		<canvas id="game-canvas" class="canvas">
 			Your browser does not support HTML5 Canvas.
@@ -10,14 +13,20 @@
 
 <script>
 	import SocketIO from 'socket.io-client';
+	import LoadingIndicator from '@/components/LoadingIndicator';
+
 	import config from '@/config';
 	import Pong from '@/game-clients/pong';
 
 	export default {
+		components: {
+			LoadingIndicator
+		},
 		data() {
 			return {
 				socket: null,
-				game: null
+				game: null,
+				loading: true
 			};
 		},
 		async mounted() {
@@ -27,6 +36,7 @@
 			this.connectToSocket();
 		},
 		beforeDestroy() {
+			this.game.stop();
 			this.disconnectFromSocket();
 		},
 		methods: {
@@ -48,6 +58,7 @@
 
 				this.socket.on('startGame', ({ fps, canvas, player }) => {
 					this.game.start(fps, canvas, player);
+					this.loading = false;
 				});
 
 				this.socket.on('updateData', (data) => {

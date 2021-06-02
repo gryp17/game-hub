@@ -23,6 +23,7 @@ window.requestAnimFrame = (function anim() {
 export default class Pong {
 	constructor({ onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
+		this.gameLoopInterval;
 		this.inputs;
 		this.paddles = [];
 		this.ball;
@@ -68,13 +69,17 @@ export default class Pong {
 		//listen for the keyboard events
 		this.keyboard.listen();
 
-		setInterval(() => {
+		this.gameLoopInterval = setInterval(() => {
 			this.gameLoop();
 		}, 1000 / fps);
 
 		requestAnimationFrame(() => {
 			this.drawGame();
 		});
+	}
+
+	stop() {
+		clearInterval(this.gameLoopInterval);
 	}
 
 	updateData({ paddles, ball }) {

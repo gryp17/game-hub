@@ -9,7 +9,7 @@ export default class Pong {
 		this.fps = fps;
 		this.players = players;
 		this.onUpdate = onUpdate;
-		this.gameLoop;
+		this.gameLoopInterval;
 		this.paddles = [];
 
 		this.inputs = {};
@@ -50,7 +50,7 @@ export default class Pong {
 
 		this.ball = new Ball(this, 200, 200, 10, 10);
 
-		this.gameLoop = setInterval(() => {
+		this.gameLoopInterval = setInterval(() => {
 			this.paddles.forEach((paddle) => {
 				paddle.move();
 			});
@@ -71,6 +71,6 @@ export default class Pong {
 	}
 
 	stop() {
-		clearInterval(this.gameLoop);
+		clearInterval(this.gameLoopInterval);
 	}
 }
