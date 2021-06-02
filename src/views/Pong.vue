@@ -88,6 +88,11 @@
 
 <style lang="scss">
 	.pong-page {
+		display: flex;
+		height: 100%;
+		padding: 20px 0px;
+		justify-content: center;
+
 		#game-canvas {
 			display: none;
 			border: solid 1px $purple;

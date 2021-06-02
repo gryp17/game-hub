@@ -113,9 +113,8 @@
 				});
 			},
 			challengePlayer(user) {
-				//TODO: check user status as well
-
-				if (user.id !== this.userSession.id) {
+				//can only challenge other online players
+				if (user.status === 'online' && user.id !== this.userSession.id) {
 					this.socket.emit('challengePlayer', user.id);
 					this.$modal.show('challenge-pending-modal', {
 						game: 'Pong',
