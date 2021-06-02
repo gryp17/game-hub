@@ -5,23 +5,20 @@ import cache from '../../cache';
 
 export default function (io, app) {
 	const lobby = io.of('/lobby');
-	let pendingChallenges = [];
 
 	lobby.use(socketIsLoggedIn(app));
 
-	lobby.on('connection', async (socket) => {
-		console.log('--- user connected to lobby');
-
+	lobby.on('connection', (socket) => {
 		//update the user status
 		lobby.setUserStatus(socket.user.id, 'online');
 
-		socket.on('challengePlayer', async (challengedUserId) => {
+		socket.on('challengePlayer', (challengedUserId) => {
 			const challengedUser = lobby.getUserById(challengedUserId);
 
 			//send the challenge to the target user
 			if (challengedUser) {
 				//set the pending challenge data
-				lobby.addPendingChallenge(socket.id, challengedUser.socketId);
+				cache.addPendingChallenge(socket.id, challengedUser.socketId);
 
 				lobby.to(challengedUser.socketId).emit('challenge', socket.user);
 			}
@@ -31,7 +28,7 @@ export default function (io, app) {
 			const challengedUser = lobby.getUserById(challengedUserId);
 
 			if (challengedUser) {
-				lobby.removePendingChallenges(socket.id);
+				cache.deletePendingChallenge(socket.id);
 				lobby.to(challengedUser.socketId).emit('cancelChallenge');
 			}
 		});
@@ -40,7 +37,7 @@ export default function (io, app) {
 			const challenger = lobby.getUserById(challengerId);
 
 			if (challenger) {
-				lobby.removePendingChallenges(socket.id);
+				cache.deletePendingChallenge(socket.id);
 				lobby.to(challenger.socketId).emit('declineChallenge');
 			}
 		});
@@ -60,7 +57,7 @@ export default function (io, app) {
 					socket.user.id
 				]);
 
-				lobby.removePendingChallenges(socket.id);
+				cache.deletePendingChallenge(socket.id);
 
 				//send the go to game event to both players
 				lobby.to(challenger.socketId).emit('goToGame');
@@ -75,8 +72,6 @@ export default function (io, app) {
 
 			//update the user status
 			lobby.setUserStatus(socket.user.id, 'offline');
-
-			console.log('--- user disconnected from lobby');
 		});
 	});
 
@@ -119,29 +114,14 @@ export default function (io, app) {
 		lobby.updateUserStatuses();
 	};
 
-	lobby.addPendingChallenge = (from, to) => {
-		pendingChallenges.push({
-			from,
-			to
-		});
-	};
-
 	lobby.cancelPendingChallenges = (socketId) => {
-		pendingChallenges = pendingChallenges.filter(({ from, to }) => {
-			if (from === socketId || to === socketId) {
-				lobby.to(to).emit('cancelChallenge');
-				lobby.to(from).emit('declineChallenge');
-				return false;
-			}
+		const challenge = cache.getPendingChallenge(socketId);
 
-			return true;
-		});
-	};
-
-	lobby.removePendingChallenges = (socketId) => {
-		pendingChallenges = pendingChallenges.filter(({ from, to }) => {
-			return (from !== socketId && to !== socketId);
-		});
+		if (challenge) {
+			lobby.to(challenge.to).emit('cancelChallenge');
+			lobby.to(challenge.from).emit('declineChallenge');
+			cache.deletePendingChallenge(socketId);
+		}
 	};
 
 	return lobby;
