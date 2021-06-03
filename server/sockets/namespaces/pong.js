@@ -18,6 +18,8 @@ export default function (io, app) {
 	pong.use(socketIsLoggedIn(app));
 
 	pong.on('connection', async (socket) => {
+		lobby.setUserStatus(socket.user.id, 'pong');
+
 		const gameInstance = await pong.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {

@@ -12,7 +12,13 @@ const state = getDefaultState();
 
 const getters = {
 	users(state) {
-		return Object.values(state.users);
+		return Object.values(state.users).map((user) => {
+			if (!user.status) {
+				user.status = 'offline';
+			}
+
+			return user;
+		});
 	},
 	userProfile(state) {
 		return state.users[state.selectedUser];
