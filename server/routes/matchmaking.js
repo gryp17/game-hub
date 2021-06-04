@@ -5,6 +5,11 @@ import matchmaking from '../matchmaking';
 
 const router = express.Router();
 
+router.get('/status', isLoggedIn, (req, res) => {
+	const status = matchmaking.hasJoinedMatchmaking(req.session.user.id);
+	sendResponse(res, status);
+});
+
 router.post('/join', isLoggedIn, (req, res) => {
 	matchmaking.join(req.session.user.id);
 	sendResponse(res, true);

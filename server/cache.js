@@ -49,6 +49,10 @@ function deletePendingChallenge(userId) {
 	}
 }
 
+function getMatchmakingEntry(userId) {
+	return cache.matchmaking[userId];
+}
+
 function getMatchmakingEntries() {
 	return cache.matchmaking;
 }
@@ -67,6 +71,7 @@ export default {
 	getPendingChallenge,
 	addPendingChallenge,
 	deletePendingChallenge,
+	getMatchmakingEntry,
 	getMatchmakingEntries,
 	addMatchmakingEntry,
 	removeMatchmakingEntry

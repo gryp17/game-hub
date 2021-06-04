@@ -8,7 +8,7 @@
 			<div class="page-header">
 				<div class="column">
 					<FormButton
-						:disabled="matchmakingButtonDisabled"
+						:disabled="matchmakingLoading"
 						@click="toggleMatchmaking"
 					>
 						{{ matchmakingButtonText }}
@@ -25,9 +25,9 @@
 				<div class="column">
 					<!-- user menu goes here -->
 					<div class="user-menu">
-						<button @click="onLogout">
+						<FormButton @click="onLogout">
 							Logout
-						</button>
+						</FormButton>
 					</div>
 				</div>
 			</div>
@@ -103,7 +103,11 @@
 			}
 		},
 		async created() {
-			await this.getUsers();
+			await Promise.all([
+				this.getUsers(),
+				this.getMatchmakingStatus()
+			]);
+
 			this.connectToSocket();
 			this.loading = false;
 		},
@@ -117,6 +121,7 @@
 			...mapActions('lobby', [
 				'getUsers',
 				'updateUserStatuses',
+				'getMatchmakingStatus',
 				'setMatchmakingStatus'
 			]),
 			async onLogout() {
@@ -203,7 +208,7 @@
 </script>
 
 <style lang="scss">
-	$header-height: 48px;
+	$header-height: 72px;
 
 	.lobby-page {
 		height: 100%;
@@ -221,8 +226,8 @@
 			.logo {
 				display: block;
 				margin: auto;
-				margin-top: -10px;
-				width: 115px;
+				margin-top: -2px;
+				width: 135px;
 			}
 
 			.user-menu {

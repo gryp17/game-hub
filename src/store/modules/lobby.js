@@ -124,6 +124,16 @@ const actions = {
 			context.commit('auth/SET_USER_SESSION', user, { root: true });
 		}
 	},
+	async getMatchmakingStatus(context) {
+		try {
+			const { data } = await MatchmakingHttpService.getStatus();
+			context.commit('SET_MATCHMAKING_ENABLED', data);
+		} catch (err) {
+			Vue.toasted.global.apiError({
+				message: `Failed to get the matchmaking status: ${err}`
+			});
+		}
+	},
 	async setMatchmakingStatus(context, status) {
 		const action = status ? MatchmakingHttpService.join : MatchmakingHttpService.leave;
 

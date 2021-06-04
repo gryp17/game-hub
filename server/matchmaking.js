@@ -24,6 +24,11 @@ function stopService() {
 	clearInterval(intervalId);
 }
 
+function hasJoinedMatchmaking(userId) {
+	const entry = cache.getMatchmakingEntry(userId);
+	return !!entry;
+}
+
 function join(userId) {
 	cache.addMatchmakingEntry(userId, {
 		id: userId,
@@ -38,6 +43,7 @@ function leave(userId) {
 export default {
 	startService,
 	stopService,
+	hasJoinedMatchmaking,
 	join,
 	leave
 };
