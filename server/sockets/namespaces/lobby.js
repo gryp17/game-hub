@@ -7,9 +7,76 @@ import cache from '../../cache';
 export default function (io, app) {
 	const lobby = io.of('/lobby');
 
-	matchmaking.startService();
-
 	lobby.use(socketIsLoggedIn(app));
+
+	/**
+	 * Helper function that returns an array of all connected users
+	 * @returns {Array}
+	 */
+	lobby.getConnectedUsers = () => {
+		const users = [];
+
+		lobby.sockets.forEach((data) => {
+			users.push({
+				...data.user,
+				socketId: data.id
+			});
+		});
+
+		return users;
+	};
+
+	/**
+	 * Returns the user object that matches the provided userId
+	 * @param {Number} userId
+	 * @returns {Object}
+	 */
+	lobby.getUserById = (userId) => {
+		const connectedUsers = lobby.getConnectedUsers();
+		return connectedUsers.find((user) => {
+			return user.id === userId;
+		});
+	};
+
+	lobby.updateUserStatuses = () => {
+		const statuses = cache.getUserStatuses();
+		lobby.emit('updateUserStatuses', statuses);
+	};
+
+	lobby.setUserStatus = (userId, status) => {
+		cache.setUserStatus(userId, status);
+		lobby.updateUserStatuses();
+	};
+
+	lobby.cancelPendingChallenges = (userId) => {
+		const challenge = cache.getPendingChallenge(userId);
+
+		if (challenge) {
+			lobby.to(challenge.from.socketId).emit('declineChallenge');
+			lobby.to(challenge.to.socketId).emit('cancelChallenge');
+			cache.deletePendingChallenge(userId);
+
+			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
+			const targetUserId = challenge.from.id !== userId ? challenge.from.id : challenge.to.id;
+			lobby.setUserStatus(targetUserId, 'online');
+		}
+	};
+
+	lobby.onMatchFound = (userA, userB) => {
+		const users = [
+			lobby.getUserById(userA.id),
+			lobby.getUserById(userB.id)
+		];
+
+		//TODO: send event for each player and also tell them to set matchmakingEnabled to false on the front end
+		//wait for BOTH of them to accept the match and create the game object and redirect them to the pong game
+
+		users.forEach((user) => {
+			lobby.to(user.socketId).emit('foundMatch');
+		});
+	};
+
+	matchmaking.startService(lobby.onMatchFound);
 
 	lobby.on('connection', (socket) => {
 		//update the user status
@@ -97,59 +164,6 @@ export default function (io, app) {
 			lobby.setUserStatus(socket.user.id, 'offline');
 		});
 	});
-
-	/**
-	 * Helper function that returns an array of all connected users
-	 * @returns {Array}
-	 */
-	lobby.getConnectedUsers = () => {
-		const users = [];
-
-		lobby.sockets.forEach((data) => {
-			users.push({
-				...data.user,
-				socketId: data.id
-			});
-		});
-
-		return users;
-	};
-
-	/**
-	 * Returns the user object that matches the provided userId
-	 * @param {Number} userId
-	 * @returns {Object}
-	 */
-	lobby.getUserById = (userId) => {
-		const connectedUsers = lobby.getConnectedUsers();
-		return connectedUsers.find((user) => {
-			return user.id === userId;
-		});
-	};
-
-	lobby.updateUserStatuses = () => {
-		const statuses = cache.getUserStatuses();
-		lobby.emit('updateUserStatuses', statuses);
-	};
-
-	lobby.setUserStatus = (userId, status) => {
-		cache.setUserStatus(userId, status);
-		lobby.updateUserStatuses();
-	};
-
-	lobby.cancelPendingChallenges = (userId) => {
-		const challenge = cache.getPendingChallenge(userId);
-
-		if (challenge) {
-			lobby.to(challenge.from.socketId).emit('declineChallenge');
-			lobby.to(challenge.to.socketId).emit('cancelChallenge');
-			cache.deletePendingChallenge(userId);
-
-			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
-			const targetUserId = challenge.from.id !== userId ? challenge.from.id : challenge.to.id;
-			lobby.setUserStatus(targetUserId, 'online');
-		}
-	};
 
 	return lobby;
 }

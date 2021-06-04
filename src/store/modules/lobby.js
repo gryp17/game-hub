@@ -134,6 +134,9 @@ const actions = {
 			});
 		}
 	},
+	setMatchmakingEnabled(context, status) {
+		context.commit('SET_MATCHMAKING_ENABLED', status);
+	},
 	async setMatchmakingStatus(context, status) {
 		const action = status ? MatchmakingHttpService.join : MatchmakingHttpService.leave;
 

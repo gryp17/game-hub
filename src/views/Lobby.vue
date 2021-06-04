@@ -122,7 +122,8 @@
 				'getUsers',
 				'updateUserStatuses',
 				'getMatchmakingStatus',
-				'setMatchmakingStatus'
+				'setMatchmakingStatus',
+				'setMatchmakingEnabled'
 			]),
 			async onLogout() {
 				await this.logout();
@@ -173,6 +174,12 @@
 
 				this.socket.on('declineChallenge', () => {
 					this.$modal.hide('challenge-pending-modal');
+				});
+
+				this.socket.on('foundMatch', () => {
+					console.log('####### FOUND MATCH');
+					// automatically set the matchmaking status to false when a new match arrives
+					this.setMatchmakingEnabled(false);
 				});
 
 				this.socket.on('goToGame', () => {
