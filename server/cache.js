@@ -1,6 +1,7 @@
 const cache = {
 	userStatus: {},
-	pendingChallenge: {}
+	pendingChallenge: {},
+	matchmaking: {}
 };
 
 function getUserStatuses() {
@@ -48,10 +49,25 @@ function deletePendingChallenge(userId) {
 	}
 }
 
+function getMatchmakingEntries() {
+	return cache.matchmaking;
+}
+
+function addMatchmakingEntry(userId, data) {
+	cache.matchmaking[userId] = data;
+}
+
+function removeMatchmakingEntry(userId) {
+	delete cache.matchmaking[userId];
+}
+
 export default {
 	getUserStatuses,
 	setUserStatus,
 	getPendingChallenge,
 	addPendingChallenge,
-	deletePendingChallenge
+	deletePendingChallenge,
+	getMatchmakingEntries,
+	addMatchmakingEntry,
+	removeMatchmakingEntry
 };

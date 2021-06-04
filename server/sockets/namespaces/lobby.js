@@ -1,10 +1,13 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 // import { sendSocketError } from '../../utils';
 import { Game } from '../../models';
+import matchmaking from '../../matchmaking';
 import cache from '../../cache';
 
 export default function (io, app) {
 	const lobby = io.of('/lobby');
+
+	matchmaking.startService();
 
 	lobby.use(socketIsLoggedIn(app));
 
@@ -86,6 +89,9 @@ export default function (io, app) {
 		socket.on('disconnect', () => {
 			//when the user disconnects cancel any pending game challenges that he is part of
 			lobby.cancelPendingChallenges(socket.user.id);
+
+			//leave the matchmaking
+			matchmaking.leave(socket.user.id);
 
 			//update the user status
 			lobby.setUserStatus(socket.user.id, 'offline');

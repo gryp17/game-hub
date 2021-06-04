@@ -7,7 +7,12 @@
 		<template v-else>
 			<div class="page-header">
 				<div class="column">
-
+					<FormButton
+						:disabled="matchmakingButtonDisabled"
+						@click="toggleMatchmaking"
+					>
+						{{ matchmakingButtonText }}
+					</FormButton>
 				</div>
 				<div class="column">
 					<img
@@ -79,16 +84,23 @@
 		data() {
 			return {
 				loading: true,
-				socket: null
+				socket: null,
+				matchmakingLoading: false
 			};
 		},
 		computed: {
 			...mapState('auth', [
 				'userSession'
 			]),
+			...mapState('lobby', [
+				'matchmakingEnabled'
+			]),
 			...mapGetters('lobby', [
 				'users'
-			])
+			]),
+			matchmakingButtonText() {
+				return this.matchmakingEnabled ? 'Stop matchmaking' : 'Play';
+			}
 		},
 		async created() {
 			await this.getUsers();
@@ -104,7 +116,8 @@
 			]),
 			...mapActions('lobby', [
 				'getUsers',
-				'updateUserStatuses'
+				'updateUserStatuses',
+				'setMatchmakingStatus'
 			]),
 			async onLogout() {
 				await this.logout();
@@ -179,6 +192,11 @@
 			},
 			onChallengeCanceled(user) {
 				this.socket.emit('cancelChallenge', user.id);
+			},
+			async toggleMatchmaking() {
+				this.matchmakingLoading = true;
+				await this.setMatchmakingStatus(!this.matchmakingEnabled);
+				this.matchmakingLoading = false;
 			}
 		}
 	};

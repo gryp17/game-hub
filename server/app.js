@@ -9,6 +9,7 @@ import { initSockets } from './sockets';
 import { sendApiError } from './utils';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
+import matchmakingRoutes from './routes/matchmaking';
 
 const app = module.exports = express();
 
@@ -53,6 +54,7 @@ app.use(session({
 //routes
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/matchmaking', matchmakingRoutes);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));

@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import UserHttpService from '@/services/user';
+import MatchmakingHttpService from '@/services/matchmaking';
 
 const getDefaultState = () => {
 	return {
 		users: {},
-		selectedUser: null
+		selectedUser: null,
+		matchmakingEnabled: false
 	};
 };
 
@@ -58,6 +60,9 @@ const mutations = {
 	},
 	SET_SELECTED_USER(state, userId) {
 		state.selectedUser = userId;
+	},
+	SET_MATCHMAKING_ENABLED(state, status) {
+		state.matchmakingEnabled = status;
 	}
 };
 
@@ -117,6 +122,18 @@ const actions = {
 
 		if (user.id === context.rootState.auth.userSession.id) {
 			context.commit('auth/SET_USER_SESSION', user, { root: true });
+		}
+	},
+	async setMatchmakingStatus(context, status) {
+		const action = status ? MatchmakingHttpService.join : MatchmakingHttpService.leave;
+
+		try {
+			await action();
+			context.commit('SET_MATCHMAKING_ENABLED', status);
+		} catch (err) {
+			Vue.toasted.global.apiError({
+				message: `Failed to set the matchmaking status: ${err}`
+			});
 		}
 	}
 };
