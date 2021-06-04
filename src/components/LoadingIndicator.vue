@@ -27,6 +27,8 @@
 
 		&.full-screen {
 			position: absolute;
+			top: 0;
+			left: 0;
 			background-color: $gray-dark;
 			z-index: 9999;
 		}

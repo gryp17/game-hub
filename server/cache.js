@@ -1,66 +1,50 @@
-import NodeCache from 'node-cache';
-import _ from 'lodash';
-
-const cache = new NodeCache();
-const userStatusPrefix = 'user-status:';
-const pendingChallengePrefix = 'pending-challenge:';
+const cache = {
+	userStatus: {},
+	pendingChallenge: {}
+};
 
 function getUserStatuses() {
-	const statuses = {};
-
-	//get all user-status: keys
-	const keys = cache.keys().filter((key) => {
-		return key.indexOf(userStatusPrefix) === 0;
-	});
-
-	const results = cache.mget(keys);
-
-	//format the data and add it to the statuses object
-	_.forOwn(results, (value, key) => {
-		const id = key.replace(userStatusPrefix, '');
-		statuses[id] = value;
-	});
-
-	return statuses;
+	return cache.userStatus;
 }
 
 function setUserStatus(userId, status) {
-	const key = userStatusPrefix + userId;
-
 	if (status === 'offline') {
-		cache.del(key);
+		delete cache.userStatus[userId];
 	} else {
-		cache.set(key, status);
+		cache.userStatus[userId] = status;
 	}
 }
 
-function getPendingChallenge(userId) {
-	const key = cache.keys().find((key) => {
-		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${userId}]`) !== -1;
+function findPendingChallengeKey(userId) {
+	return Object.keys(cache.pendingChallenge).find((key) => {
+		return key.indexOf(`[${userId}]`) !== -1;
 	});
+}
+
+function getPendingChallenge(userId) {
+	const key = findPendingChallengeKey(userId);
 
 	if (!key) {
 		return null;
 	}
 
-	return cache.get(key);
+	return cache.pendingChallenge[key];
 }
 
 function addPendingChallenge(from, to) {
-	const key = `${pendingChallengePrefix}[${from.id}]-[${to.id}]`;
-	cache.set(key, {
+	const key = `[${from.id}]-[${to.id}]`;
+
+	cache.pendingChallenge[key] = {
 		from,
 		to
-	}, 60);
+	};
 }
 
 function deletePendingChallenge(userId) {
-	const key = cache.keys().find((key) => {
-		return key.indexOf(pendingChallengePrefix) === 0 && key.indexOf(`[${userId}]`) !== -1;
-	});
+	const key = findPendingChallengeKey(userId);
 
 	if (key) {
-		cache.del(key);
+		delete cache.pendingChallenge[key];
 	}
 }
 
