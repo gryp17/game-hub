@@ -18,7 +18,7 @@ function join(userId) {
 }
 
 function leave(userId) {
-	cache.removeMatchmakingEntry(userId);
+	cache.deleteMatchmakingEntry(userId);
 }
 
 function startService(matchFound, interval = 5000) {
@@ -30,16 +30,20 @@ function startService(matchFound, interval = 5000) {
 		//match the available users
 		while (users.length > 1) {
 			const matchedUsers = [
-				users[0],
-				users[1]
+				users[0].id,
+				users[1].id
 			];
 
 			//remove both users from the matchmaking and from the users list
-			matchedUsers.forEach((user) => {
-				leave(user.id);
+			matchedUsers.forEach((userId) => {
+				leave(userId);
 				users.shift();
 			});
 
+			//add the cache entry for this match/challenge
+			cache.addMatchmakingChallenge(...matchedUsers);
+
+			//notify the socket server or whatever about this match
 			matchFound(...matchedUsers);
 		}
 	}, interval);

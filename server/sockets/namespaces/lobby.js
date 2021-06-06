@@ -149,14 +149,16 @@ export default function (io, app) {
 		}
 	};
 
-	lobby.onMatchFound = (userA, userB) => {
+	lobby.onMatchFound = (userIdA, userIdB) => {
 		const users = [
-			lobby.getUserById(userA.id),
-			lobby.getUserById(userB.id)
+			lobby.getUserById(userIdA),
+			lobby.getUserById(userIdB)
 		];
 
 		//TODO: send event for each player and also tell them to set matchmakingEnabled to false on the front end
-		//wait for BOTH of them to accept the match and create the game object and redirect them to the pong game
+		//wait for BOTH of them to accept the match
+		//and create the game object
+		//and redirect them to the pong game
 
 		users.forEach((user) => {
 			lobby.to(user.socketId).emit('foundMatch');

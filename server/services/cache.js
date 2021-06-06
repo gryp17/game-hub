@@ -1,7 +1,8 @@
 const cache = {
 	userStatus: {},
 	pendingChallenge: {},
-	matchmaking: {}
+	matchmaking: {},
+	matchmakingChallenge: {}
 };
 
 function getUserStatuses() {
@@ -61,8 +62,47 @@ function addMatchmakingEntry(userId, data) {
 	cache.matchmaking[userId] = data;
 }
 
-function removeMatchmakingEntry(userId) {
+function deleteMatchmakingEntry(userId) {
 	delete cache.matchmaking[userId];
+}
+
+function addMatchmakingChallenge(userIdA, userIdB) {
+	const key = `[${userIdA}]-[${userIdB}]`;
+
+	cache.matchmakingChallenge[key] = {
+		[userIdA]: null,
+		[userIdB]: null
+	};
+}
+
+function findMatchmakingChallenge(userId) {
+	return Object.keys(cache.matchmakingChallenge).find((key) => {
+		return key.indexOf(`[${userId}]`) !== -1;
+	});
+}
+
+function getMatchmakingChallenge(userId) {
+	const key = findMatchmakingChallenge(userId);
+
+	if (!key) {
+		return null;
+	}
+
+	return cache.matchmakingChallenge[key];
+}
+
+function updateMatchmakingChallenge(userId, status) {
+	const key = findMatchmakingChallenge(userId);
+
+	if (key) {
+		cache.matchmakingChallenge[key][userId] = status;
+	}
+}
+
+function deleteMatchmakingChallenge(userId) {
+	const key = findMatchmakingChallenge(userId);
+
+	delete cache.matchmakingChallenge[key];
 }
 
 export default {
@@ -74,5 +114,9 @@ export default {
 	getMatchmakingEntry,
 	getMatchmakingEntries,
 	addMatchmakingEntry,
-	removeMatchmakingEntry
+	deleteMatchmakingEntry,
+	addMatchmakingChallenge,
+	getMatchmakingChallenge,
+	updateMatchmakingChallenge,
+	deleteMatchmakingChallenge
 };
