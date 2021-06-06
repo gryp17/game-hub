@@ -66,12 +66,18 @@ function deleteMatchmakingEntry(userId) {
 	delete cache.matchmaking[userId];
 }
 
-function addMatchmakingChallenge(userIdA, userIdB) {
-	const key = `[${userIdA}]-[${userIdB}]`;
+function addMatchmakingChallenge(userA, userB) {
+	const key = `[${userA.id}]-[${userB.id}]`;
 
 	cache.matchmakingChallenge[key] = {
-		[userIdA]: false,
-		[userIdB]: false
+		[userA.id]: {
+			accepted: false,
+			socketId: userA.socketId
+		},
+		[userB.id]: {
+			accepted: false,
+			socketId: userB.socketId
+		}
 	};
 }
 
@@ -91,11 +97,11 @@ function getMatchmakingChallenge(userId) {
 	return cache.matchmakingChallenge[key];
 }
 
-function updateMatchmakingChallenge(userId, status) {
+function updateMatchmakingChallenge(userId, accepted) {
 	const key = findMatchmakingChallenge(userId);
 
 	if (key) {
-		cache.matchmakingChallenge[key][userId] = status;
+		cache.matchmakingChallenge[key][userId].accepted = accepted;
 	}
 }
 

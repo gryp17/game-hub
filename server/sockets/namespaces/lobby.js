@@ -96,8 +96,8 @@ export default function (io, app) {
 
 			if (challenge) {
 				//check if both players have accepted the matchmaking challenge
-				const ready = Object.values(challenge).every((status) => {
-					return status;
+				const ready = Object.values(challenge).every((user) => {
+					return user.accepted;
 				});
 
 				if (ready) {
@@ -111,13 +111,9 @@ export default function (io, app) {
 
 					await gameInstance.setUsers(Object.keys(challenge));
 
-					//map the user id's to the corresponding socketId's and send the socket event
-					Object.keys(challenge).map((id) => {
-						return lobby.getUserById(parseInt(id));
-					}).forEach((user) => {
-						if (user) {
-							lobby.to(user.socketId).emit('goToGame');
-						}
+					//send the socket event to both users
+					Object.values(challenge).forEach((user) => {
+						lobby.to(user.socketId).emit('goToGame');
 					});
 				}
 			}
@@ -131,7 +127,7 @@ export default function (io, app) {
 			//leave the matchmaking
 			matchmaking.leave(socket.user.id);
 
-			//cancel any matchmaking challenged
+			//cancel any matchmaking challenges
 			lobby.cancelPendingMatchmakingChallenges(socket.user.id);
 
 			//update the user status
@@ -192,18 +188,8 @@ export default function (io, app) {
 		}
 	};
 
-	lobby.onMatchFound = (userIdA, userIdB) => {
-		const users = [
-			lobby.getUserById(userIdA),
-			lobby.getUserById(userIdB)
-		];
-
-		//TODO: send event for each player and also tell them to set matchmakingEnabled to false on the front end
-		//wait for BOTH of them to accept the match
-		//and create the game object
-		//and redirect them to the pong game
-
-		users.forEach((user) => {
+	lobby.onMatchFound = (userA, userB) => {
+		[userA, userB].forEach((user) => {
 			lobby.to(user.socketId).emit('foundMatch', {
 				game: 'Pong'
 			});
@@ -216,13 +202,9 @@ export default function (io, app) {
 		if (challenge) {
 			cache.deleteMatchmakingChallenge(userId);
 
-			//map the user id's to the corresponding socketId's and send the socket event
-			Object.keys(challenge).map((id) => {
-				return lobby.getUserById(parseInt(id));
-			}).forEach((user) => {
-				if (user) {
-					lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
-				}
+			//send the event to each user
+			Object.values(challenge).forEach((user) => {
+				lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
 			});
 		}
 	};

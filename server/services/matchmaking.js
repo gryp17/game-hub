@@ -10,9 +10,10 @@ function getAvailableUsers() {
 	});
 }
 
-function join(userId) {
+function join(userId, socketId) {
 	cache.addMatchmakingEntry(userId, {
 		id: userId,
+		socketId,
 		joined: new Date()
 	});
 }
@@ -25,18 +26,16 @@ function startService(matchFound, interval = 5000) {
 	intervalId = setInterval(() => {
 		const users = getAvailableUsers();
 
-		console.log(users);
-
 		//match the available users
 		while (users.length > 1) {
 			const matchedUsers = [
-				users[0].id,
-				users[1].id
+				users[0],
+				users[1]
 			];
 
 			//remove both users from the matchmaking and from the users list
-			matchedUsers.forEach((userId) => {
-				leave(userId);
+			matchedUsers.forEach((user) => {
+				leave(user.id);
 				users.shift();
 			});
 
