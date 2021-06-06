@@ -9,7 +9,7 @@ import app from '../app';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { User } from '../models';
-import { sendResponse, sendApiError, sendError, makeHash } from '../utils';
+import { sendResponse, sendApiError, sendError, makeHash } from '../services/utils';
 import { errorCodes, uploads } from '../config';
 
 const unlink = promisify(fs.unlink);

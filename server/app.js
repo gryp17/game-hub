@@ -6,7 +6,8 @@ import session from 'express-session';
 import createMySQLStore from 'express-mysql-session';
 import config from './config';
 import { initSockets } from './sockets';
-import { sendApiError } from './utils';
+import { sendApiError } from './services/utils';
+import matchmaking from './services/matchmaking';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import matchmakingRoutes from './routes/matchmaking';
@@ -65,7 +66,10 @@ const server = app.listen(config.port, () => {
 });
 
 //setup the socket.io listeners
-initSockets(server, app);
+const io = initSockets(server, app);
+
+//start the matchmaking service
+matchmaking.startService(io.of('/lobby').onMatchFound);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {

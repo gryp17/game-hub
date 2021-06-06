@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 import cookieParser from 'cookie-parser';
 import config from '../config';
-import { sendApiError } from '../utils';
+import { sendApiError } from '../services/utils';
 
 /**
  * Checks if the user is logged in

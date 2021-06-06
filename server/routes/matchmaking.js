@@ -1,7 +1,7 @@
 import express from 'express';
 import { isLoggedIn } from '../middleware/authentication';
-import { sendResponse } from '../utils';
-import matchmaking from '../matchmaking';
+import { sendResponse } from '../services/utils';
+import matchmaking from '../services/matchmaking';
 
 const router = express.Router();
 

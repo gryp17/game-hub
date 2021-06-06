@@ -1,6 +1,6 @@
 import path from 'path';
 import _ from 'lodash';
-import { sendError, compareHash } from '../utils';
+import { sendError, compareHash } from '../services/utils';
 import { minPasswordLength, uploads, errorCodes } from '../config';
 import { User } from '../models';
 

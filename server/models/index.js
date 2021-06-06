@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import config from '../config';
-import { makeHash } from '../utils';
+import { makeHash } from '../services/utils';
 
 const db = new Sequelize(config.db.database, config.db.user, config.db.password, {
 	host: config.db.host,

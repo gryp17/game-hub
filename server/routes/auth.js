@@ -3,7 +3,7 @@ import { uploads, errorCodes } from '../config';
 import { User } from '../models';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
-import { sendResponse, sendError, sendApiError, compareHash, makeHash } from '../utils';
+import { sendResponse, sendError, sendApiError, compareHash, makeHash } from '../services/utils';
 
 const router = express.Router();
 
