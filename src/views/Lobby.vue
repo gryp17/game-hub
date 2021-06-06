@@ -62,6 +62,10 @@
 		<ChallengePendingModal
 			@cancel="onChallengeCanceled"
 		/>
+		<MatchmakingPendingModal
+			@accept="onMatcmakingChallengeAccepted"
+			@cancel="onMatcmakingChallengeCanceled"
+		/>
 	</div>
 </template>
 
@@ -73,13 +77,15 @@
 	import UserItem from '@/components/users-list/UserItem';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
+	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 
 	export default {
 		components: {
 			LoadingIndicator,
 			UserItem,
 			ChallengeModal,
-			ChallengePendingModal
+			ChallengePendingModal,
+			MatchmakingPendingModal
 		},
 		data() {
 			return {
@@ -135,6 +141,8 @@
 				//can only challenge other online players
 				if (user.status === 'online' && user.id !== this.userSession.id) {
 					this.socket.emit('challengePlayer', user.id);
+
+					//TODO: don't hardcode the game name once there are more supported games
 					this.$modal.show('challenge-pending-modal', {
 						game: 'Pong',
 						user
@@ -161,9 +169,9 @@
 					this.updateUserStatuses(statuses);
 				});
 
-				this.socket.on('challenge', (user) => {
+				this.socket.on('challenge', ({ user, game }) => {
 					this.$modal.show('challenge-modal', {
-						game: 'Pong',
+						game,
 						user
 					});
 				});
@@ -176,10 +184,13 @@
 					this.$modal.hide('challenge-pending-modal');
 				});
 
-				this.socket.on('foundMatch', () => {
-					console.log('####### FOUND MATCH');
-					// automatically set the matchmaking status to false when a new match arrives
+				this.socket.on('foundMatch', ({ game }) => {
+					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);
+
+					this.$modal.show('matchmaking-pending-modal', {
+						game
+					});
 				});
 
 				this.socket.on('goToGame', () => {
@@ -204,6 +215,15 @@
 			},
 			onChallengeCanceled(user) {
 				this.socket.emit('cancelChallenge', user.id);
+			},
+			onMatcmakingChallengeAccepted() {
+				console.log('MATCHMAKING ACCEPTED');
+				//TODO: send a socket io event that the user has accepted
+				//the server should update the cache
+				//once both users have accepted it should create the game object and send a start game event
+			},
+			onMatcmakingChallengeCanceled() {
+				console.log('MATCHMAKING CANCELLED');
 			},
 			async toggleMatchmaking() {
 				this.matchmakingLoading = true;

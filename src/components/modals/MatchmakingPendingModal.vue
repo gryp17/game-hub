@@ -1,25 +1,29 @@
 <template>
-	<div class="challenge-pending-modal">
+	<div class="matchmaking-pending-modal">
 		<modal
 			:adaptive="true"
 			:width="'100%'"
 			:maxWidth="460"
 			:height="'auto'"
-			name="challenge-pending-modal"
+			name="matchmaking-pending-modal"
 			@before-open="onBeforeOpen"
 			@opened="startCountdown"
 			@before-close="stopCountdown"
 			@closed="onClose"
 		>
 			<div class="header">
-				Game challenge
+				Opponent found
 			</div>
 			<div class="content">
-				You have challenged <span class="bold">{{ user.username }}</span> in a game of <span class="bold">{{ game }}</span>
+				An opponent has been found for a game of <span class="bold">{{ game }}</span>
+				<br/>
+				<br/>
+				Starting match in:
+				<br/>
 
 				<ChallengeTimeoutCountdown
 					ref="countdown"
-					@timeout="cancel"
+					@timeout="accept"
 				/>
 
 				<div class="buttons-wrapper">
@@ -44,7 +48,6 @@
 		},
 		data() {
 			return {
-				user: {},
 				game: null
 			};
 		},
@@ -54,7 +57,6 @@
 			 * @param {Object} e
 			 */
 			onBeforeOpen(e) {
-				this.user = e.params.user;
 				this.game = e.params.game;
 			},
 			startCountdown() {
@@ -71,20 +73,23 @@
 			 * Closes the modal
 			 */
 			closeModal() {
-				this.$modal.hide('challenge-pending-modal');
+				this.$modal.hide('matchmaking-pending-modal');
 			},
 			onClose() {
-				this.$emit('cancel', this.user);
+				this.$emit('cancel');
 			},
 			cancel() {
 				this.closeModal();
+			},
+			accept() {
+				this.$emit('accept');
 			}
 		}
 	};
 </script>
 
 <style lang="scss">
-	.challenge-pending-modal {
+	.matchmaking-pending-modal {
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;
@@ -99,10 +104,6 @@
 
 			.buttons-wrapper {
 				text-align: center;
-
-				.form-button {
-					margin-right: 5px;
-				}
 			}
 		}
 	}

@@ -28,7 +28,10 @@ export default function (io, app) {
 					socketId: challengedUser.socketId
 				});
 
-				lobby.to(challengedUser.socketId).emit('challenge', socket.user);
+				lobby.to(challengedUser.socketId).emit('challenge', {
+					game: 'Pong',
+					user: socket.user
+				});
 
 				//set both users status to busy while the challenge is still active
 				lobby.setUserStatus(socket.user.id, 'busy');
@@ -161,7 +164,9 @@ export default function (io, app) {
 		//and redirect them to the pong game
 
 		users.forEach((user) => {
-			lobby.to(user.socketId).emit('foundMatch');
+			lobby.to(user.socketId).emit('foundMatch', {
+				game: 'Pong'
+			});
 		});
 	};
 
