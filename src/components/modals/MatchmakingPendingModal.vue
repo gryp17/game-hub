@@ -5,11 +5,11 @@
 			:width="'100%'"
 			:maxWidth="460"
 			:height="'auto'"
+			:clickToClose="false"
 			name="matchmaking-pending-modal"
 			@before-open="onBeforeOpen"
 			@opened="startCountdown"
 			@before-close="stopCountdown"
-			@closed="onClose"
 		>
 			<div class="header">
 				Opponent found
@@ -23,6 +23,7 @@
 
 				<ChallengeTimeoutCountdown
 					ref="countdown"
+					:timeout="10"
 					@timeout="accept"
 				/>
 
@@ -75,14 +76,13 @@
 			closeModal() {
 				this.$modal.hide('matchmaking-pending-modal');
 			},
-			onClose() {
-				this.$emit('cancel');
-			},
 			cancel() {
+				this.$emit('cancel');
 				this.closeModal();
 			},
 			accept() {
 				this.$emit('accept');
+				this.closeModal();
 			}
 		}
 	};

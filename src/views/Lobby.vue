@@ -193,6 +193,10 @@
 					});
 				});
 
+				this.socket.on('cancelMatchmakingChallenge', () => {
+					this.$modal.hide('matchmaking-pending-modal');
+				});
+
 				this.socket.on('goToGame', () => {
 					this.$router.push({
 						name: 'pong'
@@ -221,9 +225,10 @@
 				//TODO: send a socket io event that the user has accepted
 				//the server should update the cache
 				//once both users have accepted it should create the game object and send a start game event
+				// this.socket.emit('acceptMatchmakingChallenge');
 			},
 			onMatcmakingChallengeCanceled() {
-				console.log('MATCHMAKING CANCELLED');
+				this.socket.emit('cancelMatchmakingChallenge');
 			},
 			async toggleMatchmaking() {
 				this.matchmakingLoading = true;

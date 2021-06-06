@@ -5,11 +5,11 @@
 			:width="'100%'"
 			:maxWidth="460"
 			:height="'auto'"
+			:clickToClose="false"
 			name="challenge-pending-modal"
 			@before-open="onBeforeOpen"
 			@opened="startCountdown"
 			@before-close="stopCountdown"
-			@closed="onClose"
 		>
 			<div class="header">
 				Game challenge
@@ -73,10 +73,8 @@
 			closeModal() {
 				this.$modal.hide('challenge-pending-modal');
 			},
-			onClose() {
-				this.$emit('cancel', this.user);
-			},
 			cancel() {
+				this.$emit('cancel', this.user);
 				this.closeModal();
 			}
 		}

@@ -5,11 +5,11 @@
 			:width="'100%'"
 			:maxWidth="460"
 			:height="'auto'"
+			:clickToClose="false"
 			name="challenge-modal"
 			@before-open="onBeforeOpen"
 			@opened="startCountdown"
 			@before-close="stopCountdown"
-			@closed="onClose"
 		>
 			<div class="header">
 				Game challenge
@@ -79,14 +79,13 @@
 			closeModal() {
 				this.$modal.hide('challenge-modal');
 			},
-			onClose() {
-				this.$emit('decline', this.user);
-			},
 			accept() {
 				this.stopCountdown();
 				this.$emit('accept', this.user);
+				this.closeModal();
 			},
 			decline() {
+				this.$emit('decline', this.user);
 				this.closeModal();
 			}
 		}

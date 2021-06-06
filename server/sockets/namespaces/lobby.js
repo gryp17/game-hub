@@ -86,6 +86,21 @@ export default function (io, app) {
 			}
 		});
 
+		socket.on('cancelMatchmakingChallenge', () => {
+			const challenge = cache.getMatchmakingChallenge(socket.user.id);
+
+			if (challenge) {
+				cache.deleteMatchmakingChallenge(socket.user.id);
+
+				//map the user id's to the corresponding socketId's and send the socket event
+				Object.keys(challenge).map((userId) => {
+					return lobby.getUserById(parseInt(userId));
+				}).forEach((user) => {
+					lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
+				});
+			}
+		});
+
 		//disconnect event handler
 		socket.on('disconnect', () => {
 			//when the user disconnects cancel any pending game challenges that he is part of

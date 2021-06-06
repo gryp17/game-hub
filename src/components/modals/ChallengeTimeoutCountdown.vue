@@ -6,16 +6,24 @@
 
 <script>
 	export default {
+		props: {
+			timeout: {
+				type: Number,
+				default: 20 //seconds
+			}
+		},
 		data() {
 			return {
-				challengeTimeout: 20, //seconds
 				challengeCounterInterval: null,
 				counter: 20
 			};
 		},
+		created() {
+			this.counter = this.timeout;
+		},
 		methods: {
 			startCountdown() {
-				this.counter = this.challengeTimeout;
+				this.counter = this.timeout;
 				this.challengeCounterInterval = setInterval(() => {
 					this.counter--;
 
