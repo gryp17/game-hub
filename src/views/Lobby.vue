@@ -63,8 +63,8 @@
 			@cancel="onChallengeCanceled"
 		/>
 		<MatchmakingPendingModal
-			@accept="onMatcmakingChallengeAccepted"
-			@cancel="onMatcmakingChallengeCanceled"
+			@accept="onMatchmakingChallengeAccepted"
+			@cancel="onMatchmakingChallengeCanceled"
 		/>
 	</div>
 </template>
@@ -220,14 +220,10 @@
 			onChallengeCanceled(user) {
 				this.socket.emit('cancelChallenge', user.id);
 			},
-			onMatcmakingChallengeAccepted() {
-				console.log('MATCHMAKING ACCEPTED');
-				//TODO: send a socket io event that the user has accepted
-				//the server should update the cache
-				//once both users have accepted it should create the game object and send a start game event
-				// this.socket.emit('acceptMatchmakingChallenge');
+			onMatchmakingChallengeAccepted() {
+				this.socket.emit('acceptMatchmakingChallenge');
 			},
-			onMatcmakingChallengeCanceled() {
+			onMatchmakingChallengeCanceled() {
 				this.socket.emit('cancelMatchmakingChallenge');
 			},
 			async toggleMatchmaking() {

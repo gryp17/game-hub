@@ -70,8 +70,8 @@ function addMatchmakingChallenge(userIdA, userIdB) {
 	const key = `[${userIdA}]-[${userIdB}]`;
 
 	cache.matchmakingChallenge[key] = {
-		[userIdA]: null,
-		[userIdB]: null
+		[userIdA]: false,
+		[userIdB]: false
 	};
 }
 

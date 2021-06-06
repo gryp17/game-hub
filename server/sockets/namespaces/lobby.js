@@ -87,17 +87,39 @@ export default function (io, app) {
 		});
 
 		socket.on('cancelMatchmakingChallenge', () => {
+			lobby.cancelPendingMatchmakingChallenges(socket.user.id);
+		});
+
+		socket.on('acceptMatchmakingChallenge', async () => {
+			cache.updateMatchmakingChallenge(socket.user.id, true);
 			const challenge = cache.getMatchmakingChallenge(socket.user.id);
 
 			if (challenge) {
-				cache.deleteMatchmakingChallenge(socket.user.id);
-
-				//map the user id's to the corresponding socketId's and send the socket event
-				Object.keys(challenge).map((userId) => {
-					return lobby.getUserById(parseInt(userId));
-				}).forEach((user) => {
-					lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
+				//check if both players have accepted the matchmaking challenge
+				const ready = Object.values(challenge).every((status) => {
+					return status;
 				});
+
+				if (ready) {
+					cache.deleteMatchmakingChallenge(socket.user.id);
+
+					//create the game with both users
+					const gameInstance = await Game.create({
+						type: 'pong',
+						status: 'pending'
+					});
+
+					await gameInstance.setUsers(Object.keys(challenge));
+
+					//map the user id's to the corresponding socketId's and send the socket event
+					Object.keys(challenge).map((id) => {
+						return lobby.getUserById(parseInt(id));
+					}).forEach((user) => {
+						if (user) {
+							lobby.to(user.socketId).emit('goToGame');
+						}
+					});
+				}
 			}
 		});
 
@@ -108,6 +130,9 @@ export default function (io, app) {
 
 			//leave the matchmaking
 			matchmaking.leave(socket.user.id);
+
+			//cancel any matchmaking challenged
+			lobby.cancelPendingMatchmakingChallenges(socket.user.id);
 
 			//update the user status
 			lobby.setUserStatus(socket.user.id, 'offline');
@@ -183,6 +208,23 @@ export default function (io, app) {
 				game: 'Pong'
 			});
 		});
+	};
+
+	lobby.cancelPendingMatchmakingChallenges = (userId) => {
+		const challenge = cache.getMatchmakingChallenge(userId);
+
+		if (challenge) {
+			cache.deleteMatchmakingChallenge(userId);
+
+			//map the user id's to the corresponding socketId's and send the socket event
+			Object.keys(challenge).map((id) => {
+				return lobby.getUserById(parseInt(id));
+			}).forEach((user) => {
+				if (user) {
+					lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
+				}
+			});
+		}
 	};
 
 	return lobby;
