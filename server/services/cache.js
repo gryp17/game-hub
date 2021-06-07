@@ -1,3 +1,5 @@
+import { userStatuses } from '../config';
+
 const cache = {
 	userStatus: {},
 	pendingChallenge: {},
@@ -10,7 +12,7 @@ function getUserStatuses() {
 }
 
 function setUserStatus(userId, status) {
-	if (status === 'offline') {
+	if (status === userStatuses.OFFLINE) {
 		delete cache.userStatus[userId];
 	} else {
 		cache.userStatus[userId] = status;
@@ -71,10 +73,12 @@ function addMatchmakingChallenge(userA, userB) {
 
 	cache.matchmakingChallenge[key] = {
 		[userA.id]: {
+			id: userA.id,
 			accepted: false,
 			socketId: userA.socketId
 		},
 		[userB.id]: {
+			id: userB.id,
 			accepted: false,
 			socketId: userB.socketId
 		}

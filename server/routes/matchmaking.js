@@ -3,7 +3,7 @@ import { isLoggedIn } from '../middleware/authentication';
 import { sendResponse, sendApiError } from '../services/utils';
 import matchmaking from '../services/matchmaking';
 import { io } from '../sockets';
-import { errorCodes } from '../config';
+import { errorCodes, userStatuses } from '../config';
 
 const router = express.Router();
 
@@ -14,18 +14,23 @@ router.get('/status', isLoggedIn, (req, res) => {
 
 router.post('/join', isLoggedIn, (req, res) => {
 	//get the user socket id from the lobby
-	const lobbyNamespace = io.of('/lobby');
-	const socketUser = lobbyNamespace.getUserById(req.session.user.id);
+	const lobby = io.of('/lobby');
+	const socketUser = lobby.getUserById(req.session.user.id);
 
 	if (!socketUser) {
 		return sendApiError(res, errorCodes.INVALID_USER_ID);
 	}
+
+	lobby.setUserStatus(req.session.user.id, userStatuses.MATCHMAKING);
 
 	matchmaking.join(req.session.user.id, socketUser.socketId);
 	sendResponse(res, true);
 });
 
 router.post('/leave', isLoggedIn, (req, res) => {
+	const lobby = io.of('/lobby');
+	lobby.setUserStatus(req.session.user.id, userStatuses.ONLINE);
+
 	matchmaking.leave(req.session.user.id);
 	sendResponse(res, true);
 });

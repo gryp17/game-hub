@@ -1,5 +1,6 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 // import { sendSocketError } from '../../services/utils';
+import { userStatuses } from '../../config';
 import { Game } from '../../models';
 import matchmaking from '../../services/matchmaking';
 import cache from '../../services/cache';
@@ -11,7 +12,7 @@ export default function (io, app) {
 
 	lobby.on('connection', (socket) => {
 		//update the user status
-		lobby.setUserStatus(socket.user.id, 'online');
+		lobby.setUserStatus(socket.user.id, userStatuses.ONLINE);
 
 		socket.on('challengePlayer', (challengedUserId) => {
 			const challengedUser = lobby.getUserById(challengedUserId);
@@ -34,8 +35,8 @@ export default function (io, app) {
 				});
 
 				//set both users status to busy while the challenge is still active
-				lobby.setUserStatus(socket.user.id, 'busy');
-				lobby.setUserStatus(challengedUser.id, 'busy');
+				lobby.setUserStatus(socket.user.id, userStatuses.BUSY);
+				lobby.setUserStatus(challengedUser.id, userStatuses.BUSY);
 			}
 		});
 
@@ -46,8 +47,8 @@ export default function (io, app) {
 				cache.deletePendingChallenge(socket.user.id);
 				lobby.to(challengedUser.socketId).emit('cancelChallenge');
 
-				lobby.setUserStatus(socket.user.id, 'online');
-				lobby.setUserStatus(challengedUser.id, 'online');
+				lobby.setUserStatus(socket.user.id, userStatuses.ONLINE);
+				lobby.setUserStatus(challengedUser.id, userStatuses.ONLINE);
 			}
 		});
 
@@ -58,8 +59,8 @@ export default function (io, app) {
 				cache.deletePendingChallenge(socket.user.id);
 				lobby.to(challenger.socketId).emit('declineChallenge');
 
-				lobby.setUserStatus(socket.user.id, 'online');
-				lobby.setUserStatus(challenger.id, 'online');
+				lobby.setUserStatus(socket.user.id, userStatuses.ONLINE);
+				lobby.setUserStatus(challenger.id, userStatuses.ONLINE);
 			}
 		});
 
@@ -131,7 +132,7 @@ export default function (io, app) {
 			lobby.cancelPendingMatchmakingChallenges(socket.user.id);
 
 			//update the user status
-			lobby.setUserStatus(socket.user.id, 'offline');
+			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
 		});
 	});
 
@@ -184,12 +185,14 @@ export default function (io, app) {
 
 			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
 			const targetUserId = challenge.from.id !== userId ? challenge.from.id : challenge.to.id;
-			lobby.setUserStatus(targetUserId, 'online');
+			lobby.setUserStatus(targetUserId, userStatuses.ONLINE);
 		}
 	};
 
 	lobby.onMatchFound = (userA, userB) => {
 		[userA, userB].forEach((user) => {
+			lobby.setUserStatus(user.id, userStatuses.BUSY);
+
 			lobby.to(user.socketId).emit('foundMatch', {
 				game: 'Pong'
 			});
@@ -202,8 +205,10 @@ export default function (io, app) {
 		if (challenge) {
 			cache.deleteMatchmakingChallenge(userId);
 
-			//send the event to each user
+			//send the event to each user and update their status
 			Object.values(challenge).forEach((user) => {
+				const userStatus = lobby.getUserById(user.id) ? userStatuses.ONLINE : userStatuses.OFFLINE;
+				lobby.setUserStatus(user.id, userStatus);
 				lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
 			});
 		}

@@ -1,4 +1,5 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
+import { userStatuses } from '../../config';
 import { User, Game } from '../../models';
 import Pong from '../../game-servers/pong';
 
@@ -18,7 +19,7 @@ export default function (io, app) {
 	pong.use(socketIsLoggedIn(app));
 
 	pong.on('connection', async (socket) => {
-		lobby.setUserStatus(socket.user.id, 'pong');
+		lobby.setUserStatus(socket.user.id, userStatuses.PONG);
 
 		const gameInstance = await pong.getPendingGame(socket.user.id);
 
@@ -73,7 +74,7 @@ export default function (io, app) {
 		//disconnect event handler
 		socket.on('disconnect', () => {
 			//update the user status
-			lobby.setUserStatus(socket.user.id, 'offline');
+			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
 
 			if (gameInstance) {
 				gameInstance.update({

@@ -28,7 +28,8 @@
 </template>
 
 <script>
-	const gameStatuses = ['pong'];
+	const gameStatuses = ['pong', 'volley'];
+	const onlineStateStatuses = ['online', 'offline'];
 
 	export default {
 		props: {
@@ -58,7 +59,7 @@
 				return this.rawStatus;
 			},
 			showStatus() {
-				return gameStatuses.includes(this.rawStatus);
+				return !onlineStateStatuses.includes(this.rawStatus);
 			}
 		}
 	};
@@ -105,7 +106,7 @@
 				}
 			}
 
-			&.busy {
+			&.busy, &.matchmaking {
 				&:after {
 					background-color: $red;
 				}
