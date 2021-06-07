@@ -7,8 +7,10 @@ const environment = process.env.NODE_ENV || 'development';
 
 //get config from the environment
 const config = require(`./${environment}`);
-config.errorCodes = errorCodes;
-config.userStatuses = userStatuses;
-config.availableGames = availableGames;
 
-module.exports = config;
+module.exports = {
+	...config,
+	errorCodes,
+	userStatuses,
+	availableGames
+};
