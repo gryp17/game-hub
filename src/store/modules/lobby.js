@@ -5,7 +5,6 @@ import MatchmakingHttpService from '@/services/matchmaking';
 const getDefaultState = () => {
 	return {
 		users: {},
-		selectedUser: null,
 		matchmakingEnabled: false
 	};
 };
@@ -21,9 +20,6 @@ const getters = {
 
 			return user;
 		});
-	},
-	userProfile(state) {
-		return state.users[state.selectedUser];
 	}
 };
 
@@ -57,9 +53,6 @@ const mutations = {
 
 			Vue.set(state.users, userId, updatedUser);
 		});
-	},
-	SET_SELECTED_USER(state, userId) {
-		state.selectedUser = userId;
 	},
 	SET_MATCHMAKING_ENABLED(state, status) {
 		state.matchmakingEnabled = status;
@@ -103,14 +96,6 @@ const actions = {
 	 */
 	newUserReceived(context, user) {
 		context.commit('ADD_USER', user);
-	},
-	/**
-	 * Sets the selected user
-	 * @param {Object} context
-	 * @param {Number} userId
-	 */
-	setSelectedUser(context, userId) {
-		context.commit('SET_SELECTED_USER', userId);
 	},
 	/**
 	 * Handles the update user event

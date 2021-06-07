@@ -125,6 +125,7 @@
 			]),
 			...mapActions('lobby', [
 				'getUsers',
+				'newUserReceived',
 				'updateUserStatuses',
 				'getMatchmakingStatus',
 				'setMatchmakingStatus',
@@ -162,6 +163,10 @@
 					this.$toasted.global.apiError({
 						message: this.$options.filters.errorsMap(error)
 					});
+				});
+
+				this.socket.on('newUser', (user) => {
+					this.newUserReceived(user);
 				});
 
 				this.socket.on('updateUserStatuses', (statuses) => {

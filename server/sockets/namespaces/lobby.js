@@ -165,6 +165,14 @@ export default function (io, app) {
 		});
 	};
 
+	/**
+	 * Notifies all clients about the new user
+	 * @param {Number} userId
+	 */
+	lobby.newUser = async (user) => {
+		lobby.emit('newUser', user);
+	};
+
 	lobby.updateUserStatuses = () => {
 		const statuses = cache.getUserStatuses();
 		lobby.emit('updateUserStatuses', statuses);
