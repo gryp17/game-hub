@@ -28,8 +28,7 @@
 </template>
 
 <script>
-	const gameStatuses = ['pong', 'volley'];
-	const onlineStateStatuses = ['online', 'offline'];
+	import { mapState } from 'vuex';
 
 	export default {
 		props: {
@@ -39,27 +38,41 @@
 			}
 		},
 		computed: {
+			...mapState('config', [
+				'userStatuses'
+			]),
+			gameStatuses() {
+				return [
+					this.userStatuses.PONG
+				];
+			},
+			onlineStateStatuses() {
+				return [
+					this.userStatuses.ONLINE,
+					this.userStatuses.OFFLINE
+				];
+			},
 			rawStatus() {
 				return this.user.status;
 			},
 			status() {
 				let status = this.rawStatus.charAt(0).toUpperCase() + this.rawStatus.slice(1);
 
-				if (gameStatuses.includes(this.rawStatus)) {
+				if (this.gameStatuses.includes(this.rawStatus)) {
 					status = `Playing ${status}`;
 				}
 
 				return status;
 			},
 			avatarClass() {
-				if (gameStatuses.includes(this.rawStatus)) {
+				if (this.gameStatuses.includes(this.rawStatus)) {
 					return 'busy';
 				}
 
 				return this.rawStatus;
 			},
 			showStatus() {
-				return !onlineStateStatuses.includes(this.rawStatus);
+				return !this.onlineStateStatuses.includes(this.rawStatus);
 			}
 		}
 	};

@@ -1,11 +1,12 @@
 <template>
 	<div id="app">
-		<router-view/>
+		<router-view v-if="!loading" />
 	</div>
 </template>
 
 <script>
 	import Vue from 'vue';
+	import { mapActions } from 'vuex';
 
 	import errorsMap from '@/filters/errorsMap';
 	import FormInput from '@/components/forms/FormInput';
@@ -21,6 +22,23 @@
 	Vue.component('FormFileInput', FormFileInput);
 	Vue.component('FormButton', FormButton);
 	Vue.component('FormSwitch', FormSwitch);
+
+	export default {
+		data() {
+			return {
+				loading: true
+			};
+		},
+		async created() {
+			await this.getConfig();
+			this.loading = false;
+		},
+		methods: {
+			...mapActions('config', [
+				'getConfig'
+			])
+		}
+	};
 </script>
 
 <style lang="scss">

@@ -26,7 +26,7 @@
 				</template>
 				<template v-slot:items>
 					<div
-						v-for="game in availableGames"
+						v-for="game in enabledGames"
 						:key="game.value"
 						@click="selectGame(game)"
 					>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex';
 	import DropdownMenu from '@/components/DropdownMenu';
 
 	export default {
@@ -58,36 +59,43 @@
 		},
 		data() {
 			return {
-				availableGames: [
-					{
-						label: 'Any game',
-						value: 'any',
-						icon: 'fas fa-dice'
-					},
-					{
-						label: 'Pong',
-						value: 'pong',
-						icon: 'fas fa-table-tennis'
-					}
-					/*
-					not supported yet
-					{
-						label: 'Volley',
-						value: 'volley',
-						icon: 'fas fa-volleyball-ball'
-					}
-					*/
-				],
+				iconsMap: {
+					pong: 'fas fa-table-tennis'
+				},
 				selectedGame: null
 			};
 		},
 		computed: {
+			...mapState('config', [
+				'availableGames'
+			]),
+			enabledGames() {
+				const games = [
+					{
+						label: 'Any game',
+						value: 'any',
+						icon: 'fas fa-dice'
+					}
+				];
+
+				Object.values(this.availableGames).forEach(({ label, value }) => {
+					const game = {
+						label,
+						value,
+						icon: this.iconsMap[value]
+					};
+
+					games.push(game);
+				});
+
+				return games;
+			},
 			playButtonText() {
 				return this.selectedGame.value === 'any' ? 'Play' : `Play ${this.selectedGame.label}`;
 			}
 		},
 		created() {
-			this.selectedGame = this.availableGames[0];
+			this.selectedGame = this.enabledGames[0];
 		},
 		methods: {
 			selectGame(game) {

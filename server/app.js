@@ -11,6 +11,7 @@ import matchmaking from './services/matchmaking';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import matchmakingRoutes from './routes/matchmaking';
+import configRoutes from './routes/config';
 
 const app = module.exports = express();
 
@@ -56,6 +57,7 @@ app.use(session({
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/matchmaking', matchmakingRoutes);
+app.use('/config', configRoutes);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));
