@@ -7,12 +7,12 @@
 		<template v-else>
 			<div class="page-header">
 				<div class="column">
-					<FormButton
+					<PlayButton
+						:active="matchmakingEnabled"
 						:disabled="matchmakingLoading"
-						@click="toggleMatchmaking"
-					>
-						{{ matchmakingButtonText }}
-					</FormButton>
+						@play="startMatchmaking"
+						@stop="stopMatchmaking"
+					/>
 				</div>
 				<div class="column">
 					<img
@@ -75,6 +75,7 @@
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
+	import PlayButton from '@/components/PlayButton';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
@@ -83,6 +84,7 @@
 		components: {
 			LoadingIndicator,
 			UserItem,
+			PlayButton,
 			ChallengeModal,
 			ChallengePendingModal,
 			MatchmakingPendingModal
@@ -103,10 +105,7 @@
 			]),
 			...mapGetters('lobby', [
 				'users'
-			]),
-			matchmakingButtonText() {
-				return this.matchmakingEnabled ? 'Stop matchmaking' : 'Play';
-			}
+			])
 		},
 		async created() {
 			await Promise.all([
@@ -226,9 +225,15 @@
 			onMatchmakingChallengeCanceled() {
 				this.socket.emit('cancelMatchmakingChallenge');
 			},
-			async toggleMatchmaking() {
+			async startMatchmaking(game) {
+				//TODO: send the selected game once more games are supported
 				this.matchmakingLoading = true;
-				await this.setMatchmakingStatus(!this.matchmakingEnabled);
+				await this.setMatchmakingStatus(true);
+				this.matchmakingLoading = false;
+			},
+			async stopMatchmaking() {
+				this.matchmakingLoading = true;
+				await this.setMatchmakingStatus(false);
 				this.matchmakingLoading = false;
 			}
 		}
