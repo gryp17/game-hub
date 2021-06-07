@@ -19,6 +19,20 @@ const getters = {
 			}
 
 			return user;
+		}).sort((a, b) => {
+			//first sort by status
+			if (a.status !== b.status) {
+				if (a.status === 'offline') {
+					return 1;
+				}
+
+				if (b.status === 'offline') {
+					return -1;
+				}
+			}
+
+			//then by username
+			return a.username > b.username;
 		});
 	}
 };
