@@ -90,6 +90,11 @@
 
 <style lang="scss">
 	.matchmaking-pending-modal {
+		//make this modal appear on top of every other modal (user profile modal) in case there are 2 modals opened at the same time
+		.vm--container {
+			z-index: 1000;
+		}
+
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;
