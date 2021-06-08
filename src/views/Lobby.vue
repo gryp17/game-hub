@@ -49,7 +49,7 @@
 						v-for="user in users"
 						:key="user.id"
 						:user="user"
-						@click="challengePlayer"
+						@click="openUserProfile"
 					/>
 				</div>
 			</div>
@@ -66,6 +66,10 @@
 			@accept="onMatchmakingChallengeAccepted"
 			@cancel="onMatchmakingChallengeCanceled"
 		/>
+
+		<UserProfileModal
+			@challenge="challengePlayer"
+		/>
 	</div>
 </template>
 
@@ -79,6 +83,7 @@
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
+	import UserProfileModal from '@/components/modals/UserProfileModal';
 
 	export default {
 		components: {
@@ -87,7 +92,8 @@
 			PlayButton,
 			ChallengeModal,
 			ChallengePendingModal,
-			MatchmakingPendingModal
+			MatchmakingPendingModal,
+			UserProfileModal
 		},
 		data() {
 			return {
@@ -137,17 +143,19 @@
 					name: 'authentication'
 				});
 			},
+			openUserProfile(user) {
+				this.$modal.show('user-profile-modal', {
+					user
+				});
+			},
 			challengePlayer(user) {
-				//can only challenge other online players
-				if (user.status === 'online' && user.id !== this.userSession.id) {
-					this.socket.emit('challengePlayer', user.id);
+				this.socket.emit('challengePlayer', user.id);
 
-					//TODO: don't hardcode the game name once there are more supported games
-					this.$modal.show('challenge-pending-modal', {
-						game: 'Pong',
-						user
-					});
-				}
+				//TODO: don't hardcode the game name once there are more supported games
+				this.$modal.show('challenge-pending-modal', {
+					game: 'Pong',
+					user
+				});
 			},
 			/**
 			 * Connects to the socket.io server and listens for it's events
