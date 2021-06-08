@@ -6,32 +6,33 @@
 			:maxWidth="460"
 			:height="'auto'"
 			name="user-profile-modal"
-			@before-open="onBeforeOpen"
 		>
-			<div class="header">
-				{{ user.username }}
-			</div>
-			<div class="content">
-
-				User profile
-				{{ user }}
-
-				<FormButton
-					v-if="canChallengePLayer"
-					@click="challengePlayer"
-				>
-					Challenge
-				</FormButton>
-
-				<div class="buttons-wrapper">
-					<FormButton
-						danger
-						@click="closeModal"
-					>
-						Close
-					</FormButton>
+			<template v-if="userProfile">
+				<div class="header">
+					{{ userProfile.username }}
 				</div>
-			</div>
+				<div class="content">
+
+					User profile
+					{{ userProfile }}
+
+					<FormButton
+						:disabled="!canChallengePLayer"
+						@click="challengePlayer"
+					>
+						Challenge
+					</FormButton>
+
+					<div class="buttons-wrapper">
+						<FormButton
+							danger
+							@click="closeModal"
+						>
+							Close
+						</FormButton>
+					</div>
+				</div>
+			</template>
 		</modal>
 	</div>
 </template>
@@ -40,14 +41,12 @@
 	import { mapState, mapGetters } from 'vuex';
 
 	export default {
-		data() {
-			return {
-				user: {}
-			};
-		},
 		computed: {
 			...mapState('config', [
 				'userStatuses'
+			]),
+			...mapGetters('lobby', [
+				'userProfile'
 			]),
 			...mapGetters('auth', [
 				'userSession'
@@ -55,19 +54,12 @@
 			canChallengePLayer() {
 				return (
 					this.userSession.status === this.userStatuses.ONLINE
-					&& this.user.status === this.userStatuses.ONLINE
-					&& this.user.id !== this.userSession.id
+					&& this.userProfile.status === this.userStatuses.ONLINE
+					&& this.userProfile.id !== this.userSession.id
 				);
 			}
 		},
 		methods: {
-			/**
-			 * Sets the file object
-			 * @param {Object} e
-			 */
-			onBeforeOpen(e) {
-				this.user = e.params.user;
-			},
 			/**
 			 * Closes the modal
 			 */
@@ -75,7 +67,7 @@
 				this.$modal.hide('user-profile-modal');
 			},
 			challengePlayer() {
-				this.$emit('challenge', this.user);
+				this.$emit('challenge', this.userProfile);
 			}
 		}
 	};

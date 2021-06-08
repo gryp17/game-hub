@@ -132,7 +132,8 @@
 				'updateUserStatuses',
 				'getMatchmakingStatus',
 				'setMatchmakingStatus',
-				'setMatchmakingEnabled'
+				'setMatchmakingEnabled',
+				'setSelectedUser'
 			]),
 			async onLogout() {
 				await this.logout();
@@ -141,9 +142,8 @@
 				});
 			},
 			openUserProfile(user) {
-				this.$modal.show('user-profile-modal', {
-					user
-				});
+				this.setSelectedUser(user.id);
+				this.$modal.show('user-profile-modal');
 			},
 			challengePlayer(user) {
 				this.socket.emit('challengePlayer', user.id);
