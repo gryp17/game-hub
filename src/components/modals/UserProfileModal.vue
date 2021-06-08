@@ -3,34 +3,51 @@
 		<modal
 			:adaptive="true"
 			:width="'100%'"
-			:maxWidth="460"
+			:maxWidth="560"
 			:height="'auto'"
 			name="user-profile-modal"
 		>
 			<template v-if="userProfile">
 				<div class="header">
 					{{ userProfile.username }}
-				</div>
-				<div class="content">
-
-					User profile
-					{{ userProfile }}
 
 					<FormButton
-						:disabled="!canChallengePLayer"
-						@click="challengePlayer"
+						transparent
+						class="close-btn"
+						@click="closeModal"
 					>
-						Challenge
+						<i class="fas fa-times"></i>
 					</FormButton>
+				</div>
+				<div class="content">
+					<Tabs
+						cache-lifetime="0"
+						class="light"
+						:options="{ useUrlFragment: false }"
+					>
+						<Tab name="Profile">
+							User profile
+							{{ userProfile }}
 
-					<div class="buttons-wrapper">
-						<FormButton
-							danger
-							@click="closeModal"
-						>
-							Close
-						</FormButton>
-					</div>
+							<div class="buttons-wrapper">
+								<FormButton
+									v-if="isOwnUser"
+								>
+									Edit profile
+								</FormButton>
+								<FormButton
+									v-if="!isOwnUser"
+									:disabled="!canChallengePLayer"
+									@click="challengePlayer"
+								>
+									Challenge
+								</FormButton>
+							</div>
+						</Tab>
+						<Tab name="Stats">
+							stats placeholder
+						</Tab>
+					</Tabs>
 				</div>
 			</template>
 		</modal>
@@ -39,8 +56,13 @@
 
 <script>
 	import { mapState, mapGetters } from 'vuex';
+	import { Tabs, Tab } from 'vue-tabs-component';
 
 	export default {
+		components: {
+			Tabs,
+			Tab
+		},
 		computed: {
 			...mapState('config', [
 				'userStatuses'
@@ -51,11 +73,14 @@
 			...mapGetters('auth', [
 				'userSession'
 			]),
+			isOwnUser() {
+				return this.userProfile.id === this.userSession.id;
+			},
 			canChallengePLayer() {
 				return (
 					this.userSession.status === this.userStatuses.ONLINE
 					&& this.userProfile.status === this.userStatuses.ONLINE
-					&& this.userProfile.id !== this.userSession.id
+					&& !this.isOwnUser
 				);
 			}
 		},
@@ -68,6 +93,7 @@
 			},
 			challengePlayer() {
 				this.$emit('challenge', this.userProfile);
+				this.closeModal();
 			}
 		}
 	};
@@ -80,13 +106,32 @@
 			background-color: $gray-darkest;
 			color: $white;
 			font-weight: bold;
+
+			.close-btn {
+				float: right;
+				padding: 0px 5px;
+				color: $white;
+
+				svg {
+					margin: 0px;
+				}
+
+				&:hover {
+					background-color: $gray;
+				}
+			}
 		}
 
 		.content {
-			padding: 10px;
+			padding: 5px;
 			color: $text-color-dark;
 
+			.tabs-component-panels {
+				padding: 10px;
+			}
+
 			.buttons-wrapper {
+				margin-top: 10px;
 				text-align: center;
 			}
 		}

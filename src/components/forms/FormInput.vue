@@ -141,7 +141,7 @@
 			padding: 10px;
 			border-radius: 0px;
 			background-color: $gray;
-			border: solid 1px $gray-lightest;
+			border: solid 1px $gray-very-light;
 			color: $white;
 			font-size: inherit;
 			font-family: $font-family;

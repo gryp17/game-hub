@@ -57,4 +57,34 @@
 		background-color: $body-color;
 		padding: 20px;
 	}
+
+	//light mode
+	&.light {
+		$border-color: $gray-lightest;
+		$body-color: $white;
+		$tabs-border: solid 3px $border-color;
+
+		border-left: $tabs-border;
+		border-right: $tabs-border;
+		border-bottom: $tabs-border;
+
+		.tabs-component-tab {
+			border-top: $tabs-border;
+			background-color: $border-color;
+			color: lighten($text-color-dark, 15%);
+
+			&.is-active {
+				color: $text-color-dark;
+				background-color: $body-color;
+			}
+
+			&:hover {
+				color: $text-color-dark;
+			}
+		}
+
+		.tabs-component-panels {
+			background-color: $body-color;
+		}
+	}
 }

@@ -131,7 +131,7 @@
 			flex-direction: column;
 			justify-content: center;
 			padding-left: 10px;
-			color: $gray-lightest;
+			color: $gray-very-light;
 			overflow-x: hidden;
 
 			.username {

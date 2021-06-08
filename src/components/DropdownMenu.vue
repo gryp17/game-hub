@@ -102,7 +102,7 @@
 				cursor: pointer;
 
 				&:hover {
-					background-color: $gray-lightest;
+					background-color: $gray-very-light;
 				}
 			}
 		}
