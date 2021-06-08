@@ -10,6 +10,24 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
+	userSession(state, getters, rootState, rootGetters) {
+		if (!state.userSession) {
+			return null;
+		}
+
+		const userStatuses = rootState.config.userStatuses;
+		const users = rootGetters['lobby/users'];
+
+		//get the current user status from the users list
+		const user = users.find((user) => {
+			return user.id === state.userSession.id;
+		});
+
+		return {
+			...state.userSession,
+			status: user ? user.status : userStatuses.OFFLINE
+		};
+	},
 	isLoggedIn(state) {
 		return !!state.userSession;
 	}

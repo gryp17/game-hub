@@ -7,8 +7,6 @@
 			:height="'auto'"
 			name="user-profile-modal"
 			@before-open="onBeforeOpen"
-			@opened="startCountdown"
-			@before-close="stopCountdown"
 		>
 			<div class="header">
 				{{ user.username }}
@@ -39,7 +37,7 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapState, mapGetters } from 'vuex';
 
 	export default {
 		data() {
@@ -48,12 +46,18 @@
 			};
 		},
 		computed: {
-			...mapState('auth', [
+			...mapState('config', [
+				'userStatuses'
+			]),
+			...mapGetters('auth', [
 				'userSession'
 			]),
 			canChallengePLayer() {
-				//TODO: use the status map here
-				return (this.user.status === 'online' && this.user.id !== this.userSession.id);
+				return (
+					this.userSession.status === this.userStatuses.ONLINE
+					&& this.user.status === this.userStatuses.ONLINE
+					&& this.user.id !== this.userSession.id
+				);
 			}
 		},
 		methods: {

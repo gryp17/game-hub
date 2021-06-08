@@ -103,9 +103,6 @@
 			};
 		},
 		computed: {
-			...mapState('auth', [
-				'userSession'
-			]),
 			...mapState('lobby', [
 				'matchmakingEnabled'
 			]),
