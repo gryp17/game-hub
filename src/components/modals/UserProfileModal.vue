@@ -25,9 +25,22 @@
 						class="light"
 						:options="{ useUrlFragment: false }"
 					>
-						<Tab name="Profile">
-							User profile
-							{{ userProfile }}
+						<Tab
+							name="Profile"
+							class="user-profile"
+						>
+							<img
+								class="avatar"
+								:src="userProfile.avatarLink"
+							/>
+
+							<div class="username">
+								{{ userProfile.username }}
+							</div>
+
+							<div class="bio">
+								{{ bio }}
+							</div>
 
 							<div class="buttons-wrapper">
 								<FormButton
@@ -82,6 +95,9 @@
 					&& this.userProfile.status === this.userStatuses.ONLINE
 					&& !this.isOwnUser
 				);
+			},
+			bio() {
+				return this.userProfile.bio ? this.userProfile.bio : 'Apparently, this user prefers to keep an air of mystery about them.';
 			}
 		},
 		methods: {
@@ -92,8 +108,10 @@
 				this.$modal.hide('user-profile-modal');
 			},
 			challengePlayer() {
-				this.$emit('challenge', this.userProfile);
 				this.closeModal();
+				setTimeout(() => {
+					this.$emit('challenge', this.userProfile);
+				}, 200);
 			}
 		}
 	};
@@ -101,6 +119,11 @@
 
 <style lang="scss">
 	.user-profile-modal {
+		//make this modal appear under any other newly opened modals (in case there are more opened modals at the same time)
+		.vm--container {
+			z-index: 998;
+		}
+
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;
@@ -130,9 +153,31 @@
 				padding: 10px;
 			}
 
-			.buttons-wrapper {
-				margin-top: 10px;
-				text-align: center;
+			.user-profile {
+				.avatar {
+					display: block;
+					margin: 10px auto;
+					width: 160px;
+					height: 160px;
+					border-radius: 100%;
+				}
+
+				.username {
+					margin-bottom: 20px;
+					text-align: center;
+					font-size: 20px;
+					font-weight: bold;
+				}
+
+				.bio {
+					margin-bottom: 20px;
+					text-align: center;
+				}
+
+				.buttons-wrapper {
+					margin-top: 10px;
+					text-align: center;
+				}
 			}
 		}
 	}
