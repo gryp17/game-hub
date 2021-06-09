@@ -76,7 +76,11 @@
 
 		.arrow-btn {
 			padding: 10px 5px;
-			border-left: solid 1px $gray;
+			margin-left: 1px;
+
+			svg {
+				margin: 0;
+			}
 		}
 
 		.dropdown-menu {
