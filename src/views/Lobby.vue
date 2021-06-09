@@ -1,5 +1,8 @@
 <template>
-	<div class="lobby-page">
+	<div
+		v-if="userSession"
+		class="lobby-page"
+	>
 		<LoadingIndicator
 			v-if="loading"
 			full-screen
@@ -103,6 +106,9 @@
 			};
 		},
 		computed: {
+			...mapState('auth', [
+				'userSession'
+			]),
 			...mapState('lobby', [
 				'matchmakingEnabled'
 			]),
