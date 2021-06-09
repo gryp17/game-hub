@@ -79,6 +79,7 @@
 			padding: 5px 0px;
 			min-width: 200px;
 			background-color: $white;
+			text-align: left;
 			z-index: 1;
 			border: solid 1px $gray;
 			border-radius: 3px;

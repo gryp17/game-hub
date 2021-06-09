@@ -4,11 +4,20 @@ import ConfigHttpService from '@/services/config';
 const getDefaultState = () => {
 	return {
 		userStatuses: {},
-		availableGames: {}
+		availableGames: []
 	};
 };
 
 const state = getDefaultState();
+
+const getters = {
+	availableGames(state) {
+		//map the game code to the game label, icon etc.
+		return state.availableGames.map((gameCode) => {
+			return Vue.options.filters.gamesMap(gameCode);
+		});
+	}
+};
 
 const mutations = {
 	RESET_STATE(state) {
@@ -34,7 +43,7 @@ const actions = {
 		try {
 			const { data } = await ConfigHttpService.getConfig();
 			context.commit('SET_USER_STATUSES', data.userStatuses);
-			context.commit('SET_AVAILABLE_GAMES', data.availableGames);
+			context.commit('SET_AVAILABLE_GAMES', Object.values(data.availableGames));
 			return data;
 		} catch (err) {
 			Vue.toasted.global.apiError({
@@ -47,6 +56,7 @@ const actions = {
 export default {
 	namespaced: true,
 	state,
+	getters,
 	mutations,
 	actions
 };

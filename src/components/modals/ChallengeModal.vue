@@ -15,7 +15,7 @@
 				Game challenge
 			</div>
 			<div class="content">
-				You have been challenged in a game of <span class="bold">{{ game }}</span> by <span class="bold">{{ user.username }}</span>
+				You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
 
 				<ChallengeTimeoutCountdown
 					ref="countdown"
@@ -51,7 +51,7 @@
 		data() {
 			return {
 				user: {},
-				game: null
+				game: {}
 			};
 		},
 		methods: {
@@ -61,7 +61,7 @@
 			 */
 			onBeforeOpen(e) {
 				this.user = e.params.user;
-				this.game = e.params.game;
+				this.game = this.$options.filters.gamesMap(e.params.game);
 			},
 			startCountdown() {
 				if (this.$refs.countdown) {

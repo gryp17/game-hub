@@ -9,6 +9,7 @@
 	import { mapActions } from 'vuex';
 
 	import errorsMap from '@/filters/errorsMap';
+	import gamesMap from '@/filters/gamesMap';
 	import FormInput from '@/components/forms/FormInput';
 	import FormFileInput from '@/components/forms/FormFileInput';
 	import FormButton from '@/components/forms/FormButton';
@@ -16,6 +17,7 @@
 
 	//global filters
 	Vue.filter('errorsMap', errorsMap);
+	Vue.filter('gamesMap', gamesMap);
 
 	//global components
 	Vue.component('FormInput', FormInput);

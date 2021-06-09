@@ -145,12 +145,11 @@
 				this.setSelectedUser(user.id);
 				this.$modal.show('user-profile-modal');
 			},
-			challengePlayer(user) {
+			challengePlayer({ user, game }) {
 				this.socket.emit('challengePlayer', user.id);
 
-				//TODO: don't hardcode the game name once there are more supported games
 				this.$modal.show('challenge-pending-modal', {
-					game: 'Pong',
+					game,
 					user
 				});
 			},

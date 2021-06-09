@@ -40,7 +40,7 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
+	import { mapGetters } from 'vuex';
 	import DropdownMenu from '@/components/DropdownMenu';
 
 	export default {
@@ -59,36 +59,19 @@
 		},
 		data() {
 			return {
-				iconsMap: {
-					pong: 'fas fa-table-tennis'
-				},
 				selectedGame: null
 			};
 		},
 		computed: {
-			...mapState('config', [
+			...mapGetters('config', [
 				'availableGames'
 			]),
 			enabledGames() {
-				const games = [
-					{
-						label: 'Any game',
-						value: 'any',
-						icon: 'fas fa-dice'
-					}
+				return [
+					//add the "any" option to the list
+					this.$options.filters.gamesMap('any'),
+					...this.availableGames
 				];
-
-				Object.values(this.availableGames).forEach(({ label, value }) => {
-					const game = {
-						label,
-						value,
-						icon: this.iconsMap[value]
-					};
-
-					games.push(game);
-				});
-
-				return games;
 			},
 			playButtonText() {
 				return this.selectedGame.value === 'any' ? 'Play' : `Play ${this.selectedGame.label}`;

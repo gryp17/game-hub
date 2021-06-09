@@ -48,13 +48,11 @@
 								>
 									Edit profile
 								</FormButton>
-								<FormButton
-									v-if="!isOwnUser"
+								<ChallengeButton
+									v-else
 									:disabled="!canChallengePLayer"
-									@click="challengePlayer"
-								>
-									Challenge
-								</FormButton>
+									@challenge="challengePlayer"
+								/>
 							</div>
 						</Tab>
 						<Tab name="Stats">
@@ -70,11 +68,13 @@
 <script>
 	import { mapState, mapGetters } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
+	import ChallengeButton from '@/components/ChallengeButton';
 
 	export default {
 		components: {
 			Tabs,
-			Tab
+			Tab,
+			ChallengeButton
 		},
 		computed: {
 			...mapState('config', [
@@ -107,10 +107,13 @@
 			closeModal() {
 				this.$modal.hide('user-profile-modal');
 			},
-			challengePlayer() {
+			challengePlayer(game) {
 				this.closeModal();
 				setTimeout(() => {
-					this.$emit('challenge', this.userProfile);
+					this.$emit('challenge', {
+						user: this.userProfile,
+						game
+					});
 				}, 200);
 			}
 		}
@@ -122,6 +125,11 @@
 		//make this modal appear under any other newly opened modals (in case there are more opened modals at the same time)
 		.vm--container {
 			z-index: 998;
+		}
+
+		//fixes a bug with the dropdown button
+		.vm--modal {
+			overflow: unset;
 		}
 
 		.header {

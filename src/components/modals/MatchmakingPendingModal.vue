@@ -15,7 +15,7 @@
 				Opponent found
 			</div>
 			<div class="content">
-				An opponent has been found for a game of <span class="bold">{{ game }}</span>
+				An opponent has been found for a game of <span class="bold">{{ game.label }}</span>
 				<br/>
 				<br/>
 				Starting match in:
@@ -49,7 +49,7 @@
 		},
 		data() {
 			return {
-				game: null
+				game: {}
 			};
 		},
 		methods: {
@@ -58,7 +58,7 @@
 			 * @param {Object} e
 			 */
 			onBeforeOpen(e) {
-				this.game = e.params.game;
+				this.game = this.$options.filters.gamesMap(e.params.game);
 			},
 			startCountdown() {
 				if (this.$refs.countdown) {

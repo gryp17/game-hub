@@ -1,6 +1,6 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 // import { sendSocketError } from '../../services/utils';
-import { userStatuses } from '../../config';
+import { userStatuses, availableGames } from '../../config';
 import { Game } from '../../models';
 import matchmaking from '../../services/matchmaking';
 import cache from '../../services/cache';
@@ -30,7 +30,7 @@ export default function (io, app) {
 				});
 
 				lobby.to(challengedUser.socketId).emit('challenge', {
-					game: 'Pong',
+					game: availableGames.PONG,
 					user: socket.user
 				});
 
@@ -202,7 +202,7 @@ export default function (io, app) {
 			lobby.setUserStatus(user.id, userStatuses.BUSY);
 
 			lobby.to(user.socketId).emit('foundMatch', {
-				game: 'Pong'
+				game: availableGames.PONG
 			});
 		});
 	};
