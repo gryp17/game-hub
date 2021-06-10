@@ -11,7 +11,10 @@
 			direction="right"
 		>
 			<template v-slot:button>
-				<FormButton class="arrow-btn">
+				<FormButton
+					:disabled="disabled"
+					class="arrow-btn"
+				>
 					<i class="fas fa-angle-down"></i>
 				</FormButton>
 			</template>
