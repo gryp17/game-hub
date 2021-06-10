@@ -2,7 +2,7 @@ import express from 'express';
 import { isLoggedIn } from '../middleware/authentication';
 import { sendResponse, sendApiError } from '../services/utils';
 import matchmaking from '../services/matchmaking';
-import { io } from '../sockets';
+import { lobby } from '../sockets';
 import { errorCodes, userStatuses } from '../config';
 
 const router = express.Router();
@@ -14,7 +14,6 @@ router.get('/status', isLoggedIn, (req, res) => {
 
 router.post('/join', isLoggedIn, (req, res) => {
 	//get the user socket id from the lobby
-	const lobby = io.of('/lobby');
 	const socketUser = lobby.getUserById(req.session.user.id);
 
 	if (!socketUser) {
@@ -28,7 +27,6 @@ router.post('/join', isLoggedIn, (req, res) => {
 });
 
 router.post('/leave', isLoggedIn, (req, res) => {
-	const lobby = io.of('/lobby');
 	lobby.setUserStatus(req.session.user.id, userStatuses.ONLINE);
 
 	matchmaking.leave(req.session.user.id);

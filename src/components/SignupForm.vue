@@ -7,6 +7,7 @@
 			type="text"
 			name="email"
 			floating-label
+			dark
 			placeholder="Email"
 		></FormInput>
 
@@ -17,6 +18,7 @@
 			type="text"
 			name="username"
 			floating-label
+			dark
 			placeholder="Username"
 		></FormInput>
 
@@ -27,6 +29,7 @@
 			type="password"
 			name="password"
 			floating-label
+			dark
 			placeholder="Password"
 		></FormInput>
 
@@ -37,6 +40,7 @@
 			type="password"
 			name="repeatPassword"
 			floating-label
+			dark
 			placeholder="Repeat password"
 		></FormInput>
 

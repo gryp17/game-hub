@@ -45,6 +45,7 @@
 							<div class="buttons-wrapper">
 								<FormButton
 									v-if="isOwnUser"
+									@click="editProfile"
 								>
 									Edit profile
 								</FormButton>
@@ -114,6 +115,12 @@
 						user: this.userProfile,
 						game
 					});
+				}, 200);
+			},
+			editProfile() {
+				this.closeModal();
+				setTimeout(() => {
+					this.$modal.show('edit-profile-modal');
 				}, 200);
 			}
 		}

@@ -73,6 +73,8 @@
 		<UserProfileModal
 			@challenge="challengePlayer"
 		/>
+
+		<EditProfileModal />
 	</div>
 </template>
 
@@ -87,6 +89,7 @@
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 	import UserProfileModal from '@/components/modals/UserProfileModal';
+	import EditProfileModal from '@/components/modals/EditProfileModal';
 
 	export default {
 		components: {
@@ -96,7 +99,8 @@
 			ChallengeModal,
 			ChallengePendingModal,
 			MatchmakingPendingModal,
-			UserProfileModal
+			UserProfileModal,
+			EditProfileModal
 		},
 		data() {
 			return {
@@ -135,6 +139,7 @@
 			...mapActions('lobby', [
 				'getUsers',
 				'newUserReceived',
+				'updateUser',
 				'updateUserStatuses',
 				'getMatchmakingStatus',
 				'setMatchmakingStatus',
@@ -177,6 +182,10 @@
 
 				this.socket.on('newUser', (user) => {
 					this.newUserReceived(user);
+				});
+
+				this.socket.on('updateUser', (user) => {
+					this.updateUser(user);
 				});
 
 				this.socket.on('updateUserStatuses', (statuses) => {

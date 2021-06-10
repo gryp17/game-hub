@@ -1,11 +1,11 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
 import { userStatuses } from '../../config';
 import { User, Game } from '../../models';
+import { lobby } from '..';
 import Pong from '../../game-servers/pong';
 
 export default function (io, app) {
 	const pong = io.of('/pong');
-	const lobby = io.of('/lobby');
 
 	const games = {};
 

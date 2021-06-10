@@ -4,7 +4,8 @@ const getDefaultState = () => {
 	return {
 		errors: {
 			login: {},
-			signup: {}
+			signup: {},
+			editProfile: {}
 		}
 	};
 };

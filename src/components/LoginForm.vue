@@ -9,6 +9,7 @@
 			type="text"
 			name="email"
 			floating-label
+			dark
 			placeholder="Email"
 		></FormInput>
 
@@ -21,6 +22,7 @@
 			type="password"
 			name="password"
 			floating-label
+			dark
 			placeholder="Password"
 		></FormInput>
 

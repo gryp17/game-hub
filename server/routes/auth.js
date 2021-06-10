@@ -4,7 +4,7 @@ import { User } from '../models';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError, sendApiError, compareHash, makeHash } from '../services/utils';
-import { io } from '../sockets';
+import { lobby } from '../sockets';
 
 const router = express.Router();
 
@@ -69,7 +69,6 @@ router.post('/signup', validate(rules.signup), async (req, res) => {
 	const email = req.body.email;
 	const username = req.body.username;
 	const password = req.body.password;
-	const lobby = io.of('/lobby');
 
 	try {
 		const hashedPassword = await makeHash(password);

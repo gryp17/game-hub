@@ -68,10 +68,10 @@ const server = app.listen(config.port, () => {
 });
 
 //setup the socket.io listeners
-const io = initSockets(server, app);
+const { lobby } = initSockets(server, app);
 
 //start the matchmaking service
-matchmaking.startService(io.of('/lobby').onMatchFound);
+matchmaking.startService(lobby.onMatchFound);
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -1,16 +1,15 @@
 import express from 'express';
-import sequelize from 'sequelize';
 import multipart from 'connect-multiparty';
 import fs from 'fs';
 import { promisify } from 'util';
 import path from 'path';
 import md5 from 'md5';
-import app from '../app';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { User } from '../models';
-import { sendResponse, sendApiError, sendError, makeHash } from '../services/utils';
-import { errorCodes, uploads } from '../config';
+import { sendResponse, sendApiError, makeHash } from '../services/utils';
+import { uploads } from '../config';
+import { lobby } from '../sockets';
 
 const unlink = promisify(fs.unlink);
 const rename = promisify(fs.rename);
@@ -19,7 +18,6 @@ const router = express.Router();
 
 const rules = {
 	updateUser: {
-		username: ['required', 'min-3', 'max-30'],
 		password: ['optional', 'strong-password', 'max-100'],
 		repeatPassword: 'matches(password)',
 		bio: ['optional', 'max-200'],
@@ -83,31 +81,13 @@ router.get('/all', isLoggedIn, async (req, res) => {
  * Updates the user data
  */
 router.put('/', isLoggedIn, multipart(), validate(rules.updateUser), async (req, res) => {
-	const chat = app.get('chat');
-	const { username, password, bio } = req.body;
+	const { password, bio } = req.body;
 
 	const updatedFields = {
-		username,
 		bio
 	};
 
 	try {
-		//check if the username is used by another user
-		const user = await User.findOne({
-			where: {
-				username,
-				id: {
-					[sequelize.Op.not]: req.session.user.id
-				}
-			}
-		});
-
-		if (user) {
-			return sendError(res, {
-				username: errorCodes.ALREADY_IN_USE
-			});
-		}
-
 		if (password) {
 			const hashedPassword = await makeHash(password);
 			updatedFields.password = hashedPassword;
@@ -141,7 +121,7 @@ router.put('/', isLoggedIn, multipart(), validate(rules.updateUser), async (req,
 		req.session.user = updatedUser.toJSON();
 
 		//notify all users about the changes
-		chat.updateUser(updatedUser.toJSON());
+		lobby.updateUser(updatedUser.toJSON());
 
 		sendResponse(res, updatedUser.toJSON());
 	} catch (err) {

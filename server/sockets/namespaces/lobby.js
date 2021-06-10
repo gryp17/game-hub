@@ -173,6 +173,14 @@ export default function (io, app) {
 		lobby.emit('newUser', user);
 	};
 
+	/**
+	 * Updates the user data
+	 * @param {Object} user
+	 */
+	lobby.updateUser = (user) => {
+		lobby.emit('updateUser', user);
+	};
+
 	lobby.updateUserStatuses = () => {
 		const statuses = cache.getUserStatuses();
 		lobby.emit('updateUserStatuses', statuses);

@@ -12,7 +12,7 @@
 			<input
 				v-if="tag === 'input'"
 				:value="value"
-				:class="['form-control', className, {'has-error': error}]"
+				:class="['form-control', className, {dark}, {'has-error': error}]"
 				:type="type"
 				:name="name"
 				:placeholder="placeholder"
@@ -27,7 +27,7 @@
 			<textarea
 				v-if="tag === 'textarea'"
 				:value="value"
-				:class="['form-control', className, {monospaced}, {'has-error': error}]"
+				:class="['form-control', className, {dark, monospaced}, {'has-error': error}]"
 				:name="name"
 				:placeholder="placeholder"
 				:rows="rows"
@@ -57,6 +57,7 @@
 			FormInputError
 		},
 		props: {
+			dark: Boolean,
 			floatingLabel: Boolean,
 			tag: {
 				type: String,
@@ -140,14 +141,19 @@
 			width: 100%;
 			padding: 10px;
 			border-radius: 0px;
-			background-color: $gray;
-			border: solid 1px $gray-very-light;
-			color: $white;
+			background-color: $white;
+			border: solid 1px $gray-lightest;
 			font-size: inherit;
 			font-family: $font-family;
 			box-sizing: border-box;
 			resize: none;
 			transition: all 300ms;
+
+			&.dark {
+				background-color: $gray;
+				border-color: $gray-very-light;
+				color: $white;
+			}
 
 			&:focus {
 				box-shadow: none;
