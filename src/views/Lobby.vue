@@ -26,12 +26,7 @@
 					/>
 				</div>
 				<div class="column">
-					<!-- user menu goes here -->
-					<div class="user-menu">
-						<FormButton @click="onLogout">
-							Logout
-						</FormButton>
-					</div>
+					<UserMenu />
 				</div>
 			</div>
 			<div class="content-wrapper">
@@ -85,6 +80,7 @@
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
 	import PlayButton from '@/components/PlayButton';
+	import UserMenu from '@/components/UserMenu';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
@@ -100,7 +96,8 @@
 			ChallengePendingModal,
 			MatchmakingPendingModal,
 			UserProfileModal,
-			EditProfileModal
+			EditProfileModal,
+			UserMenu
 		},
 		data() {
 			return {
@@ -133,9 +130,6 @@
 			this.disconnectFromSocket();
 		},
 		methods: {
-			...mapActions('auth', [
-				'logout'
-			]),
 			...mapActions('lobby', [
 				'getUsers',
 				'newUserReceived',
@@ -146,12 +140,6 @@
 				'setMatchmakingEnabled',
 				'setSelectedUser'
 			]),
-			async onLogout() {
-				await this.logout();
-				this.$router.push({
-					name: 'authentication'
-				});
-			},
 			openUserProfile(user) {
 				this.setSelectedUser(user.id);
 				this.$modal.show('user-profile-modal');
@@ -288,7 +276,7 @@
 			}
 
 			.user-menu {
-				text-align: right;
+				float: right;
 			}
 		}
 
