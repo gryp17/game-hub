@@ -13,8 +13,8 @@
 					<PlayButton
 						:active="matchmakingEnabled"
 						:disabled="matchmakingLoading"
-						@play="startMatchmaking"
-						@stop="stopMatchmaking"
+						@play="onStartMatchmaking"
+						@stop="onStopMatchmaking"
 					/>
 				</div>
 				<div class="column">
@@ -66,7 +66,7 @@
 		/>
 
 		<UserProfileModal
-			@challenge="challengePlayer"
+			@challenge="onChallengePlayer"
 		/>
 
 		<EditProfileModal />
@@ -135,29 +135,41 @@
 				'newUserReceived',
 				'updateUser',
 				'updateUserStatuses',
+				'challengePlayer',
+				'cancelChallenge',
+				'declineChallenge',
+				'acceptChallenge',
 				'getMatchmakingStatus',
-				'setMatchmakingStatus',
+				'startMatchmaking',
+				'stopMatchmaking',
 				'setMatchmakingEnabled',
+				'cancelMatchmakingChallenge',
+				'acceptMatchmakingChallenge',
 				'setSelectedUser'
 			]),
 			openUserProfile(user) {
 				this.setSelectedUser(user.id);
 				this.$modal.show('user-profile-modal');
 			},
-			challengePlayer({ user, game }) {
-				this.socket.emit('challengePlayer', user.id);
-
-				this.$modal.show('challenge-pending-modal', {
-					game,
-					user
+			async onChallengePlayer({ user, game }) {
+				const success = await this.challengePlayer({
+					userId: user.id,
+					game
 				});
+
+				if (success) {
+					this.$modal.show('challenge-pending-modal', {
+						game,
+						user
+					});
+				}
 			},
 			/**
 			 * Connects to the socket.io server and listens for it's events
 			 */
 			connectToSocket() {
 				//initialize the socket connection
-				this.socket = SocketIO(`${config.apiUrl}/lobby`, {
+				this.socket = SocketIO(`${config.socketUrl}/lobby`, {
 					transports: ['websocket'],
 					upgrade: false
 				});
@@ -208,9 +220,9 @@
 					this.$modal.hide('matchmaking-pending-modal');
 				});
 
-				this.socket.on('goToGame', () => {
+				this.socket.on('goToGame', (game) => {
 					this.$router.push({
-						name: 'pong'
+						name: game
 					});
 				});
 			},
@@ -223,29 +235,28 @@
 				}
 			},
 			onChallengeAccepted(user) {
-				this.socket.emit('acceptChallenge', user.id);
+				this.acceptChallenge(user.id);
 			},
 			onChallengeDeclined(user) {
-				this.socket.emit('declineChallenge', user.id);
+				this.declineChallenge(user.id);
 			},
 			onChallengeCanceled(user) {
-				this.socket.emit('cancelChallenge', user.id);
+				this.cancelChallenge(user.id);
 			},
 			onMatchmakingChallengeAccepted() {
-				this.socket.emit('acceptMatchmakingChallenge');
+				this.acceptMatchmakingChallenge();
 			},
 			onMatchmakingChallengeCanceled() {
-				this.socket.emit('cancelMatchmakingChallenge');
+				this.cancelMatchmakingChallenge();
 			},
-			async startMatchmaking(game) {
-				//TODO: send the selected game once more games are supported
+			async onStartMatchmaking(game) {
 				this.matchmakingLoading = true;
-				await this.setMatchmakingStatus(true);
+				await this.startMatchmaking(game);
 				this.matchmakingLoading = false;
 			},
-			async stopMatchmaking() {
+			async onStopMatchmaking() {
 				this.matchmakingLoading = true;
-				await this.setMatchmakingStatus(false);
+				await this.stopMatchmaking();
 				this.matchmakingLoading = false;
 			}
 		}

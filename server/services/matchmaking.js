@@ -10,10 +10,11 @@ function getAvailableUsers() {
 	});
 }
 
-function join(userId, socketId) {
+function join(userId, socketId, game) {
 	cache.addMatchmakingEntry(userId, {
 		id: userId,
 		socketId,
+		game,
 		joined: new Date()
 	});
 }
@@ -25,6 +26,9 @@ function leave(userId) {
 function startService(matchFound, interval = 5000) {
 	intervalId = setInterval(() => {
 		const users = getAvailableUsers();
+
+		//TODO: match the users depending on their prefered game
+		//each users has a game property which can be pong or any
 
 		//match the available users
 		while (users.length > 1) {
@@ -38,6 +42,8 @@ function startService(matchFound, interval = 5000) {
 				leave(user.id);
 				users.shift();
 			});
+
+			//TODO: pass the selected game to the matchmaking challenge here ...
 
 			//add the cache entry for this match/challenge
 			cache.addMatchmakingChallenge(...matchedUsers);

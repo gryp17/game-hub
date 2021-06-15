@@ -45,7 +45,7 @@
 			 */
 			connectToSocket() {
 				//initialize the socket connection
-				this.socket = SocketIO(`${config.apiUrl}/pong`, {
+				this.socket = SocketIO(`${config.socketUrl}/pong`, {
 					transports: ['websocket'],
 					upgrade: false
 				});

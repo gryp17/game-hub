@@ -14,5 +14,6 @@ export default {
 	WRONG_PASSWORD: 'wrong_password',
 	// api error codes
 	INVALID_AUTHENTICATION_TOKEN: 'invalid_authentication_token',
-	INVALID_USER_ID: 'invalid_user_id'
+	INVALID_USER_ID: 'invalid_user_id',
+	CHALLENGE_NOT_FOUND: 'challenge_not_found'
 };

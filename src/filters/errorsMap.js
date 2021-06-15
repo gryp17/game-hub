@@ -14,7 +14,8 @@ export default (errorCode) => {
 		wrong_password: 'Wrong password',
 		// api errors
 		invalid_authentication_token: 'Invalid authentication token',
-		invalid_user_id: 'Invalid user id'
+		invalid_user_id: 'Invalid user id',
+		challenge_not_found: 'Challenge not found'
 	};
 
 	if (!errors[errorCode]) {

@@ -35,12 +35,13 @@ function getPendingChallenge(userId) {
 	return cache.pendingChallenge[key];
 }
 
-function addPendingChallenge(from, to) {
+function addPendingChallenge(from, to, game) {
 	const key = `[${from.id}]-[${to.id}]`;
 
 	cache.pendingChallenge[key] = {
 		from,
-		to
+		to,
+		game
 	};
 }
 

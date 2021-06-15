@@ -10,6 +10,7 @@ import { sendApiError } from './services/utils';
 import matchmaking from './services/matchmaking';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
+import lobbyRoutes from './routes/lobby';
 import matchmakingRoutes from './routes/matchmaking';
 import configRoutes from './routes/config';
 
@@ -53,11 +54,12 @@ app.use(session({
 	}
 }));
 
-//routes
-app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/matchmaking', matchmakingRoutes);
-app.use('/config', configRoutes);
+//api routes
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/lobby', lobbyRoutes);
+app.use('/api/matchmaking', matchmakingRoutes);
+app.use('/api/config', configRoutes);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));

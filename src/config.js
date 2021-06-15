@@ -1,3 +1,6 @@
+const serverUrl = 'http://localhost:4000';
+
 export default {
-	apiUrl: 'http://localhost:4000'
+	socketUrl: serverUrl,
+	apiUrl: `${serverUrl}/api`
 };
