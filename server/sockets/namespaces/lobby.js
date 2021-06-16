@@ -1,5 +1,5 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses, availableGames } from '../../config';
+import { userStatuses } from '../../config';
 import matchmaking from '../../services/matchmaking';
 import cache from '../../services/cache';
 
@@ -118,12 +118,12 @@ export default function (io, app) {
 		}
 	};
 
-	lobby.onMatchFound = (userA, userB) => {
+	lobby.onMatchFound = (userA, userB, game) => {
 		[userA, userB].forEach((user) => {
 			lobby.setUserStatus(user.id, userStatuses.BUSY);
 
 			lobby.to(user.socketId).emit('foundMatch', {
-				game: availableGames.PONG
+				game
 			});
 		});
 	};
@@ -135,7 +135,7 @@ export default function (io, app) {
 			cache.deleteMatchmakingChallenge(userId);
 
 			//send the event to each user and update their status
-			Object.values(challenge).forEach((user) => {
+			Object.values(challenge.players).forEach((user) => {
 				const userStatus = lobby.getUserById(user.id) ? userStatuses.ONLINE : userStatuses.OFFLINE;
 				lobby.setUserStatus(user.id, userStatus);
 				lobby.to(user.socketId).emit('cancelMatchmakingChallenge');

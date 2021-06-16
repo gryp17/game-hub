@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import cache from './cache';
+import { availableGames } from '../config';
 
 let intervalId = null;
 
@@ -23,33 +25,59 @@ function leave(userId) {
 	cache.deleteMatchmakingEntry(userId);
 }
 
+function pickGame(userGame, opponentGame) {
+	const games = Object.values(availableGames);
+
+	if (userGame !== 'any') {
+		return userGame;
+	}
+
+	if (opponentGame !== 'any') {
+		return opponentGame;
+	}
+
+	//pick a random game
+	return _.sample(games);
+}
+
 function startService(matchFound, interval = 5000) {
 	intervalId = setInterval(() => {
-		const users = getAvailableUsers();
-
-		//TODO: match the users depending on their prefered game
-		//each users has a game property which can be pong or any
+		let users = getAvailableUsers();
 
 		//match the available users
 		while (users.length > 1) {
-			const matchedUsers = [
-				users[0],
-				users[1]
-			];
+			const user = users[0];
+			let opponent;
+			let selectedGame;
 
-			//remove both users from the matchmaking and from the users list
-			matchedUsers.forEach((user) => {
-				leave(user.id);
-				users.shift();
+			users.shift();
+
+			//find the first compatible opponent and remove him from the users list
+			users = users.filter((entry) => {
+				if (!opponent && (user.game === 'any' || entry.game === 'any' || entry.game === user.game)) {
+					opponent = entry;
+					//pick a game that matches both of the users preferences
+					selectedGame = pickGame(user.game, entry.game);
+					return false;
+				}
+
+				return true;
 			});
 
-			//TODO: pass the selected game to the matchmaking challenge here ...
+			if (!opponent) {
+				continue;
+			}
+
+			//remove both users from the matchmaking
+			[user, opponent].forEach((player) => {
+				leave(player.id);
+			});
 
 			//add the cache entry for this match/challenge
-			cache.addMatchmakingChallenge(...matchedUsers);
+			cache.addMatchmakingChallenge(user, opponent, selectedGame);
 
 			//notify the socket server or whatever about this match
-			matchFound(...matchedUsers);
+			matchFound(user, opponent, selectedGame);
 		}
 	}, interval);
 }

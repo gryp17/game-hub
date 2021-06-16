@@ -67,15 +67,14 @@ router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 	}
 
 	//check if both players have accepted the matchmaking challenge
-	const ready = Object.values(challenge).every((user) => {
+	const ready = Object.values(challenge.players).every((user) => {
 		return user.accepted;
 	});
 
 	if (ready) {
 		cache.deleteMatchmakingChallenge(user.id);
 
-		//TODO: use the game from the challenge object here once it's implemented
-		const gameType = availableGames.PONG;
+		const gameType = challenge.game;
 
 		//create the game with both users
 		const gameInstance = await Game.create({
@@ -83,10 +82,10 @@ router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 			status: 'pending'
 		});
 
-		await gameInstance.setUsers(Object.keys(challenge));
+		await gameInstance.setUsers(Object.keys(challenge.players));
 
 		//send the go to game event to both players
-		lobby.goToGame(Object.values(challenge), gameType);
+		lobby.goToGame(Object.values(challenge.players), gameType);
 	}
 
 	sendResponse(res, true);
