@@ -30,18 +30,11 @@
 				</div>
 			</div>
 			<div class="content-wrapper">
-				<div class="chat-wrapper">
-					<div class="messages-list">
-						<div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div>
-						<div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div>
-						<div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div><div>message</div>
-						<div>message</div><div>message</div><div>message</div><div>message</div><div>message</div>
-						<div>message</div><div>message</div><div>message</div><div>message</div><div>message</div>
-					</div>
-					<div class="controls">
-						controls
-					</div>
+				<div class="chat">
+					<MessagesList />
+					<ChatControls />
 				</div>
+
 				<div class="users-list">
 					<UserItem
 						v-for="user in users"
@@ -79,6 +72,8 @@
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
+	import MessagesList from '@/components/chat/MessagesList';
+	import ChatControls from '@/components/chat/ChatControls';
 	import PlayButton from '@/components/PlayButton';
 	import UserMenu from '@/components/UserMenu';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
@@ -91,6 +86,8 @@
 		components: {
 			LoadingIndicator,
 			UserItem,
+			MessagesList,
+			ChatControls,
 			PlayButton,
 			ChallengeModal,
 			ChallengePendingModal,
@@ -123,6 +120,11 @@
 				this.getMatchmakingStatus()
 			]);
 
+			this.getMessages({
+				limit: 10,
+				offset: 0
+			});
+
 			this.connectToSocket();
 			this.loading = false;
 		},
@@ -140,6 +142,10 @@
 				'declineChallenge',
 				'acceptChallenge',
 				'setSelectedUser'
+			]),
+			...mapActions('chat', [
+				'getMessages',
+				'messageReceived'
 			]),
 			...mapActions('matchmaking', [
 				'getMatchmakingStatus',
@@ -229,7 +235,7 @@
 				});
 
 				this.socket.on('newMessage', (message) => {
-					console.log('GOT A NEW MESSAGE', message);
+					this.messageReceived(message);
 				});
 			},
 			/**
@@ -298,27 +304,11 @@
 			flex: 1;
 			height: calc(100% - #{$header-height});
 
-			.chat-wrapper {
+			.chat {
+				flex: 1;
 				display: flex;
 				flex-direction: column;
-				flex: 1;
 				background-color: $gray;
-
-				.messages-list {
-					display: flex;
-					flex-direction: column-reverse;
-					overflow-y: auto;
-
-					> div {
-						padding: 10px;
-					}
-				}
-
-				.controls {
-					padding: 20px 15px;
-					background-color: $gray-dark;
-					border-right: solid 1px $gray-darkest;
-				}
 			}
 
 			.users-list {
