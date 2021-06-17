@@ -122,9 +122,7 @@ export default function (io, app) {
 		[userA, userB].forEach((user) => {
 			lobby.setUserStatus(user.id, userStatuses.BUSY);
 
-			lobby.to(user.socketId).emit('foundMatch', {
-				game
-			});
+			lobby.to(user.socketId).emit('foundMatch', game);
 		});
 	};
 

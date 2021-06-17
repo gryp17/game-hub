@@ -12,7 +12,7 @@
 				<div class="column">
 					<PlayButton
 						:active="matchmakingEnabled"
-						:disabled="matchmakingLoading"
+						:disabled="matchmakingIsLoading"
 						@play="onStartMatchmaking"
 						@stop="onStopMatchmaking"
 					/>
@@ -102,16 +102,16 @@
 		data() {
 			return {
 				loading: true,
-				socket: null,
-				matchmakingLoading: false
+				socket: null
 			};
 		},
 		computed: {
 			...mapState('auth', [
 				'userSession'
 			]),
-			...mapState('lobby', [
-				'matchmakingEnabled'
+			...mapState('matchmaking', [
+				'matchmakingEnabled',
+				'matchmakingIsLoading'
 			]),
 			...mapGetters('lobby', [
 				'users'
@@ -139,13 +139,15 @@
 				'cancelChallenge',
 				'declineChallenge',
 				'acceptChallenge',
+				'setSelectedUser'
+			]),
+			...mapActions('matchmaking', [
 				'getMatchmakingStatus',
 				'startMatchmaking',
 				'stopMatchmaking',
 				'setMatchmakingEnabled',
 				'cancelMatchmakingChallenge',
-				'acceptMatchmakingChallenge',
-				'setSelectedUser'
+				'acceptMatchmakingChallenge'
 			]),
 			openUserProfile(user) {
 				this.setSelectedUser(user.id);
@@ -207,7 +209,7 @@
 					this.$modal.hide('challenge-pending-modal');
 				});
 
-				this.socket.on('foundMatch', ({ game }) => {
+				this.socket.on('foundMatch', (game) => {
 					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);
 
@@ -249,15 +251,11 @@
 			onMatchmakingChallengeCanceled() {
 				this.cancelMatchmakingChallenge();
 			},
-			async onStartMatchmaking(game) {
-				this.matchmakingLoading = true;
-				await this.startMatchmaking(game);
-				this.matchmakingLoading = false;
+			onStartMatchmaking(game) {
+				this.startMatchmaking(game);
 			},
-			async onStopMatchmaking() {
-				this.matchmakingLoading = true;
-				await this.stopMatchmaking();
-				this.matchmakingLoading = false;
+			onStopMatchmaking() {
+				this.stopMatchmaking();
 			}
 		}
 	};
