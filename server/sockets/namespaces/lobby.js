@@ -141,5 +141,13 @@ export default function (io, app) {
 		}
 	};
 
+	/**
+	 * Sends a new message to all users in the lobby
+	 * @param {Object} message
+	 */
+	lobby.sendMessage = async (message) => {
+		lobby.emit('newMessage', message);
+	};
+
 	return lobby;
 }

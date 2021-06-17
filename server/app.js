@@ -13,6 +13,7 @@ import userRoutes from './routes/user';
 import lobbyRoutes from './routes/lobby';
 import matchmakingRoutes from './routes/matchmaking';
 import configRoutes from './routes/config';
+import messageRoutes from './routes/message';
 
 const app = module.exports = express();
 
@@ -60,6 +61,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/lobby', lobbyRoutes);
 app.use('/api/matchmaking', matchmakingRoutes);
 app.use('/api/config', configRoutes);
+app.use('/api/message', messageRoutes);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));

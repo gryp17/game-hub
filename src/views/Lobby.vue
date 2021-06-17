@@ -227,6 +227,10 @@
 						name: game
 					});
 				});
+
+				this.socket.on('newMessage', (message) => {
+					console.log('GOT A NEW MESSAGE', message);
+				});
 			},
 			/**
 			 * Disconnects from the socket.io server

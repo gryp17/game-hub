@@ -16,6 +16,7 @@ const db = new Sequelize(config.db.database, config.db.user, config.db.password,
 const User = require('./user').default(db);
 const Game = require('./game').default(db);
 const GameUser = require('./game-user').default(db);
+const Message = require('./message').default(db);
 
 //setup relations
 User.belongsToMany(Game, {
@@ -25,6 +26,8 @@ User.belongsToMany(Game, {
 Game.belongsToMany(User, {
 	through: GameUser
 });
+
+Message.belongsTo(User);
 
 /**
  * Syncs the models and the mysql tables
@@ -80,6 +83,7 @@ export {
 	User,
 	Game,
 	GameUser,
+	Message,
 	sync,
 	syncAndSeed
 };
