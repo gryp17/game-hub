@@ -1,13 +1,11 @@
 import Vue from 'vue';
 import UserHttpService from '@/services/user';
 import LobbyHttpService from '@/services/lobby';
-import MatchmakingHttpService from '@/services/matchmaking';
 
 const getDefaultState = () => {
 	return {
 		users: {},
-		selectedUser: null,
-		matchmakingEnabled: false
+		selectedUser: null
 	};
 };
 
@@ -75,9 +73,6 @@ const mutations = {
 	},
 	SET_SELECTED_USER(state, userId) {
 		state.selectedUser = userId;
-	},
-	SET_MATCHMAKING_ENABLED(state, status) {
-		state.matchmakingEnabled = status;
 	}
 };
 
@@ -198,70 +193,6 @@ const actions = {
 		} catch (err) {
 			Vue.toasted.global.apiError({
 				message: `Failed to accept the challenge: ${err}`
-			});
-		}
-	},
-	async getMatchmakingStatus(context) {
-		try {
-			const { data } = await MatchmakingHttpService.getStatus();
-			context.commit('SET_MATCHMAKING_ENABLED', data);
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to get the matchmaking status: ${err}`
-			});
-		}
-	},
-	setMatchmakingEnabled(context, status) {
-		context.commit('SET_MATCHMAKING_ENABLED', status);
-	},
-	async startMatchmaking(context, game) {
-		try {
-			const { data } = await MatchmakingHttpService.join(game);
-
-			//throw the errors and show them using a toast instead of handling them in a form or something
-			if (data && data.errors) {
-				const errors = Object.values(data.errors).join(', ');
-				throw new Error(errors);
-			}
-
-			context.commit('SET_MATCHMAKING_ENABLED', true);
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to join the matchmaking: ${err}`
-			});
-		}
-	},
-	async stopMatchmaking(context) {
-		try {
-			await MatchmakingHttpService.leave();
-			context.commit('SET_MATCHMAKING_ENABLED', false);
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to leave the matchmaking: ${err}`
-			});
-		}
-	},
-	async cancelMatchmakingChallenge(context) {
-		try {
-			await MatchmakingHttpService.cancelChallenge();
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to cancel the matchmaking challenge: ${err}`
-			});
-		}
-	},
-	async acceptMatchmakingChallenge(context) {
-		try {
-			const { data } = await MatchmakingHttpService.acceptChallenge();
-
-			//throw the errors and show them using a toast instead of handling them in a form or something
-			if (data && data.errors) {
-				const errors = Object.values(data.errors).join(', ');
-				throw new Error(errors);
-			}
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to accept the matchmaking challenge: ${err}`
 			});
 		}
 	}
