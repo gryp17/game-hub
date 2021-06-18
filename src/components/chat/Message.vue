@@ -5,6 +5,9 @@
 </template>
 
 <script>
+
+	// TODO: test the linkified text
+
 	export default {
 		props: {
 			message: {

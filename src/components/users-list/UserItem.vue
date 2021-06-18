@@ -3,12 +3,11 @@
 		class="user-item"
 		@click="$emit('click', user)"
 	>
-		<div :class="['avatar-wrapper', avatarClass]">
-			<img
-				:src="user.avatarLink"
-				:title="status"
-			/>
-		</div>
+		<UserAvatar
+			:avatar="user.avatarLink"
+			:title="formattedStatus"
+			:status="avatarStatus"
+		/>
 		<div class="user-info">
 			<div
 				class="username"
@@ -19,9 +18,9 @@
 			<div
 				v-if="showStatus"
 				class="status"
-				:title="status"
+				:title="formattedStatus"
 			>
-				{{ status }}
+				{{ formattedStatus }}
 			</div>
 		</div>
 	</div>
@@ -29,8 +28,12 @@
 
 <script>
 	import { mapState } from 'vuex';
+	import UserAvatar from '@/components/UserAvatar';
 
 	export default {
+		components: {
+			UserAvatar
+		},
 		props: {
 			user: {
 				type: Object,
@@ -41,11 +44,6 @@
 			...mapState('config', [
 				'userStatuses'
 			]),
-			gameStatuses() {
-				return [
-					this.userStatuses.PONG
-				];
-			},
 			onlineStateStatuses() {
 				return [
 					this.userStatuses.ONLINE,
@@ -53,23 +51,13 @@
 				];
 			},
 			rawStatus() {
-				return this.user.status;
+				return this.user.status.raw;
 			},
-			status() {
-				let status = this.rawStatus.charAt(0).toUpperCase() + this.rawStatus.slice(1);
-
-				if (this.gameStatuses.includes(this.rawStatus)) {
-					status = `Playing ${status}`;
-				}
-
-				return status;
+			formattedStatus() {
+				return this.user.status.formatted;
 			},
-			avatarClass() {
-				if (this.gameStatuses.includes(this.rawStatus)) {
-					return 'busy';
-				}
-
-				return this.rawStatus;
+			avatarStatus() {
+				return this.user.status.avatar;
 			},
 			showStatus() {
 				return !this.onlineStateStatuses.includes(this.rawStatus);
@@ -83,48 +71,6 @@
 		display: flex;
 		padding: 10px;
 		cursor: pointer;
-
-		.avatar-wrapper {
-			position: relative;
-
-			img {
-				width: 40px;
-				height: 40px;
-				border-radius: 100%;
-				vertical-align: middle;
-			}
-
-			&:after {
-				position: absolute;
-				bottom: -2px;
-				right: -2px;
-				content: '';
-				width: 15px;
-				height: 15px;
-				background-color: $gray-light;
-				border: solid 2px $gray;
-				border-radius: 100%;
-				pointer-events: none;
-			}
-
-			&.online {
-				&:after {
-					background-color: $green;
-				}
-			}
-
-			&.offline {
-				&:after {
-					background-color: $gray-light;
-				}
-			}
-
-			&.busy, &.matchmaking {
-				&:after {
-					background-color: $red;
-				}
-			}
-		}
 
 		.user-info {
 			display: flex;

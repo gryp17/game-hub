@@ -21,12 +21,12 @@ const getters = {
 			return user;
 		}).sort((a, b) => {
 			//first sort by status
-			if (a.status !== b.status) {
-				if (a.status === 'offline') {
+			if (a.status.raw !== b.status.raw) {
+				if (a.status.raw === 'offline') {
 					return 1;
 				}
 
-				if (b.status === 'offline') {
+				if (b.status.raw === 'offline') {
 					return -1;
 				}
 			}
@@ -61,7 +61,7 @@ const mutations = {
 	},
 	UPDATE_USER_STATUSES(state, statuses) {
 		Object.keys(state.users).forEach((userId) => {
-			const status = statuses[userId] || 'offline';
+			const status = statuses[userId] || {};
 
 			const updatedUser = {
 				...state.users[userId],
@@ -104,7 +104,33 @@ const actions = {
 	 * @param {Object} statuses
 	 */
 	updateUserStatuses(context, statuses) {
-		context.commit('UPDATE_USER_STATUSES', statuses);
+		const userStatusesMap = {};
+
+		const userStatuses = context.rootState.config.userStatuses;
+
+		//TODO: update this list when more games are added
+		const gameStatuses = [
+			userStatuses.PONG
+		];
+
+		//for each user generate 3 types of status (raw, formatted and avatar)
+		Object.keys(context.state.users).forEach((userId) => {
+			const rawStatus = statuses[userId] || 'offline';
+			const avatarStatus = gameStatuses.includes(rawStatus) ? 'busy' : rawStatus;
+			let formattedStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1);
+
+			if (gameStatuses.includes(rawStatus)) {
+				formattedStatus = `Playing ${formattedStatus}`;
+			}
+
+			userStatusesMap[userId] = {
+				raw: rawStatus,
+				formatted: formattedStatus,
+				avatar: avatarStatus
+			};
+		});
+
+		context.commit('UPDATE_USER_STATUSES', userStatusesMap);
 	},
 	/**
 	 * Handles the new user event
