@@ -41,12 +41,17 @@ router.post('/', isLoggedIn, validate(rules.addMessage), async (req, res) => {
  * Returns all messages
  */
 router.get('/', isLoggedIn, validate(rules.getMessages), async (req, res) => {
-	const { limit, offset } = req.query;
+	const maxMessagesPerRequest = 20;
+
+	let limit = parseInt(req.query.limit);
+	const offset = parseInt(req.query.offset);
+
+	limit = limit > maxMessagesPerRequest ? maxMessagesPerRequest : limit;
 
 	try {
 		const messages = await Message.findAll({
-			limit: parseInt(limit),
-			offset: parseInt(offset),
+			limit,
+			offset,
 			order: [
 				['createdAt', 'desc']
 			]
