@@ -1,5 +1,8 @@
 <template>
-	<div :class="['user-avatar', avatarClass, statusType]">
+	<div
+		:class="['user-avatar', avatarClass, statusType]"
+		@click="$emit('click')"
+	>
 		<img
 			class="avatar-image"
 			:src="avatar"

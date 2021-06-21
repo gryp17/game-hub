@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Toasted from 'vue-toasted';
 import VModal from 'vue-js-modal';
+import Linkify from 'vue-linkify';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 
@@ -34,6 +35,7 @@ Vue.toasted.register('apiError', (payload) => {
 });
 
 Vue.use(VModal);
+Vue.directive('linkified', Linkify);
 
 Vue.config.productionTip = false;
 

@@ -5,6 +5,7 @@
 			:key="message.id"
 			:message="message"
 			:own="message.userId === userSession.id"
+			@open-profile="onOpenUserProfile"
 		/>
 	</div>
 </template>
@@ -93,6 +94,9 @@
 
 					this.getMessages(params);
 				}, 500);
+			},
+			onOpenUserProfile(userId) {
+				this.$modal.show('user-profile-modal', userId);
 			}
 		}
 	};

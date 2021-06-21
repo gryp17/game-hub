@@ -6,6 +6,7 @@
 			:maxWidth="560"
 			:height="'auto'"
 			name="user-profile-modal"
+			@before-open="onBeforeOpen"
 		>
 			<template v-if="userProfile">
 				<div class="header">
@@ -82,23 +83,35 @@
 			UserAvatar,
 			ChallengeButton
 		},
+		data() {
+			return {
+				userId: null
+			};
+		},
 		computed: {
 			...mapState('config', [
 				'userStatuses'
 			]),
-			...mapGetters('lobby', [
-				'userProfile'
+			...mapState('lobby', [
+				'users'
 			]),
 			...mapGetters('auth', [
 				'userSession'
 			]),
+			userProfile() {
+				if (!this.userId) {
+					return null;
+				}
+
+				return this.users[this.userId];
+			},
 			isOwnUser() {
 				return this.userProfile.id === this.userSession.id;
 			},
 			canChallengePLayer() {
 				return (
-					this.userSession.status === this.userStatuses.ONLINE
-					&& this.userProfile.status === this.userStatuses.ONLINE
+					this.userSession.status.raw === this.userStatuses.ONLINE
+					&& this.userProfile.status.raw === this.userStatuses.ONLINE
 					&& !this.isOwnUser
 				);
 			},
@@ -107,6 +120,9 @@
 			}
 		},
 		methods: {
+			onBeforeOpen(e) {
+				this.userId = e.params;
+			},
 			/**
 			 * Closes the modal
 			 */

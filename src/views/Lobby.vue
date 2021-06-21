@@ -140,8 +140,7 @@
 				'challengePlayer',
 				'cancelChallenge',
 				'declineChallenge',
-				'acceptChallenge',
-				'setSelectedUser'
+				'acceptChallenge'
 			]),
 			...mapActions('chat', [
 				'getMessages',
@@ -156,8 +155,7 @@
 				'acceptMatchmakingChallenge'
 			]),
 			openUserProfile(user) {
-				this.setSelectedUser(user.id);
-				this.$modal.show('user-profile-modal');
+				this.$modal.show('user-profile-modal', user.id);
 			},
 			async onChallengePlayer({ user, game }) {
 				const success = await this.challengePlayer({
