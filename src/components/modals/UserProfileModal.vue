@@ -29,9 +29,12 @@
 							name="Profile"
 							class="user-profile"
 						>
-							<img
-								class="avatar"
-								:src="userProfile.avatarLink"
+							<UserAvatar
+								status-type="border"
+								:avatar="userProfile.avatarLink"
+								:title="userProfile.status.formatted"
+								:status="userProfile.status.avatar"
+								:size="160"
 							/>
 
 							<div class="username">
@@ -69,12 +72,14 @@
 <script>
 	import { mapState, mapGetters } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
+	import UserAvatar from '@/components/UserAvatar';
 	import ChallengeButton from '@/components/ChallengeButton';
 
 	export default {
 		components: {
 			Tabs,
 			Tab,
+			UserAvatar,
 			ChallengeButton
 		},
 		computed: {
@@ -169,29 +174,24 @@
 			}
 
 			.user-profile {
-				.avatar {
-					display: block;
+				text-align: center;
+
+				.user-avatar {
 					margin: 10px auto;
-					width: 160px;
-					height: 160px;
-					border-radius: 100%;
 				}
 
 				.username {
 					margin-bottom: 20px;
-					text-align: center;
 					font-size: 20px;
 					font-weight: bold;
 				}
 
 				.bio {
 					margin-bottom: 20px;
-					text-align: center;
 				}
 
 				.buttons-wrapper {
 					margin-top: 10px;
-					text-align: center;
 				}
 			}
 		}
