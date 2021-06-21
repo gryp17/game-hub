@@ -30,6 +30,9 @@ const mutations = {
 	RESET_STATE(state) {
 		Object.assign(state, getDefaultState());
 	},
+	SET_MESSAGES(state, messages) {
+		state.messages = messages;
+	},
 	ADD_MESSAGES(state, messages) {
 		state.messages = state.messages.concat(messages);
 	},
@@ -60,9 +63,11 @@ const actions = {
 	 * @returns {Promise}
 	 */
 	async getMessages(context, { limit, offset }) {
+		const mutation = offset === 0 ? 'SET_MESSAGES' : 'ADD_MESSAGES';
+
 		try {
 			const { data } = await MessageHttpService.getMessages(limit, offset);
-			context.commit('ADD_MESSAGES', data);
+			context.commit(mutation, data);
 			return data;
 		} catch (err) {
 			Vue.toasted.global.apiError({
