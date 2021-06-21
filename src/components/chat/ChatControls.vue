@@ -6,6 +6,7 @@
 			placeholder="Write a message..."
 			class="message-input"
 			ref="messageInput"
+			dark
 		/>
 
 		<div class="controls-wrapper">
@@ -78,6 +79,7 @@
 <style lang="scss">
 	.chat-controls {
 		display: flex;
+		padding: 5px 10px;
 		background-color: $gray-dark;
 		border-right: solid 1px $gray-darkest;
 
@@ -92,6 +94,13 @@
 		}
 
 		.controls-wrapper {
+
+			.form-button.transparent {
+				&:hover {
+					background-color: $gray;
+				}
+			}
+
 			.send-btn {
 				float: right;
 			}
