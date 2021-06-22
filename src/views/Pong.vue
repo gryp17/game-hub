@@ -95,7 +95,7 @@
 
 		#game-canvas {
 			display: none;
-			width: 100%;
+			width: 90%;
 			border: solid 1px $purple;
 		}
 	}
