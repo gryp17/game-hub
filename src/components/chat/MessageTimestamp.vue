@@ -28,7 +28,11 @@
 				const date = moment(this.date);
 
 				if (date.isSame(moment(), 'day')) {
-					return date.format('HH:mm:ss');
+					return date.format('[Today at] HH:mm:ss');
+				}
+
+				if (date.isSame(moment().subtract(1, 'day'), 'day')) {
+					return date.format('[Yesterday at] HH:mm:ss');
 				}
 
 				return this.fullDate;
