@@ -16,7 +16,7 @@
 	import LoadingIndicator from '@/components/LoadingIndicator';
 
 	import config from '@/config';
-	import Pong from '@/game-clients/pong';
+	import Pong from '../../games/pong/entry-points/client';
 
 	export default {
 		components: {

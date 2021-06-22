@@ -1,6 +1,6 @@
-import Paddle from '../../games/pong/paddle';
-import Ball from '../../games/pong/ball';
-import CollisionsManager from '../../games/pong/collisions-manager';
+import Paddle from '../paddle';
+import Ball from '../ball';
+import CollisionsManager from '../collisions-manager';
 
 export default class Pong {
 	constructor(id, fps, canvas, players, { onUpdate }) {

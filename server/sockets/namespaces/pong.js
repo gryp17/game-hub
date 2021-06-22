@@ -2,7 +2,7 @@ import { socketIsLoggedIn } from '../../middleware/authentication';
 import { userStatuses } from '../../config';
 import { User, Game } from '../../models';
 import { lobby } from '..';
-import Pong from '../../game-servers/pong';
+import Pong from '../../../games/pong/entry-points/server';
 
 export default function (io, app) {
 	const pong = io.of('/pong');

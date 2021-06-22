@@ -1,8 +1,8 @@
-import Context from '@pong/context';
-import Keyboard from '@pong/keyboard';
-import Paddle from '@pong/paddle';
-import Ball from '@pong/ball';
-import CollisionsManager from '@pong/collisions-manager';
+import Context from '../context';
+import Keyboard from '../keyboard';
+import Paddle from '../paddle';
+import Ball from '../ball';
+import CollisionsManager from '../collisions-manager';
 
 /**
  * requestAnim shim layer by Paul Irish
