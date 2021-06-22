@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import UserHttpService from '@/services/user';
+import UserHttpService from '@/services/api/user';
 
 const getDefaultState = () => {
 	return {

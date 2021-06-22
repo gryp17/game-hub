@@ -69,6 +69,15 @@
 <script>
 	import SocketIO from 'socket.io-client';
 	import { mapState, mapGetters, mapActions } from 'vuex';
+	import {
+		showProfileModal,
+		showChallengeModal,
+		showChallengePendingModal,
+		showMatchmakingPendingModal,
+		hideChallengeModal,
+		hideChallengePendingModal,
+		hideMatchmakingPendingModal
+	} from '@/services/modal';
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserItem from '@/components/users-list/UserItem';
@@ -155,7 +164,7 @@
 				'acceptMatchmakingChallenge'
 			]),
 			openUserProfile(user) {
-				this.$modal.show('user-profile-modal', user.id);
+				showProfileModal(user.id);
 			},
 			async onChallengePlayer({ user, game }) {
 				const success = await this.challengePlayer({
@@ -164,7 +173,7 @@
 				});
 
 				if (success) {
-					this.$modal.show('challenge-pending-modal', {
+					showChallengePendingModal({
 						game,
 						user
 					});
@@ -199,31 +208,31 @@
 				});
 
 				this.socket.on('challenge', ({ user, game }) => {
-					this.$modal.show('challenge-modal', {
+					showChallengeModal({
 						game,
 						user
 					});
 				});
 
 				this.socket.on('cancelChallenge', () => {
-					this.$modal.hide('challenge-modal');
+					hideChallengeModal();
 				});
 
 				this.socket.on('declineChallenge', () => {
-					this.$modal.hide('challenge-pending-modal');
+					hideChallengePendingModal();
 				});
 
 				this.socket.on('foundMatch', (game) => {
 					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);
 
-					this.$modal.show('matchmaking-pending-modal', {
+					showMatchmakingPendingModal({
 						game
 					});
 				});
 
 				this.socket.on('cancelMatchmakingChallenge', () => {
-					this.$modal.hide('matchmaking-pending-modal');
+					hideMatchmakingPendingModal();
 				});
 
 				this.socket.on('goToGame', (game) => {

@@ -12,6 +12,7 @@
 
 <script>
 	import { mapGetters, mapActions } from 'vuex';
+	import { showProfileModal } from '@/services/modal';
 	import Message from '@/components/chat/Message';
 
 	export default {
@@ -96,7 +97,7 @@
 				}, 500);
 			},
 			onOpenUserProfile(userId) {
-				this.$modal.show('user-profile-modal', userId);
+				showProfileModal(userId);
 			}
 		}
 	};

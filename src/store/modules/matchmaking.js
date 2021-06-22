@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import MatchmakingHttpService from '@/services/matchmaking';
+import MatchmakingHttpService from '@/services/api/matchmaking';
 
 const getDefaultState = () => {
 	return {

@@ -82,6 +82,7 @@
 
 <script>
 	import { mapState, mapGetters, mapActions } from 'vuex';
+	import { hideEditProfileModal } from '@/services/modal';
 	import UploadImagePreview from '@/components/UploadImagePreview';
 
 	const formName = 'editProfile';
@@ -121,7 +122,7 @@
 			 * Closes the modal
 			 */
 			closeModal() {
-				this.$modal.hide('edit-profile-modal');
+				hideEditProfileModal();
 			},
 			/**
 			 * Resets the form before opening the modal

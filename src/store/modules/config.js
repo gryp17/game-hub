@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import ConfigHttpService from '@/services/config';
+import ConfigHttpService from '@/services/api/config';
 
 const getDefaultState = () => {
 	return {

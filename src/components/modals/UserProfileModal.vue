@@ -73,6 +73,7 @@
 <script>
 	import { mapState, mapGetters } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
+	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
 	import UserAvatar from '@/components/UserAvatar';
 	import ChallengeButton from '@/components/ChallengeButton';
 
@@ -127,7 +128,7 @@
 			 * Closes the modal
 			 */
 			closeModal() {
-				this.$modal.hide('user-profile-modal');
+				hideProfileModal();
 			},
 			challengePlayer(game) {
 				this.closeModal();
@@ -141,7 +142,7 @@
 			editProfile() {
 				this.closeModal();
 				setTimeout(() => {
-					this.$modal.show('edit-profile-modal');
+					showEditProfileModal();
 				}, 200);
 			}
 		}

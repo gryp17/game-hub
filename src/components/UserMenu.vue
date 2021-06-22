@@ -30,6 +30,7 @@
 
 <script>
 	import { mapActions } from 'vuex';
+	import { showEditProfileModal } from '@/services/modal';
 	import DropdownMenu from '@/components/DropdownMenu';
 
 	export default {
@@ -53,7 +54,7 @@
 			 * Opens the edit profile modal
 			 */
 			onEditProfile() {
-				this.$modal.show('edit-profile-modal');
+				showEditProfileModal();
 			}
 		}
 	};

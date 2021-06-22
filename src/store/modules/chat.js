@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import moment from 'moment';
-import MessageHttpService from '@/services/message';
+import MessageHttpService from '@/services/api/message';
 
 const getDefaultState = () => {
 	return {

@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import UserHttpService from '@/services/user';
-import LobbyHttpService from '@/services/lobby';
+import UserHttpService from '@/services/api/user';
+import LobbyHttpService from '@/services/api/lobby';
 
 const getDefaultState = () => {
 	return {

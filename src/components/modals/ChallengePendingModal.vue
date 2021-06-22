@@ -36,6 +36,7 @@
 </template>
 
 <script>
+	import { hideChallengePendingModal } from '@/services/modal';
 	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
 
 	export default {
@@ -71,7 +72,7 @@
 			 * Closes the modal
 			 */
 			closeModal() {
-				this.$modal.hide('challenge-pending-modal');
+				hideChallengePendingModal();
 			},
 			cancel() {
 				this.$emit('cancel', this.user);

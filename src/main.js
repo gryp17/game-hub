@@ -5,6 +5,8 @@ import Linkify from 'vue-linkify';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 
+import { initModals } from '@/services/modal';
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -39,8 +41,10 @@ Vue.directive('linkified', Linkify);
 
 Vue.config.productionTip = false;
 
-new Vue({
+const app = new Vue({
 	router,
 	store,
 	render: (h) => h(App)
 }).$mount('#app');
+
+initModals(app);

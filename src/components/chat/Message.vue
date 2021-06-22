@@ -5,12 +5,16 @@
 				:avatar="message.user.avatarLink"
 				:title="message.user.status.formatted"
 				:status="message.user.status.avatar"
-				@click="$emit('open-profile', message.userId)"
+				@click="onOpenProfile"
 			/>
 		</div>
 		<div class="message-wrapper">
 			<div class="message-header">
-				<div :title="username" class="author">
+				<div
+					:title="username"
+					class="author"
+					@click="onOpenProfile"
+				>
 					{{ username }}
 				</div>
 
@@ -61,6 +65,11 @@
 		computed: {
 			username() {
 				return this.message.user.username;
+			}
+		},
+		methods: {
+			onOpenProfile() {
+				this.$emit('open-profile', this.message.userId);
 			}
 		}
 	};
