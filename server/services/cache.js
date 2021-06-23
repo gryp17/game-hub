@@ -4,7 +4,8 @@ const cache = {
 	userStatus: {},
 	pendingChallenge: {},
 	matchmaking: {},
-	matchmakingChallenge: {}
+	matchmakingChallenge: {},
+	game: {}
 };
 
 function getUserStatuses() {
@@ -119,6 +120,29 @@ function deleteMatchmakingChallenge(userId) {
 	delete cache.matchmakingChallenge[key];
 }
 
+function addRunningGame(gameId, game) {
+	const key = gameId;
+	cache.game[key] = game;
+}
+
+function findRunningGameById(gameId) {
+	const key = gameId;
+	return cache.game[key];
+}
+
+function findRunningGameByUserId(userId) {
+	return Object.values(cache.game).find((game) => {
+		return game.players.some((player) => {
+			return player.id === userId;
+		});
+	});
+}
+
+function deleteRunningGame(gameId) {
+	const key = gameId;
+	delete cache.game[key];
+}
+
 export default {
 	getUserStatuses,
 	setUserStatus,
@@ -132,5 +156,9 @@ export default {
 	addMatchmakingChallenge,
 	getMatchmakingChallenge,
 	updateMatchmakingChallenge,
-	deleteMatchmakingChallenge
+	deleteMatchmakingChallenge,
+	addRunningGame,
+	findRunningGameById,
+	findRunningGameByUserId,
+	deleteRunningGame
 };

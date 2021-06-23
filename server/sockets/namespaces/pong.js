@@ -1,13 +1,12 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses } from '../../config';
+import { userStatuses, gameStatuses, availableGames } from '../../config';
 import { User, Game } from '../../models';
 import { lobby } from '..';
+import cache from '../../services/cache';
 import Pong from '../../../games/pong/entry-points/server';
 
 export default function (io, app) {
 	const pong = io.of('/pong');
-
-	const games = {};
 
 	const fps = 60; // TODO: need to get the FPS and the width and height from a config or something
 	const canvas = {
@@ -39,10 +38,13 @@ export default function (io, app) {
 		//once both players have joined the room - mark it as in progress
 		if (playersCount === maxPlayers) {
 			gameInstance.update({
-				status: 'in-progress'
+				status: gameStatuses.IN_PROGRESS
 			});
 
-			const players = [...roomClients];
+			const players = [...roomClients].map((socketId) => {
+				return pong.getUserBySocketId(socketId);
+			});
+
 			const gameId = gameInstance.id;
 
 			const game = new Pong(gameId, fps, canvas, players, {
@@ -53,11 +55,11 @@ export default function (io, app) {
 
 			game.start();
 
-			games[gameId] = game;
+			cache.addRunningGame(gameId, game);
 
 			//start the game sending a separate event to each player
-			players.forEach((socketId, index) => {
-				pong.to(socketId).emit('startGame', {
+			players.forEach((player, index) => {
+				pong.to(player.socketId).emit('startGame', {
 					fps,
 					canvas,
 					player: index + 1
@@ -67,7 +69,7 @@ export default function (io, app) {
 
 		socket.on('updateInputs', (inputs) => {
 			//find the game that this player belongs to and update it's inputs
-			const game = pong.getGameByPlayer(socket.id);
+			const game = cache.findRunningGameByUserId(socket.user.id);
 			game.updateInputs({ socketId: socket.id, inputs });
 		});
 
@@ -78,7 +80,7 @@ export default function (io, app) {
 
 			if (gameInstance) {
 				gameInstance.update({
-					status: 'finished'
+					status: gameStatuses.FINISHED
 				});
 
 				pong.stopGame(gameInstance.id);
@@ -86,14 +88,43 @@ export default function (io, app) {
 		});
 	});
 
+	/**
+	 * Helper function that returns an array of all connected users
+	 * @returns {Array}
+	 */
+	pong.getConnectedUsers = () => {
+		const users = [];
+
+		pong.sockets.forEach((data) => {
+			users.push({
+				...data.user,
+				socketId: data.id
+			});
+		});
+
+		return users;
+	};
+
+	/**
+	 * Returns the user object that matches the provided socketId
+	 * @param {Number} userId
+	 * @returns {Object}
+	 */
+	pong.getUserBySocketId = (socketId) => {
+		const connectedUsers = pong.getConnectedUsers();
+		return connectedUsers.find((user) => {
+			return user.socketId === socketId;
+		});
+	};
+
 	pong.getPendingGame = async (userId) => {
 		const userInstance = await User.findByPk(userId, {
 			include: {
 				model: Game,
 				required: false,
 				where: {
-					type: 'pong',
-					status: 'pending'
+					type: availableGames.PONG,
+					status: gameStatuses.PENDING
 				}
 			}
 		});
@@ -107,20 +138,12 @@ export default function (io, app) {
 		return pendingGames.pop();
 	};
 
-	pong.getGameByPlayer = (socketId) => {
-		const game = Object.values(games).find((game) => {
-			return game.playerBelongsToGame(socketId);
-		});
-
-		return game;
-	};
-
 	pong.stopGame = (gameId) => {
-		const game = games[gameId];
+		const game = cache.findRunningGameById(gameId);
 
 		if (game) {
 			game.stop();
-			delete games[gameId];
+			cache.deleteRunningGame(gameId);
 		}
 
 		pong.to(gameId).emit('exitGame');

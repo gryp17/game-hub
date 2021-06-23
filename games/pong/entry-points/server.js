@@ -14,8 +14,8 @@ export default class Pong {
 
 		this.inputs = {};
 
-		players.forEach((socketId) => {
-			this.inputs[socketId] = {
+		players.forEach((player) => {
+			this.inputs[player.socketId] = {
 				UP: false,
 				DOWN: false
 			};
@@ -34,18 +34,14 @@ export default class Pong {
 		this.collisionsManager = new CollisionsManager(this);
 	}
 
-	playerBelongsToGame(socketId) {
-		return this.players.includes(socketId);
-	}
-
 	updateInputs({ socketId, inputs }) {
 		this.inputs[socketId] = inputs;
 	}
 
 	start() {
 		this.paddles = [
-			new Paddle(this, 1, true, this.players[0]),
-			new Paddle(this, 2, true, this.players[1])
+			new Paddle(this, 1, true, this.players[0].socketId),
+			new Paddle(this, 2, true, this.players[1].socketId)
 		];
 
 		this.ball = new Ball(this, 200, 200, 10, 10);
