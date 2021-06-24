@@ -30,7 +30,7 @@
 			};
 		},
 		async mounted() {
-			this.game = new Pong({
+			this.game = new Pong('game-canvas', {
 				onUpdateInputs: this.updateInputs
 			});
 			this.connectToSocket();

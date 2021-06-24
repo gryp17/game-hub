@@ -21,7 +21,7 @@ window.requestAnimFrame = (function anim() {
 }());
 
 export default class Pong {
-	constructor({ onUpdateInputs }) {
+	constructor(canvasId, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.gameLoopInterval;
 		this.inputs;
@@ -46,7 +46,7 @@ export default class Pong {
 
 		//canvas/context objects
 		this.contexts = {
-			game: new Context('game-canvas')
+			game: new Context(canvasId)
 		};
 
 		this.collisionsManager = new CollisionsManager(this);
