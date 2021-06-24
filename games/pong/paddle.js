@@ -15,10 +15,16 @@ export default class Paddle {
 		this.dx = 0;
 		this.dy = 0;
 		this.maxSpeed = 8;
+		this.color = '#ffffff';
 
 		//the second player's paddle should be on the right side of the screen
 		if (player === 2) {
 			this.x = this.canvas.width - this.width;
+		}
+
+		//use a different color for the playlable/controllable paddle
+		if (this.controllable) {
+			this.color = '#b47afd';
 		}
 	}
 
@@ -33,6 +39,7 @@ export default class Paddle {
 	}
 
 	draw() {
+		this.context.fillStyle = this.color;
 		this.context.fillRect(this.x, this.y, this.width, this.height);
 	}
 
