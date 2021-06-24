@@ -43,7 +43,7 @@ const actions = {
 		try {
 			const { data } = await ConfigHttpService.getConfig();
 			context.commit('SET_USER_STATUSES', data.userStatuses);
-			context.commit('SET_AVAILABLE_GAMES', Object.values(data.availableGames));
+			context.commit('SET_AVAILABLE_GAMES', data.availableGames);
 			return data;
 		} catch (err) {
 			Vue.toasted.global.apiError({

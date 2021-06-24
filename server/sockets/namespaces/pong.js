@@ -1,5 +1,5 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses, gameStatuses, availableGames } from '../../config';
+import { userStatuses, gameStatuses, games } from '../../config';
 import { User, Game } from '../../models';
 import { lobby } from '..';
 import cache from '../../services/cache';
@@ -8,10 +8,10 @@ import Pong from '../../../games/pong/entry-points/server';
 export default function (io, app) {
 	const pong = io.of('/pong');
 
-	const fps = 60; // TODO: need to get the FPS and the width and height from a config or something
+	const fps = games.PONG.fps;
 	const canvas = {
-		width: 1000,
-		height: 620
+		width: games.PONG.width,
+		height: games.PONG.height
 	};
 	const maxPlayers = 2;
 
@@ -55,7 +55,7 @@ export default function (io, app) {
 
 			game.start();
 
-			cache.addRunningGame(gameId, game);
+			cache.addGameState(gameId, game);
 
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
@@ -69,7 +69,7 @@ export default function (io, app) {
 
 		socket.on('updateInputs', (inputs) => {
 			//find the game that this player belongs to and update it's inputs
-			const game = cache.findRunningGameByUserId(socket.user.id);
+			const game = cache.findGameStateByUserId(socket.user.id);
 			game.updateInputs({ socketId: socket.id, inputs });
 		});
 
@@ -123,7 +123,7 @@ export default function (io, app) {
 				model: Game,
 				required: false,
 				where: {
-					type: availableGames.PONG,
+					type: games.PONG.code,
 					status: gameStatuses.PENDING
 				}
 			}
@@ -139,11 +139,11 @@ export default function (io, app) {
 	};
 
 	pong.stopGame = (gameId) => {
-		const game = cache.findRunningGameById(gameId);
+		const game = cache.findGameStateById(gameId);
 
 		if (game) {
 			game.stop();
-			cache.deleteRunningGame(gameId);
+			cache.deleteGameState(gameId);
 		}
 
 		pong.to(gameId).emit('exitGame');

@@ -3,18 +3,18 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, availableGames } from '../config';
+import { errorCodes, userStatuses, gameCodes } from '../config';
 import { Game } from '../models';
 import cache from '../services/cache';
 
 const router = express.Router();
 
-const gameCodes = Object.values(availableGames).join(',');
+const validGameCodes = gameCodes.join(',');
 
 const rules = {
 	challengePlayer: {
 		userId: ['integer'],
-		game: [`in(${gameCodes})`]
+		game: [`in(${validGameCodes})`]
 	},
 	cancelChallenge: {
 		userId: ['integer']

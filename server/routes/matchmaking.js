@@ -4,20 +4,20 @@ import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import matchmaking from '../services/matchmaking';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, availableGames } from '../config';
+import { errorCodes, userStatuses, gameCodes } from '../config';
 import { Game } from '../models';
 import cache from '../services/cache';
 
 const router = express.Router();
 
-const gameCodes = [
+const validGameCodes = [
 	'any',
-	...Object.values(availableGames)
+	...gameCodes
 ].join(',');
 
 const rules = {
 	joinMatchmaking: {
-		game: [`in(${gameCodes})`]
+		game: [`in(${validGameCodes})`]
 	}
 };
 

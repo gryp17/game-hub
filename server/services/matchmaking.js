@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import cache from './cache';
-import { availableGames } from '../config';
+import { gameCodes } from '../config';
 
 let intervalId = null;
 
@@ -32,8 +32,6 @@ function findOpponentIndex(game, players) {
 }
 
 function pickGame(playerGame, opponentGame) {
-	const games = Object.values(availableGames);
-
 	if (playerGame !== 'any') {
 		return playerGame;
 	}
@@ -43,7 +41,7 @@ function pickGame(playerGame, opponentGame) {
 	}
 
 	//pick a random game
-	return _.sample(games);
+	return _.sample(gameCodes);
 }
 
 function matchPlayers(matchFound) {

@@ -8,8 +8,8 @@ export default class Paddle {
 		this.controllable = controllable;
 		this.playerId = playerId;
 
-		this.width = 20;
-		this.height = 220;
+		this.width = this.canvas.width / 46;
+		this.height = this.canvas.height / 3.5;
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
