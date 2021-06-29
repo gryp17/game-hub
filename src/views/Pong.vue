@@ -5,6 +5,21 @@
 			full-screen
 		/>
 
+		<div class="hud">
+			<div
+				v-for="item in scores"
+				:key="item.id"
+				class="player-info"
+			>
+				<div class="username">
+					{{ item.username }}
+				</div>
+				<div class="score">
+					{{ item.score }}
+				</div>
+			</div>
+		</div>
+
 		<canvas id="game-canvas" class="canvas">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
@@ -38,6 +53,15 @@
 		beforeDestroy() {
 			this.game.stop();
 			this.disconnectFromSocket();
+		},
+		computed: {
+			scores() {
+				if (!this.game) {
+					return [];
+				}
+
+				return Object.values(this.game.scores);
+			}
 		},
 		methods: {
 			/**
@@ -91,6 +115,28 @@
 		display: flex;
 		height: 100%;
 		justify-content: center;
+
+		.hud {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			width: 100%;
+			height: 100%;
+
+			.player-info {
+				padding: 25px;
+				text-align: center;
+
+				.username {
+					font-size: 32px;
+				}
+
+				.score {
+					margin-top: 5px;
+					font-size: 28px;
+				}
+			}
+		}
 
 		#game-canvas {
 			display: none;

@@ -71,19 +71,23 @@ export default class CollisionsManager {
 		}
 
 		//left end of screen
-		if (ball.x + ball.width > ball.canvas.width) {
-			// SCORE for player two
-			console.log('SCORE FOR PLAYER TWO');
-			ball.x = ball.canvas.width - ball.width;
+		if (ball.x < 0) {
+			ball.x = 0;
 			ball.dx = ball.dx * -1;
+
+			if (this.game.isServer) {
+				this.game.onPlayerScore(2);
+			}
 		}
 
 		//right end of screen
-		if (ball.x < 0) {
-			// SCORE for player one
-			console.log('SCORE FOR PLAYER ONE');
-			ball.x = 0;
+		if (ball.x + ball.width > ball.canvas.width) {
+			ball.x = ball.canvas.width - ball.width;
 			ball.dx = ball.dx * -1;
+
+			if (this.game.isServer) {
+				this.game.onPlayerScore(1);
+			}
 		}
 	}
 }

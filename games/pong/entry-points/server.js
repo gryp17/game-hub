@@ -11,13 +11,21 @@ export default class Pong {
 		this.onUpdate = onUpdate;
 		this.gameLoopInterval;
 		this.paddles = [];
+		this.scores = {};
 
 		this.inputs = {};
 
-		players.forEach((player) => {
+		players.forEach((player, index) => {
 			this.inputs[player.socketId] = {
 				UP: false,
 				DOWN: false
+			};
+
+			//generate the player 1 and player 2 scores
+			this.scores[index + 1] = {
+				id: player.id,
+				username: player.username,
+				score: 0
 			};
 		});
 
@@ -36,6 +44,10 @@ export default class Pong {
 
 	updateInputs({ socketId, inputs }) {
 		this.inputs[socketId] = inputs;
+	}
+
+	onPlayerScore(player) {
+		this.scores[player].score = this.scores[player].score + 1;
 	}
 
 	start() {
@@ -58,7 +70,8 @@ export default class Pong {
 
 			this.onUpdate({
 				paddles: paddlesState,
-				ball: this.ball.getState()
+				ball: this.ball.getState(),
+				scores: this.scores
 			});
 
 			//handle all game collisions
