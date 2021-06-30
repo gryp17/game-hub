@@ -31,7 +31,7 @@ const getters = {
 			}
 
 			//then by username
-			return a.username > b.username;
+			return a.username.localeCompare(b.username);
 		});
 	}
 };
