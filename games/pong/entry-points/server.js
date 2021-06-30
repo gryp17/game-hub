@@ -3,10 +3,11 @@ import Ball from '../ball';
 import CollisionsManager from '../collisions-manager';
 
 export default class Pong {
-	constructor(id, fps, canvas, players, { onUpdate }) {
+	constructor(id, fps, canvas, maxScore, players, { onUpdate }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
 		this.fps = fps;
+		this.maxScore = maxScore;
 		this.players = players;
 		this.onUpdate = onUpdate;
 		this.gameLoopInterval;
@@ -48,6 +49,13 @@ export default class Pong {
 
 	onPlayerScore(player) {
 		this.scores[player].score = this.scores[player].score + 1;
+
+		if (this.scores[player].score === this.maxScore) {
+			// TODO: end the game
+		} else {
+			// TODO: otherwise reset the ball position and after some timeout shoot it again in some random direction
+			this.ball.resetPosition();
+		}
 	}
 
 	start() {

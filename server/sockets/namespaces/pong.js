@@ -47,7 +47,7 @@ export default function (io, app) {
 
 			const gameId = gameInstance.id;
 
-			const game = new Pong(gameId, fps, canvas, players, {
+			const game = new Pong(gameId, fps, canvas, games.PONG.maxScore, players, {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit('updateData', data);
 				}

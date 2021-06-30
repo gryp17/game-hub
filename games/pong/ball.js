@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default class Ball {
 	constructor(game, x = 0, y = 0, dx = 0, dy = 0) {
 		this.context = game.contexts.game.context;
@@ -15,6 +17,22 @@ export default class Ball {
 			this.image = new Image();
 			this.image.src = 'https://www.pinclipart.com/picdir/big/544-5446703_transparent-background-red-ball-icon-clipart.png';
 		}
+	}
+
+	resetPosition() {
+		this.x = (this.canvas.width / 2) - (this.width / 2);
+		this.y = (this.canvas.height / 2) - (this.height / 2);
+
+		const directionMultiplier = this.dx > 0 ? 1 : -1;
+
+		this.dx = 0;
+		this.dy = 0;
+
+		//start moving the ball again after some delay
+		setTimeout(() => {
+			this.dx = 10 * directionMultiplier;
+			this.dy = _.random(-10, 10);
+		}, 3000);
 	}
 
 	move() {
