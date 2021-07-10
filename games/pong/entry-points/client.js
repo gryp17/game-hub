@@ -65,7 +65,7 @@ export default class Pong {
 			new Paddle(this, 1, player === 1),
 			new Paddle(this, 2, player === 2)
 		];
-		this.ball = new Ball(this, 200, 200, 10, 10);
+		this.ball = new Ball(this, 7, 0.5);
 
 		//listen for the keyboard events
 		this.keyboard.listen();

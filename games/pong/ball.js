@@ -1,28 +1,49 @@
 import _ from 'lodash';
 
 export default class Ball {
-	constructor(game, x = 0, y = 0, dx = 0, dy = 0) {
+	constructor(game, initialSpeed, speedIncrease) {
 		this.context = game.contexts.game.context;
 		this.canvas = game.contexts.game.canvas;
 
 		this.width = 60;
 		this.height = 60;
-		this.x = x;
-		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
+		this.x = 0;
+		this.y = 0;
+		this.dx = 0;
+		this.dy = 0;
+		this.initialSpeed = initialSpeed;
+		this.speedIncrease = speedIncrease;
 
 		// TODO: load this image in a different way and save it in the "game" object
 		if (!game.isServer) {
 			this.image = new Image();
 			this.image.src = 'https://www.pinclipart.com/picdir/big/544-5446703_transparent-background-red-ball-icon-clipart.png';
 		}
+
+		this.center();
+
+		//give the players some time before shooting the ball
+		setTimeout(() => {
+			//shoot the ball in a random direction
+			this.dx = _.sample([this.initialSpeed, this.initialSpeed * -1]);
+			this.dy = _.sample([this.initialSpeed, this.initialSpeed * -1]);
+		}, 2000);
 	}
 
-	resetPosition() {
+	static increaseSpeed(speed, increment) {
+		const directionMultiplier = speed > 0 ? 1 : -1;
+		return (Math.abs(speed) + increment) * directionMultiplier;
+	}
+
+	center() {
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = (this.canvas.height / 2) - (this.height / 2);
+	}
 
+	reset() {
+		this.center();
+
+		//check the current ball direction
 		const directionMultiplier = this.dx > 0 ? 1 : -1;
 
 		this.dx = 0;
@@ -30,9 +51,15 @@ export default class Ball {
 
 		//start moving the ball again after some delay
 		setTimeout(() => {
-			this.dx = 10 * directionMultiplier;
-			this.dy = _.random(-10, 10);
-		}, 3000);
+			//shoot the ball in the opposite horizontal direction and a random vertical direction
+			this.dx = this.initialSpeed * directionMultiplier;
+			this.dy = _.sample([this.initialSpeed, this.initialSpeed * -1]);
+		}, 2000);
+	}
+
+	speedUp() {
+		this.dx = Ball.increaseSpeed(this.dx, this.speedIncrease);
+		this.dy = Ball.increaseSpeed(this.dy, this.speedIncrease);
 	}
 
 	move() {

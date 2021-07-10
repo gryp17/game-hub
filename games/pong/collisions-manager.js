@@ -51,6 +51,7 @@ export default class CollisionsManager {
 				}
 
 				ball.dx = ball.dx * -1;
+				ball.speedUp();
 			}
 		});
 	}

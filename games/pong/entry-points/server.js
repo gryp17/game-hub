@@ -54,7 +54,7 @@ export default class Pong {
 			// TODO: end the game
 		} else {
 			// TODO: otherwise reset the ball position and after some timeout shoot it again in some random direction
-			this.ball.resetPosition();
+			this.ball.reset();
 		}
 	}
 
@@ -64,7 +64,7 @@ export default class Pong {
 			new Paddle(this, 2, true, this.players[1].socketId)
 		];
 
-		this.ball = new Ball(this, 200, 200, 10, 10);
+		this.ball = new Ball(this, 7, 0.5);
 
 		this.gameLoopInterval = setInterval(() => {
 			this.paddles.forEach((paddle) => {
