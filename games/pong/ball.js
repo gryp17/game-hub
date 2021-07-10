@@ -57,9 +57,12 @@ export default class Ball {
 		}, 2000);
 	}
 
-	speedUp() {
+	speedUp(paddleAcceleration) {
+		//if there is any paddle acceleration use it to increase the ball vertical acceleration - otherwise use the default speed increase
+		const verticalSpeedIncrease = paddleAcceleration !== 0 ? paddleAcceleration : this.speedIncrease;
+
 		this.dx = Ball.increaseSpeed(this.dx, this.speedIncrease);
-		this.dy = Ball.increaseSpeed(this.dy, this.speedIncrease);
+		this.dy = Ball.increaseSpeed(this.dy, verticalSpeedIncrease);
 	}
 
 	move() {
