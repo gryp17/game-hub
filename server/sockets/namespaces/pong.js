@@ -8,13 +8,6 @@ import Pong from '../../../games/pong/entry-points/server';
 export default function (io, app) {
 	const pong = io.of('/pong');
 
-	const fps = games.PONG.fps;
-	const canvas = {
-		width: games.PONG.width,
-		height: games.PONG.height
-	};
-	const maxPlayers = 2;
-
 	pong.use(socketIsLoggedIn(app));
 
 	pong.on('connection', async (socket) => {
@@ -36,7 +29,7 @@ export default function (io, app) {
 		const playersCount = roomClients ? roomClients.size : 0;
 
 		//once both players have joined the room - mark it as in progress
-		if (playersCount === maxPlayers) {
+		if (playersCount === games.PONG.maxPlayers) {
 			gameInstance.update({
 				status: gameStatuses.IN_PROGRESS
 			});
@@ -47,7 +40,7 @@ export default function (io, app) {
 
 			const gameId = gameInstance.id;
 
-			const game = new Pong(gameId, fps, canvas, games.PONG.maxScore, players, {
+			const game = new Pong(gameId, games.PONG, players, {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit('updateData', data);
 				}
@@ -60,8 +53,7 @@ export default function (io, app) {
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
 				pong.to(player.socketId).emit('startGame', {
-					fps,
-					canvas,
+					config: games.PONG,
 					player: index + 1
 				});
 			});

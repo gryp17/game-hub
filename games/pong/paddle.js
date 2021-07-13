@@ -1,9 +1,11 @@
 export default class Paddle {
-	constructor(game, player = 1, controllable = false, playerId = null) {
+	constructor(game, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
 		this.game = game;
 		this.context = game.contexts.game.context;
 		this.canvas = game.contexts.game.canvas;
 
+		this.acceleration = acceleration;
+		this.maxSpeed = maxSpeed;
 		this.player = player;
 		this.controllable = controllable;
 		this.playerId = playerId;
@@ -14,7 +16,6 @@ export default class Paddle {
 		this.y = 0;
 		this.dx = 0;
 		this.dy = 0;
-		this.maxSpeed = 8;
 		this.color = '#ffffff';
 
 		//the second player's paddle should be on the right side of the screen
@@ -52,25 +53,15 @@ export default class Paddle {
 		//up
 		if (inputs.UP) {
 			if (this.dy > (this.maxSpeed * -1)) {
-				this.dy = this.dy - 2;
+				this.dy = this.dy - this.acceleration;
 			}
 		}
 
 		//down
 		if (inputs.DOWN) {
 			if (this.dy < this.maxSpeed) {
-				this.dy = this.dy + 2;
+				this.dy = this.dy + this.acceleration;
 			}
-		}
-
-		//left
-		if (inputs.LEFT) {
-			this.dx = this.dx - 2;
-		}
-
-		//right
-		if (inputs.RIGHT) {
-			this.dx = this.dx + 2;
 		}
 	}
 

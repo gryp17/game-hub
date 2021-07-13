@@ -21,8 +21,10 @@ window.requestAnimFrame = (function anim() {
 }());
 
 export default class Pong {
-	constructor(canvasId, { onUpdateInputs }) {
+	constructor(canvasId, config, player, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
+		this.config = config;
+		this.player = player;
 		this.gameLoopInterval;
 		this.inputs;
 		this.paddles = [];
@@ -50,29 +52,32 @@ export default class Pong {
 			game: new Context(canvasId)
 		};
 
+		this.contexts.game.setSize(this.config.width, this.config.height);
+
 		this.collisionsManager = new CollisionsManager(this);
 	}
 
-	start(fps, canvas, player) {
-		console.log(`######### START GAME WITH FPS ${fps} AS PLAYER ${player}`);
+	start() {
+		console.log(`######### START GAME WITH FPS ${this.config.fps} AS PLAYER ${this.player}`);
 
-		this.contexts.game.setSize(canvas.width, canvas.height);
 		this.contexts.game.show();
 		this.contexts.game.focus();
 
 		//game objects
-		this.paddles = [
-			new Paddle(this, 1, player === 1),
-			new Paddle(this, 2, player === 2)
-		];
-		this.ball = new Ball(this, 7, 0.5);
+		this.paddles = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
+			const playerIndex = index + 1;
+			const controllable = this.player === playerIndex;
+			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, controllable);
+		});
+
+		this.ball = new Ball(this, this.config.ball.size, this.config.ball.initialSpeed, this.config.ball.acceleration);
 
 		//listen for the keyboard events
 		this.keyboard.listen();
 
 		this.gameLoopInterval = setInterval(() => {
 			this.gameLoop();
-		}, 1000 / fps);
+		}, 1000 / this.config.fps);
 
 		requestAnimationFrame(() => {
 			this.drawGame();

@@ -1,18 +1,18 @@
 import _ from 'lodash';
 
 export default class Ball {
-	constructor(game, initialSpeed, speedIncrease) {
+	constructor(game, size, initialSpeed, acceleration) {
 		this.context = game.contexts.game.context;
 		this.canvas = game.contexts.game.canvas;
 
-		this.width = 60;
-		this.height = 60;
+		this.width = size;
+		this.height = size;
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;
 		this.dy = 0;
 		this.initialSpeed = initialSpeed;
-		this.speedIncrease = speedIncrease;
+		this.acceleration = acceleration;
 
 		// TODO: load this image in a different way and save it in the "game" object
 		if (!game.isServer) {
@@ -59,10 +59,10 @@ export default class Ball {
 
 	speedUp(paddleAcceleration) {
 		//if there is any paddle acceleration use it to increase the ball vertical acceleration - otherwise use the default speed increase
-		const verticalSpeedIncrease = paddleAcceleration !== 0 ? paddleAcceleration : this.speedIncrease;
+		const verticalAcceleration = paddleAcceleration !== 0 ? paddleAcceleration : this.acceleration;
 
-		this.dx = Ball.increaseSpeed(this.dx, this.speedIncrease);
-		this.dy = Ball.increaseSpeed(this.dy, verticalSpeedIncrease);
+		this.dx = Ball.increaseSpeed(this.dx, this.acceleration);
+		this.dy = Ball.increaseSpeed(this.dy, verticalAcceleration);
 	}
 
 	move() {

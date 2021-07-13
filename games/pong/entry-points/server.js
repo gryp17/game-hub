@@ -3,11 +3,10 @@ import Ball from '../ball';
 import CollisionsManager from '../collisions-manager';
 
 export default class Pong {
-	constructor(id, fps, canvas, maxScore, players, { onUpdate }) {
+	constructor(id, config, players, { onUpdate }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
-		this.fps = fps;
-		this.maxScore = maxScore;
+		this.config = config;
 		this.players = players;
 		this.onUpdate = onUpdate;
 		this.gameLoopInterval;
@@ -35,7 +34,10 @@ export default class Pong {
 		this.contexts = {
 			game: {
 				context: {},
-				canvas
+				canvas: {
+					width: this.config.width,
+					height: this.config.height
+				}
 			}
 		};
 
@@ -50,7 +52,7 @@ export default class Pong {
 	onPlayerScore(player) {
 		this.scores[player].score = this.scores[player].score + 1;
 
-		if (this.scores[player].score === this.maxScore) {
+		if (this.scores[player].score === this.config.maxScore) {
 			// TODO: end the game
 		} else {
 			// TODO: otherwise reset the ball position and after some timeout shoot it again in some random direction
@@ -59,12 +61,12 @@ export default class Pong {
 	}
 
 	start() {
-		this.paddles = [
-			new Paddle(this, 1, true, this.players[0].socketId),
-			new Paddle(this, 2, true, this.players[1].socketId)
-		];
+		this.paddles = this.players.map((player, index) => {
+			const playerIndex = index + 1;
+			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, true, player.socketId);
+		});
 
-		this.ball = new Ball(this, 7, 0.5);
+		this.ball = new Ball(this, this.config.ball.size, this.config.ball.initialSpeed, this.config.ball.acceleration);
 
 		this.gameLoopInterval = setInterval(() => {
 			this.paddles.forEach((paddle) => {
@@ -84,7 +86,7 @@ export default class Pong {
 
 			//handle all game collisions
 			this.collisionsManager.handleCollisions();
-		}, 1000 / this.fps);
+		}, 1000 / this.config.fps);
 	}
 
 	stop() {

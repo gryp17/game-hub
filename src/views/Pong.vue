@@ -45,9 +45,6 @@
 			};
 		},
 		async mounted() {
-			this.game = new Pong('game-canvas', {
-				onUpdateInputs: this.updateInputs
-			});
 			this.connectToSocket();
 		},
 		beforeDestroy() {
@@ -80,8 +77,12 @@
 					});
 				});
 
-				this.socket.on('startGame', ({ fps, canvas, player }) => {
-					this.game.start(fps, canvas, player);
+				this.socket.on('startGame', ({ config, player }) => {
+					this.game = new Pong('game-canvas', config, player, {
+						onUpdateInputs: this.updateInputs
+					});
+
+					this.game.start();
 					this.loading = false;
 				});
 
