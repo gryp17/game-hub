@@ -43,6 +43,9 @@ export default function (io, app) {
 			const game = new Pong(gameId, games.PONG, players, {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit('updateData', data);
+				},
+				onGameOver(winner) {
+					pong.to(gameRoomId).emit('gameOver', winner.id);
 				}
 			});
 
@@ -77,6 +80,8 @@ export default function (io, app) {
 
 				pong.stopGame(gameInstance.id);
 			}
+
+			//TODO: stop the running game and mark the other user as winner
 		});
 	});
 

@@ -88,7 +88,7 @@ export default class Pong {
 		clearInterval(this.gameLoopInterval);
 	}
 
-	updateData({ paddles, ball, scores }) {
+	updateData({ paddles, ball, scores, gameOver }) {
 		paddles.forEach((paddle, index) => {
 			this.paddles[index].setState(paddle);
 		});
@@ -96,6 +96,10 @@ export default class Pong {
 		this.ball.setState(ball);
 
 		this.scores = scores;
+
+		if (gameOver) {
+			this.stop();
+		}
 	}
 
 	gameLoop() {

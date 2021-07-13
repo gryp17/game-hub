@@ -3,15 +3,17 @@ import Ball from '../ball';
 import CollisionsManager from '../collisions-manager';
 
 export default class Pong {
-	constructor(id, config, players, { onUpdate }) {
+	constructor(id, config, players, { onUpdate, onGameOver }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
 		this.config = config;
 		this.players = players;
 		this.onUpdate = onUpdate;
+		this.onGameOver = onGameOver;
 		this.gameLoopInterval;
 		this.paddles = [];
 		this.scores = {};
+		this.gameOver = false;
 
 		this.inputs = {};
 
@@ -53,11 +55,28 @@ export default class Pong {
 		this.scores[player].score = this.scores[player].score + 1;
 
 		if (this.scores[player].score === this.config.maxScore) {
-			// TODO: end the game
+			//stop the game loop, mark the game as game over and update the game state one last time
+			this.stop();
+			this.gameOver = true;
+			this.onGameStateUpdate();
+			this.onGameOver(this.players[player - 1]);
 		} else {
-			// TODO: otherwise reset the ball position and after some timeout shoot it again in some random direction
+			//otherwise reset the ball position and after some timeout shoot it again in some random direction
 			this.ball.reset();
 		}
+	}
+
+	onGameStateUpdate() {
+		const paddlesState = this.paddles.map((paddle) => {
+			return paddle.getState();
+		});
+
+		this.onUpdate({
+			paddles: paddlesState,
+			ball: this.ball.getState(),
+			scores: this.scores,
+			gameOver: this.gameOver
+		});
 	}
 
 	start() {
@@ -74,18 +93,10 @@ export default class Pong {
 			});
 			this.ball.move();
 
-			const paddlesState = this.paddles.map((paddle) => {
-				return paddle.getState();
-			});
-
-			this.onUpdate({
-				paddles: paddlesState,
-				ball: this.ball.getState(),
-				scores: this.scores
-			});
-
 			//handle all game collisions
 			this.collisionsManager.handleCollisions();
+
+			this.onGameStateUpdate();
 		}, 1000 / this.config.fps);
 	}
 

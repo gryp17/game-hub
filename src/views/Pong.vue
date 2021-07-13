@@ -27,6 +27,7 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 
@@ -48,10 +49,15 @@
 			this.connectToSocket();
 		},
 		beforeDestroy() {
-			this.game.stop();
+			if (this.game) {
+				this.game.stop();
+			}
 			this.disconnectFromSocket();
 		},
 		computed: {
+			...mapGetters('auth', [
+				'userSession'
+			]),
 			scores() {
 				if (!this.game) {
 					return [];
@@ -88,6 +94,15 @@
 
 				this.socket.on('updateData', (data) => {
 					this.game.updateData(data);
+				});
+
+				this.socket.on('gameOver', (winnerId) => {
+					//TODO: use a modal here and redirect the players to the lobby in X seconds
+					if (this.userSession.id === winnerId) {
+						alert('YOU HAVE WON!!!');
+					} else {
+						alert('YOU HAVE LOST...');
+					}
 				});
 
 				this.socket.on('exitGame', () => {
