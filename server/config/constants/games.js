@@ -5,7 +5,7 @@ export default {
 		fps: 60,
 		width: 1024,
 		height: 768,
-		maxScore: 3,
+		maxScore: 1,
 		ball: {
 			size: 60,
 			initialSpeed: 7,

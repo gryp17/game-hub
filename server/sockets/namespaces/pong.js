@@ -13,7 +13,7 @@ export default function (io, app) {
 	pong.on('connection', async (socket) => {
 		lobby.setUserStatus(socket.user.id, userStatuses.PONG);
 
-		const gameInstance = await pong.getPendingGame(socket.user.id);
+		let gameInstance = await pong.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {
 			return pong.to(socket.id).emit('exitGame');
@@ -46,6 +46,13 @@ export default function (io, app) {
 				},
 				onGameOver(winner) {
 					pong.to(gameRoomId).emit('gameOver', winner.id);
+
+					cache.deleteGameState(gameId);
+
+					gameInstance.update({
+						status: gameStatuses.FINISHED,
+						winner: winner.id
+					});
 				}
 			});
 
@@ -69,19 +76,24 @@ export default function (io, app) {
 		});
 
 		//disconnect event handler
-		socket.on('disconnect', () => {
+		socket.on('disconnect', async () => {
 			//update the user status
 			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
 
-			if (gameInstance) {
-				gameInstance.update({
-					status: gameStatuses.FINISHED
+			//reload the game instance manually (reload() fails for some reason)
+			gameInstance = await Game.findByPk(gameInstance.id);
+
+			//set the other user as winner if the game hasn't been finished yet
+			if (gameInstance && gameInstance.status !== gameStatuses.FINISHED) {
+				const game = cache.findGameStateById(gameInstance.id);
+
+				//find the other/remaining user
+				const winner = game.players.find((user) => {
+					return user.id !== socket.user.id;
 				});
 
-				pong.stopGame(gameInstance.id);
+				game.gameIsOver(winner);
 			}
-
-			//TODO: stop the running game and mark the other user as winner
 		});
 	});
 
@@ -133,17 +145,6 @@ export default function (io, app) {
 		}
 
 		return pendingGames.pop();
-	};
-
-	pong.stopGame = (gameId) => {
-		const game = cache.findGameStateById(gameId);
-
-		if (game) {
-			game.stop();
-			cache.deleteGameState(gameId);
-		}
-
-		pong.to(gameId).emit('exitGame');
 	};
 
 	return pong;

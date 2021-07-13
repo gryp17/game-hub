@@ -27,6 +27,13 @@ Game.belongsToMany(User, {
 	through: GameUser
 });
 
+Game.belongsTo(User, {
+	foreignKey: {
+		name: 'winner',
+		allowNull: true
+	}
+});
+
 Message.belongsTo(User);
 
 /**

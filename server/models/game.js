@@ -7,6 +7,9 @@ export default (db) => {
 		},
 		status: {
 			type: Sequelize.STRING
+		},
+		data: {
+			type: Sequelize.JSON
 		}
 	});
 };

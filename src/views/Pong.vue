@@ -103,6 +103,12 @@
 					} else {
 						alert('YOU HAVE LOST...');
 					}
+
+					setTimeout(() => {
+						this.$router.push({
+							name: 'lobby'
+						});
+					}, 3000);
 				});
 
 				this.socket.on('exitGame', () => {

@@ -51,15 +51,19 @@ export default class Pong {
 		this.inputs[socketId] = inputs;
 	}
 
+	gameIsOver(winner) {
+		//stop the game loop, mark the game as game over and update the game state one last time
+		this.stop();
+		this.gameOver = true;
+		this.onGameStateUpdate();
+		this.onGameOver(winner);
+	}
+
 	onPlayerScore(player) {
 		this.scores[player].score = this.scores[player].score + 1;
 
 		if (this.scores[player].score === this.config.maxScore) {
-			//stop the game loop, mark the game as game over and update the game state one last time
-			this.stop();
-			this.gameOver = true;
-			this.onGameStateUpdate();
-			this.onGameOver(this.players[player - 1]);
+			this.gameIsOver(this.players[player - 1]);
 		} else {
 			//otherwise reset the ball position and after some timeout shoot it again in some random direction
 			this.ball.reset();
