@@ -44,18 +44,22 @@ export default function (io, app) {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit('updateData', data);
 				},
-				onGameOver(winner, scores, ragequit) {
-					pong.to(gameRoomId).emit('gameOver', winner.id);
-
+				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
 
-					gameInstance.update({
+					await gameInstance.update({
 						status: gameStatuses.FINISHED,
 						winner: winner.id,
 						ragequit,
 						data: {
 							score: scores
 						}
+					});
+
+					pong.to(gameRoomId).emit('gameOver', {
+						winner: winner.id,
+						ragequit,
+						score: scores
 					});
 				}
 			});

@@ -1,48 +1,45 @@
 <template>
-	<div class="challenge-modal">
+	<div class="game-over-modal">
 		<modal
 			:adaptive="true"
 			:width="'100%'"
 			:maxWidth="460"
 			:height="'auto'"
 			:clickToClose="false"
-			name="challenge-modal"
+			name="game-over-modal"
 			@before-open="onBeforeOpen"
 			@opened="startCountdown"
 			@before-close="stopCountdown"
 		>
 			<div class="header">
-				Game challenge
+				Game over
 			</div>
 			<div class="content">
-				You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
+				Game over text
+
+				<div v-if="isWinner">
+					You have won
+				</div>
+				<div v-else>
+					You have lost
+				</div>
+
+				{{ ragequit }}
+				{{ score }}
 
 				<ChallengeTimeoutCountdown
+					:timeout="5"
 					ref="countdown"
-					@timeout="decline"
+					@timeout="redirectToLobby"
 				/>
-
-				<div class="buttons-wrapper">
-					<FormButton
-						success
-						@click="accept"
-					>
-						Accept
-					</FormButton>
-					<FormButton
-						danger
-						@click="decline"
-					>
-						Decline
-					</FormButton>
-				</div>
 			</div>
 		</modal>
 	</div>
 </template>
 
 <script>
-	import { hideChallengeModal } from '@/services/modal';
+	import { mapGetters } from 'vuex';
+	import { hideGameOverModal } from '@/services/modal';
 	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
 
 	export default {
@@ -51,14 +48,24 @@
 		},
 		data() {
 			return {
-				user: {},
-				game: {}
+				winner: null,
+				ragequit: false,
+				score: null
 			};
+		},
+		computed: {
+			...mapGetters('auth', [
+				'userSession'
+			]),
+			isWinner() {
+				return this.userSession.id === this.winner;
+			}
 		},
 		methods: {
 			onBeforeOpen(e) {
-				this.user = e.params.user;
-				this.game = this.$options.filters.gamesMap(e.params.game);
+				this.winner = e.params.winner;
+				this.ragequit = e.params.ragequit;
+				this.score = e.params.score;
 			},
 			startCountdown() {
 				if (this.$refs.countdown) {
@@ -70,27 +77,23 @@
 					this.$refs.countdown.stopCountdown();
 				}
 			},
+			redirectToLobby() {
+				this.$router.push({
+					name: 'lobby'
+				});
+			},
 			/**
 			 * Closes the modal
 			 */
 			closeModal() {
-				hideChallengeModal();
-			},
-			accept() {
-				this.stopCountdown();
-				this.$emit('accept', this.user);
-				this.closeModal();
-			},
-			decline() {
-				this.$emit('decline', this.user);
-				this.closeModal();
+				hideGameOverModal();
 			}
 		}
 	};
 </script>
 
 <style lang="scss">
-	.challenge-modal {
+	.game-over-modal {
 		.header {
 			padding: 10px;
 			background-color: $gray-darkest;
@@ -102,14 +105,6 @@
 			padding: 10px;
 			text-align: center;
 			color: $text-color-dark;
-
-			.buttons-wrapper {
-				text-align: center;
-
-				.form-button {
-					margin-right: 5px;
-				}
-			}
 		}
 	}
 </style>

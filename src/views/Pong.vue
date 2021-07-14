@@ -23,6 +23,8 @@
 		<canvas id="game-canvas" class="canvas">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
+
+		<GameOverModal />
 	</div>
 </template>
 
@@ -30,13 +32,16 @@
 	import { mapGetters } from 'vuex';
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
+	import GameOverModal from '@/components/modals/GameOverModal';
 
 	import config from '@/config';
+	import { showGameOverModal } from '@/services/modal';
 	import Pong from '../../games/pong/entry-points/client';
 
 	export default {
 		components: {
-			LoadingIndicator
+			LoadingIndicator,
+			GameOverModal
 		},
 		data() {
 			return {
@@ -96,19 +101,12 @@
 					this.game.updateData(data);
 				});
 
-				this.socket.on('gameOver', (winnerId) => {
-					//TODO: use a modal here and redirect the players to the lobby in X seconds
-					if (this.userSession.id === winnerId) {
-						alert('YOU HAVE WON!!!');
-					} else {
-						alert('YOU HAVE LOST...');
-					}
-
-					setTimeout(() => {
-						this.$router.push({
-							name: 'lobby'
-						});
-					}, 3000);
+				this.socket.on('gameOver', ({ winner, ragequit, score }) => {
+					showGameOverModal({
+						winner,
+						ragequit,
+						score
+					});
 				});
 
 				this.socket.on('exitGame', () => {

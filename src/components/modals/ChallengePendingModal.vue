@@ -50,10 +50,6 @@
 			};
 		},
 		methods: {
-			/**
-			 * Sets the file object
-			 * @param {Object} e
-			 */
 			onBeforeOpen(e) {
 				this.user = e.params.user;
 				this.game = this.$options.filters.gamesMap(e.params.game);

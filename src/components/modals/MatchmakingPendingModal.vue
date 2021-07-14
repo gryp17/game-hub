@@ -54,10 +54,6 @@
 			};
 		},
 		methods: {
-			/**
-			 * Sets the file object
-			 * @param {Object} e
-			 */
 			onBeforeOpen(e) {
 				this.game = this.$options.filters.gamesMap(e.params.game);
 			},

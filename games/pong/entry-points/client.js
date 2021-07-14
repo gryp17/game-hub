@@ -58,8 +58,6 @@ export default class Pong {
 	}
 
 	start() {
-		console.log(`######### START GAME WITH FPS ${this.config.fps} AS PLAYER ${this.player}`);
-
 		this.contexts.game.show();
 		this.contexts.game.focus();
 

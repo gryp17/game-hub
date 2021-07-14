@@ -5,7 +5,8 @@ const modals = {
 	editProfile: 'edit-profile-modal',
 	challenge: 'challenge-modal',
 	challengePending: 'challenge-pending-modal',
-	matchmakingPending: 'matchmaking-pending-modal'
+	matchmakingPending: 'matchmaking-pending-modal',
+	gameOver: 'game-over-modal'
 };
 
 function initModals(appInstance) {
@@ -60,6 +61,14 @@ function hideMatchmakingPendingModal() {
 	hideModal(modals.matchmakingPending);
 }
 
+function showGameOverModal(params) {
+	showModal(modals.gameOver, params);
+}
+
+function hideGameOverModal() {
+	hideModal(modals.gameOver);
+}
+
 export {
 	initModals,
 	showModal,
@@ -72,5 +81,7 @@ export {
 	showChallengePendingModal,
 	hideChallengePendingModal,
 	showMatchmakingPendingModal,
-	hideMatchmakingPendingModal
+	hideMatchmakingPendingModal,
+	showGameOverModal,
+	hideGameOverModal
 };
