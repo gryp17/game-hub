@@ -51,12 +51,20 @@ export default class Pong {
 		this.inputs[socketId] = inputs;
 	}
 
-	gameIsOver(winner) {
+	gameIsOver(winner, ragequit = false) {
+		const scores = {};
+
+		//format the scores object
+		Object.keys(this.scores).forEach((key) => {
+			const user = this.scores[key];
+			scores[user.id] = user.score;
+		});
+
 		//stop the game loop, mark the game as game over and update the game state one last time
 		this.stop();
 		this.gameOver = true;
 		this.onGameStateUpdate();
-		this.onGameOver(winner);
+		this.onGameOver(winner, scores, ragequit);
 	}
 
 	onPlayerScore(player) {

@@ -10,6 +10,10 @@ export default (db) => {
 		},
 		data: {
 			type: Sequelize.JSON
+		},
+		ragequit: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false
 		}
 	});
 };

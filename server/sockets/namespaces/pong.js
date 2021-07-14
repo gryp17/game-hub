@@ -44,14 +44,18 @@ export default function (io, app) {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit('updateData', data);
 				},
-				onGameOver(winner) {
+				onGameOver(winner, scores, ragequit) {
 					pong.to(gameRoomId).emit('gameOver', winner.id);
 
 					cache.deleteGameState(gameId);
 
 					gameInstance.update({
 						status: gameStatuses.FINISHED,
-						winner: winner.id
+						winner: winner.id,
+						ragequit,
+						data: {
+							score: scores
+						}
 					});
 				}
 			});
@@ -92,7 +96,7 @@ export default function (io, app) {
 					return user.id !== socket.user.id;
 				});
 
-				game.gameIsOver(winner);
+				game.gameIsOver(winner, true);
 			}
 		});
 	});
