@@ -28,7 +28,7 @@
 					this.counter--;
 
 					//if the time is over stop the interval and cancel the challenge
-					if (this.counter < 0) {
+					if (this.counter < 1) {
 						clearInterval(this.challengeCounterInterval);
 						this.$emit('timeout');
 					}

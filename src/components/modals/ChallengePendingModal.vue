@@ -94,10 +94,6 @@
 
 			.buttons-wrapper {
 				text-align: center;
-
-				.form-button {
-					margin-right: 5px;
-				}
 			}
 		}
 	}

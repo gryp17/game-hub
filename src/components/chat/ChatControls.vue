@@ -94,6 +94,7 @@
 		}
 
 		.controls-wrapper {
+			margin-left: 5px;
 
 			.form-button.transparent {
 				&:hover {

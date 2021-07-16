@@ -3,7 +3,7 @@
 		<modal
 			:adaptive="true"
 			:width="'100%'"
-			:maxWidth="460"
+			:maxWidth="570"
 			:height="'auto'"
 			:clickToClose="false"
 			name="game-over-modal"
@@ -15,23 +15,30 @@
 				Game over
 			</div>
 			<div class="content">
-				Game over text
 
-				<div v-if="isWinner">
-					You have won
-				</div>
-				<div v-else>
-					You have lost
+				<div class="game-over-icon-wrapper">
+					<i :class="icon"></i>
 				</div>
 
-				{{ ragequit }}
-				{{ score }}
+				<div class="game-over-text">
+					{{ text }}
+				</div>
+
+				You will be redirected to the lobby in
 
 				<ChallengeTimeoutCountdown
-					:timeout="5"
+					:timeout="10"
 					ref="countdown"
 					@timeout="redirectToLobby"
 				/>
+
+				<div class="buttons-wrapper">
+					<FormButton
+						@click="redirectToLobby"
+					>
+						Take me to the lobby
+					</FormButton>
+				</div>
 			</div>
 		</modal>
 	</div>
@@ -59,6 +66,28 @@
 			]),
 			isWinner() {
 				return this.userSession.id === this.winner;
+			},
+			icon() {
+				if (this.isWinner) {
+					if (this.ragequit) {
+						return 'fas fa-grin-tears pink';
+					}
+
+					return 'fas fa-thumbs-up green';
+				}
+
+				return 'fas fa-meh yellow';
+			},
+			text() {
+				if (this.isWinner) {
+					if (this.ragequit) {
+						return 'LOL! Your opponent just ragequit!';
+					}
+
+					return 'You won!';
+				}
+
+				return 'You lost. Better luck next time.';
 			}
 		},
 		methods: {
@@ -78,6 +107,8 @@
 				}
 			},
 			redirectToLobby() {
+				this.stopCountdown();
+
 				this.$router.push({
 					name: 'lobby'
 				});
@@ -105,6 +136,36 @@
 			padding: 10px;
 			text-align: center;
 			color: $text-color-dark;
+
+			.game-over-icon-wrapper {
+				margin-bottom: 10px;
+				font-size: 84px;
+
+				.green {
+					color: $green;
+				}
+
+				.pink {
+					color: $pink;
+				}
+
+				.yellow {
+					color: $yellow;
+				}
+			}
+
+			.game-over-text {
+				margin-bottom: 10px;
+				font-size: 32px;
+			}
+
+			.challenge-timeout-countdown {
+				padding: 10px 0px;
+			}
+
+			.buttons-wrapper {
+				text-align: center;
+			}
 		}
 	}
 </style>
