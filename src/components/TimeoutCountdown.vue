@@ -1,5 +1,5 @@
 <template>
-	<div class="challenge-timeout-countdown">
+	<div class="timeout-countdown">
 		{{ counter }}
 	</div>
 </template>
@@ -14,7 +14,7 @@
 		},
 		data() {
 			return {
-				challengeCounterInterval: null,
+				counterInterval: null,
 				counter: 20
 			};
 		},
@@ -24,25 +24,25 @@
 		methods: {
 			startCountdown() {
 				this.counter = this.timeout;
-				this.challengeCounterInterval = setInterval(() => {
+				this.counterInterval = setInterval(() => {
 					this.counter--;
 
-					//if the time is over stop the interval and cancel the challenge
+					//if the time is over stop the interval and cemit the timeout event
 					if (this.counter < 1) {
-						clearInterval(this.challengeCounterInterval);
+						clearInterval(this.counterInterval);
 						this.$emit('timeout');
 					}
 				}, 1000);
 			},
 			stopCountdown() {
-				clearInterval(this.challengeCounterInterval);
+				clearInterval(this.counterInterval);
 			}
 		}
 	};
 </script>
 
 <style lang="scss">
-	.challenge-timeout-countdown {
+	.timeout-countdown {
 		padding: 15px 0px;
 		font-size: 18px;
 		text-align: center;

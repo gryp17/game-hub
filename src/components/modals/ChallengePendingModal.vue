@@ -17,7 +17,7 @@
 			<div class="content">
 				You have challenged <span class="bold">{{ user.username }}</span> in a game of <span class="bold">{{ game.label }}</span>
 
-				<ChallengeTimeoutCountdown
+				<TimeoutCountdown
 					ref="countdown"
 					@timeout="cancel"
 				/>
@@ -37,11 +37,11 @@
 
 <script>
 	import { hideChallengePendingModal } from '@/services/modal';
-	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
+	import TimeoutCountdown from '@/components/TimeoutCountdown';
 
 	export default {
 		components: {
-			ChallengeTimeoutCountdown
+			TimeoutCountdown
 		},
 		data() {
 			return {

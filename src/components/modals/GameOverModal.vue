@@ -26,7 +26,7 @@
 
 				You will be redirected to the lobby in
 
-				<ChallengeTimeoutCountdown
+				<TimeoutCountdown
 					:timeout="10"
 					ref="countdown"
 					@timeout="redirectToLobby"
@@ -47,11 +47,11 @@
 <script>
 	import { mapGetters } from 'vuex';
 	import { hideGameOverModal } from '@/services/modal';
-	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
+	import TimeoutCountdown from '@/components/TimeoutCountdown';
 
 	export default {
 		components: {
-			ChallengeTimeoutCountdown
+			TimeoutCountdown
 		},
 		data() {
 			return {

@@ -21,7 +21,7 @@
 				Starting match in:
 				<br/>
 
-				<ChallengeTimeoutCountdown
+				<TimeoutCountdown
 					ref="countdown"
 					:timeout="10"
 					@timeout="accept"
@@ -42,11 +42,11 @@
 
 <script>
 	import { hideMatchmakingPendingModal } from '@/services/modal';
-	import ChallengeTimeoutCountdown from '@/components/modals/ChallengeTimeoutCountdown';
+	import TimeoutCountdown from '@/components/TimeoutCountdown';
 
 	export default {
 		components: {
-			ChallengeTimeoutCountdown
+			TimeoutCountdown
 		},
 		data() {
 			return {
