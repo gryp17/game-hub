@@ -159,10 +159,6 @@
 				font-size: 32px;
 			}
 
-			.challenge-timeout-countdown {
-				padding: 10px 0px;
-			}
-
 			.buttons-wrapper {
 				text-align: center;
 			}

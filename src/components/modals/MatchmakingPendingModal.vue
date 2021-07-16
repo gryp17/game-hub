@@ -15,11 +15,11 @@
 				Opponent found
 			</div>
 			<div class="content">
-				An opponent has been found for a game of <span class="bold">{{ game.label }}</span>
-				<br/>
-				<br/>
-				Starting match in:
-				<br/>
+				<div class="matchmaking-text">
+					An opponent has been found for a game of <span class="bold">{{ game.label }}</span>
+				</div>
+
+				Starting match in
 
 				<TimeoutCountdown
 					ref="countdown"
@@ -98,6 +98,11 @@
 			padding: 10px;
 			text-align: center;
 			color: $text-color-dark;
+
+			.matchmaking-text {
+				margin-bottom: 10px;
+				font-size: 18px;
+			}
 
 			.buttons-wrapper {
 				text-align: center;
