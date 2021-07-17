@@ -51,14 +51,14 @@ export default class Paddle {
 
 	processInputs(inputs) {
 		//up
-		if (inputs.UP) {
+		if (inputs.up) {
 			if (this.dy > (this.maxSpeed * -1)) {
 				this.dy = this.dy - this.acceleration;
 			}
 		}
 
 		//down
-		if (inputs.DOWN) {
+		if (inputs.down) {
 			if (this.dy < this.maxSpeed) {
 				this.dy = this.dy + this.acceleration;
 			}

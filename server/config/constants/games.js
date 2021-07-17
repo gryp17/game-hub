@@ -5,7 +5,7 @@ export default {
 		fps: 60,
 		width: 1024,
 		height: 768,
-		maxScore: 1,
+		maxScore: 5,
 		ball: {
 			size: 60,
 			initialSpeed: 7,
@@ -14,6 +14,14 @@ export default {
 		paddle: {
 			acceleration: 2,
 			maxSpeed: 8
+		},
+		controls: {
+			up: {
+				keys: [38, 87] //arrow up, W
+			},
+			down: {
+				keys: [40, 83] //arrow down, S
+			}
 		}
 	}
 };

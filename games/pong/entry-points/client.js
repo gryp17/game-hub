@@ -34,15 +34,7 @@ export default class Pong {
 		//events
 		this.onUpdateInputs = onUpdateInputs;
 
-		// TODO: move to a config or something
-		this.gameControls = {
-			UP: {
-				keys: [38, 87] //arrow up, W
-			},
-			DOWN: {
-				keys: [40, 83] //arrow down, S
-			}
-		};
+		this.gameControls = config.controls;
 
 		//initialize the keyboard controls
 		this.keyboard = new Keyboard(this.gameControls);
