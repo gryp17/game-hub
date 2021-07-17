@@ -3,8 +3,8 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, gameCodes } from '../config';
-import { Game } from '../models';
+import { errorCodes, userStatuses, gameStatuses, gameCodes } from '../config';
+import { Game, User } from '../models';
 import cache from '../services/cache';
 
 const router = express.Router();
@@ -128,17 +128,44 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 	}
 
 	const gameType = challenge.game;
+	const userIds = [
+		challenger.id,
+		ownUser.id
+	];
+
+	//find any pending games related to any of the 2 users and delete them before creating a new one
+	const pendingGames = await Game.findAll({
+		where: {
+			status: gameStatuses.PENDING
+		},
+		include: {
+			model: User,
+			required: true,
+			where: {
+				id: userIds
+			}
+		}
+	});
+
+	if (pendingGames.length > 0) {
+		const gameIds = pendingGames.map((game) => {
+			return game.id;
+		});
+
+		await Game.destroy({
+			where: {
+				id: gameIds
+			}
+		});
+	}
 
 	//create the game with both users
 	const gameInstance = await Game.create({
 		type: gameType,
-		status: 'pending'
+		status: gameStatuses.PENDING
 	});
 
-	await gameInstance.setUsers([
-		challenger.id,
-		ownUser.id
-	]);
+	await gameInstance.setUsers(userIds);
 
 	cache.deletePendingChallenge(ownUser.id);
 
