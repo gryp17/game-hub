@@ -161,30 +161,8 @@
 			overflow: unset;
 		}
 
-		.header {
-			padding: 10px;
-			background-color: $gray-darkest;
-			color: $white;
-			font-weight: bold;
-
-			.close-btn {
-				float: right;
-				padding: 0px 5px;
-				color: $white;
-
-				svg {
-					margin: 0px;
-				}
-
-				&:hover {
-					background-color: $gray;
-				}
-			}
-		}
-
 		.content {
 			padding: 5px;
-			color: $text-color-dark;
 
 			.tabs-component-panels {
 				padding: 10px;

@@ -14,7 +14,7 @@
 			<div class="header">
 				Game over
 			</div>
-			<div class="content">
+			<div class="content center">
 
 				<div class="game-over-icon-wrapper">
 					<i :class="icon"></i>
@@ -125,18 +125,7 @@
 
 <style lang="scss">
 	.game-over-modal {
-		.header {
-			padding: 10px;
-			background-color: $gray-darkest;
-			color: $white;
-			font-weight: bold;
-		}
-
 		.content {
-			padding: 10px;
-			text-align: center;
-			color: $text-color-dark;
-
 			.game-over-icon-wrapper {
 				margin-bottom: 10px;
 				font-size: 84px;
@@ -157,10 +146,6 @@
 			.game-over-text {
 				margin-bottom: 10px;
 				font-size: 32px;
-			}
-
-			.buttons-wrapper {
-				text-align: center;
 			}
 		}
 	}

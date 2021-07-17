@@ -201,31 +201,7 @@
 			z-index: 998;
 		}
 
-		.header {
-			padding: 10px;
-			background-color: $gray-darkest;
-			color: $white;
-			font-weight: bold;
-
-			.close-btn {
-				float: right;
-				padding: 0px 5px;
-				color: $white;
-
-				svg {
-					margin: 0px;
-				}
-
-				&:hover {
-					background-color: $gray;
-				}
-			}
-		}
-
 		.content {
-			padding: 10px;
-			color: $text-color-dark;
-
 			.avatar-wrapper {
 				display: flex;
 				flex-direction: column;
@@ -244,10 +220,6 @@
 					text-align: center;
 					font-style: italic;
 				}
-			}
-
-			.buttons-wrapper {
-				text-align: center;
 			}
 		}
 	}

@@ -14,7 +14,7 @@
 			<div class="header">
 				Game challenge
 			</div>
-			<div class="content">
+			<div class="content center">
 				You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
 
 				<TimeoutCountdown
@@ -88,28 +88,3 @@
 		}
 	};
 </script>
-
-<style lang="scss">
-	.challenge-modal {
-		.header {
-			padding: 10px;
-			background-color: $gray-darkest;
-			color: $white;
-			font-weight: bold;
-		}
-
-		.content {
-			padding: 10px;
-			text-align: center;
-			color: $text-color-dark;
-
-			.buttons-wrapper {
-				text-align: center;
-
-				.form-button {
-					margin-right: 5px;
-				}
-			}
-		}
-	}
-</style>

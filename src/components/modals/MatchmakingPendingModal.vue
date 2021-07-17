@@ -14,7 +14,7 @@
 			<div class="header">
 				Opponent found
 			</div>
-			<div class="content">
+			<div class="content center">
 				<div class="matchmaking-text">
 					An opponent has been found for a game of <span class="bold">{{ game.label }}</span>
 				</div>
@@ -87,25 +87,10 @@
 
 <style lang="scss">
 	.matchmaking-pending-modal {
-		.header {
-			padding: 10px;
-			background-color: $gray-darkest;
-			color: $white;
-			font-weight: bold;
-		}
-
 		.content {
-			padding: 10px;
-			text-align: center;
-			color: $text-color-dark;
-
 			.matchmaking-text {
 				margin-bottom: 10px;
 				font-size: 18px;
-			}
-
-			.buttons-wrapper {
-				text-align: center;
 			}
 		}
 	}

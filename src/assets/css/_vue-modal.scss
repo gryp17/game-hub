@@ -5,4 +5,42 @@
 .vm--modal {
     border-radius: 0px;
     border: solid 1px $gray-light;
+
+    .header {
+        padding: 10px;
+        background-color: $gray-darkest;
+        color: $white;
+        font-weight: bold;
+
+        .close-btn {
+            float: right;
+            padding: 0px 5px;
+            color: $white;
+
+            svg {
+                margin: 0px;
+            }
+
+            &:hover {
+                background-color: $gray;
+            }
+        }
+    }
+
+    .content {
+        padding: 10px;
+		color: $text-color-dark;
+
+        &.center {
+            text-align: center;
+        }
+
+        .buttons-wrapper {
+            text-align: center;
+
+            .form-button + .form-button {
+                margin-left: 5px;
+            }
+        }
+    }
 }
