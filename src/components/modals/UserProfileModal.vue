@@ -71,7 +71,7 @@
 </template>
 
 <script>
-	import { mapState, mapGetters } from 'vuex';
+	import { mapState, mapGetters, mapActions } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
 	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
 	import UserAvatar from '@/components/UserAvatar';
@@ -121,8 +121,19 @@
 			}
 		},
 		methods: {
+			...mapActions('lobby', [
+				'getGameStats',
+				'getGameHistory'
+			]),
 			onBeforeOpen(e) {
 				this.userId = e.params;
+
+				this.getGameStats(this.userId);
+				this.getGameHistory({
+					userId: this.userId,
+					limit: 5,
+					offset: 0
+				});
 			},
 			/**
 			 * Closes the modal

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import UserHttpService from '@/services/api/user';
 import LobbyHttpService from '@/services/api/lobby';
+import GameHttpService from '@/services/api/game';
 
 const getDefaultState = () => {
 	return {
@@ -204,6 +205,26 @@ const actions = {
 		} catch (err) {
 			Vue.toasted.global.apiError({
 				message: `Failed to accept the challenge: ${err}`
+			});
+		}
+	},
+	async getGameStats(context, userId) {
+		try {
+			const { data } = await GameHttpService.getStats(userId);
+			console.log(data);
+		} catch (err) {
+			Vue.toasted.global.apiError({
+				message: `Failed to fetch the game stats: ${err}`
+			});
+		}
+	},
+	async getGameHistory(context, { userId, limit, offset }) {
+		try {
+			const { data } = await GameHttpService.getHistory(userId, limit, offset);
+			console.log(data);
+		} catch (err) {
+			Vue.toasted.global.apiError({
+				message: `Failed to fetch the game history: ${err}`
 			});
 		}
 	}
