@@ -48,7 +48,7 @@ const isBoolean = (value) => {
  * @returns {Boolean}
  */
 const isInteger = (value) => {
-	return typeof value === 'number' && (value % 1) === 0;
+	return /^-?\d+$/.test(value);
 };
 
 /**

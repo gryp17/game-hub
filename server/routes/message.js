@@ -13,8 +13,8 @@ const rules = {
 		content: 'required'
 	},
 	getMessages: {
-		limit: ['required', 'number'],
-		offset: ['required', 'number']
+		limit: ['required', 'integer'],
+		offset: ['required', 'integer']
 	}
 };
 

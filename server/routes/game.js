@@ -9,8 +9,8 @@ const router = express.Router();
 
 const rules = {
 	getGames: {
-		limit: ['required', 'number'],
-		offset: ['required', 'number']
+		limit: ['required', 'integer'],
+		offset: ['required', 'integer']
 	}
 };
 
