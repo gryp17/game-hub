@@ -60,8 +60,16 @@
 								/>
 							</div>
 						</Tab>
-						<Tab name="Stats">
-							stats placeholder
+						<Tab
+							name="Stats"
+							class="user-stats"
+						>
+							<GameResultsChart
+								v-if="gameStats"
+								:won="gameStats.won"
+								:lost="gameStats.lost"
+								:ragequit="gameStats.ragequit"
+							/>
 						</Tab>
 					</Tabs>
 				</div>
@@ -76,13 +84,15 @@
 	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
 	import UserAvatar from '@/components/UserAvatar';
 	import ChallengeButton from '@/components/ChallengeButton';
+	import GameResultsChart from '@/components/charts/GameResultsChart';
 
 	export default {
 		components: {
 			Tabs,
 			Tab,
 			UserAvatar,
-			ChallengeButton
+			ChallengeButton,
+			GameResultsChart
 		},
 		data() {
 			return {
@@ -94,7 +104,8 @@
 				'userStatuses'
 			]),
 			...mapState('lobby', [
-				'users'
+				'users',
+				'gameStats'
 			]),
 			...mapGetters('auth', [
 				'userSession'
@@ -198,6 +209,21 @@
 
 				.buttons-wrapper {
 					margin-top: 10px;
+				}
+			}
+
+			.user-stats {
+				.game-results-chart {
+					margin: auto;
+					width: 65%;
+				}
+			}
+
+			@media (max-width: 400px) {
+				.user-stats {
+					.game-results-chart {
+						width: 100%;
+					}
 				}
 			}
 		}

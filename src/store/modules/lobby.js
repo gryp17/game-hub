@@ -5,7 +5,13 @@ import GameHttpService from '@/services/api/game';
 
 const getDefaultState = () => {
 	return {
-		users: {}
+		users: {},
+		gameStats: {
+			total: 0,
+			won: 0,
+			lost: 0,
+			ragequit: 0
+		}
 	};
 };
 
@@ -67,6 +73,9 @@ const mutations = {
 
 			Vue.set(state.users, userId, updatedUser);
 		});
+	},
+	SET_GAME_STATS(state, stats) {
+		state.gameStats = stats;
 	}
 };
 
@@ -211,7 +220,7 @@ const actions = {
 	async getGameStats(context, userId) {
 		try {
 			const { data } = await GameHttpService.getStats(userId);
-			console.log(data);
+			context.commit('SET_GAME_STATS', data);
 		} catch (err) {
 			Vue.toasted.global.apiError({
 				message: `Failed to fetch the game stats: ${err}`
