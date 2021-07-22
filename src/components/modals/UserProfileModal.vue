@@ -112,8 +112,7 @@
 				'userStatuses'
 			]),
 			...mapState('lobby', [
-				'users',
-				'gameStats'
+				'users'
 			]),
 			...mapGetters('auth', [
 				'userSession'
@@ -124,6 +123,9 @@
 				}
 
 				return this.users[this.userId];
+			},
+			gameStats() {
+				return this.userProfile.gameStats;
 			},
 			isOwnUser() {
 				return this.userProfile.id === this.userSession.id;
@@ -141,13 +143,11 @@
 		},
 		methods: {
 			...mapActions('lobby', [
-				'getGameStats',
 				'getGameHistory'
 			]),
 			onBeforeOpen(e) {
 				this.userId = e.params;
 
-				this.getGameStats(this.userId);
 				this.getGameHistory({
 					userId: this.userId,
 					limit: 5,

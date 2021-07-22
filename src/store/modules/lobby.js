@@ -5,14 +5,7 @@ import GameHttpService from '@/services/api/game';
 
 const getDefaultState = () => {
 	return {
-		users: {},
-		gameStats: {
-			total: 0,
-			won: 0,
-			lost: 0,
-			ragequit: 0,
-			byType: {}
-		}
+		users: {}
 	};
 };
 
@@ -74,9 +67,6 @@ const mutations = {
 
 			Vue.set(state.users, userId, updatedUser);
 		});
-	},
-	SET_GAME_STATS(state, stats) {
-		state.gameStats = stats;
 	}
 };
 
@@ -215,16 +205,6 @@ const actions = {
 		} catch (err) {
 			Vue.toasted.global.apiError({
 				message: `Failed to accept the challenge: ${err}`
-			});
-		}
-	},
-	async getGameStats(context, userId) {
-		try {
-			const { data } = await GameHttpService.getStats(userId);
-			context.commit('SET_GAME_STATS', data);
-		} catch (err) {
-			Vue.toasted.global.apiError({
-				message: `Failed to fetch the game stats: ${err}`
 			});
 		}
 	},

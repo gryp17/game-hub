@@ -3,7 +3,7 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { User } from '../models';
 import { sendResponse, sendApiError, sendError } from '../services/utils';
-import { errorCodes, gameStatuses, games } from '../config';
+import { errorCodes, gameStatuses } from '../config';
 
 const router = express.Router();
 
@@ -13,62 +13,6 @@ const rules = {
 		offset: ['required', 'integer']
 	}
 };
-
-router.get('/stats/:userId', isLoggedIn, async (req, res) => {
-	try {
-		const userId = parseInt(req.params.userId);
-		const userInstance = await User.findByPk(userId);
-
-		if (!userInstance) {
-			return sendError(res, {
-				userId: errorCodes.INVALID_USER_ID
-			});
-		}
-
-		const finishedGames = await userInstance.getGames({
-			where: {
-				status: gameStatuses.FINISHED
-			}
-		});
-
-		const total = finishedGames.length;
-		let won = 0;
-		let lost = 0;
-		let ragequit = 0;
-
-		const byType = {};
-
-		//generate the byType object
-		Object.keys(games).forEach((key) => {
-			const code = games[key].code;
-			byType[code] = 0;
-		});
-
-		finishedGames.forEach((game) => {
-			if (game.winner === userId) {
-				won++;
-			} else {
-				if (game.ragequit) {
-					ragequit++;
-				}
-
-				lost++;
-			}
-
-			byType[game.type]++;
-		});
-
-		sendResponse(res, {
-			total,
-			won,
-			lost,
-			ragequit,
-			byType
-		});
-	} catch (err) {
-		sendApiError(res, err);
-	}
-});
 
 router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req, res) => {
 	const maxGamesPerRequest = 20;

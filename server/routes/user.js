@@ -6,9 +6,10 @@ import path from 'path';
 import md5 from 'md5';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
-import { User } from '../models';
+import { User, Game } from '../models';
 import { sendResponse, sendApiError, makeHash } from '../services/utils';
-import { uploads } from '../config';
+import { calculateGameStats } from '../services/misc';
+import { uploads, gameStatuses } from '../config';
 import { lobby } from '../sockets';
 
 const unlink = promisify(fs.unlink);
@@ -59,7 +60,7 @@ async function uploadAvatar(userId, file) {
  */
 router.get('/all', isLoggedIn, async (req, res) => {
 	try {
-		const users = await User.findAll({
+		let users = await User.findAll({
 			attributes: [
 				'id',
 				'username',
@@ -68,7 +69,22 @@ router.get('/all', isLoggedIn, async (req, res) => {
 				'avatarLink',
 				'createdAt',
 				'updatedAt'
-			]
+			],
+			include: {
+				model: Game,
+				where: {
+					status: gameStatuses.FINISHED
+				}
+			}
+		});
+
+		//calculate the game stats for each user
+		users = users.map((userInstance) => {
+			const user = userInstance.toJSON();
+			user.gameStats = calculateGameStats(user.id, user.games);
+			delete user.games;
+
+			return user;
 		});
 
 		sendResponse(res, users);

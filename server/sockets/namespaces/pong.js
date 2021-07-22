@@ -61,6 +61,8 @@ export default function (io, app) {
 						ragequit,
 						score: scores
 					});
+
+					lobby.updateGameStats(players);
 				}
 			});
 

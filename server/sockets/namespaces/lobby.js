@@ -1,7 +1,9 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses } from '../../config';
+import { userStatuses, gameStatuses } from '../../config';
+import { calculateGameStats } from '../../services/misc';
 import matchmaking from '../../services/matchmaking';
 import cache from '../../services/cache';
+import { User, Game } from '../../models';
 
 export default function (io, app) {
 	const lobby = io.of('/lobby');
@@ -139,6 +141,34 @@ export default function (io, app) {
 				lobby.to(user.socketId).emit('cancelMatchmakingChallenge');
 			});
 		}
+	};
+
+	lobby.updateGameStats = async (users) => {
+		const userIds = users.map((user) => {
+			return user.id;
+		});
+
+		const userInstances = await User.findAll({
+			where: {
+				id: userIds
+			},
+			include: {
+				model: Game,
+				where: {
+					status: gameStatuses.FINISHED
+				}
+			}
+		});
+
+		//calculate the game stats for each user
+		userInstances.forEach((user) => {
+			const gameStats = calculateGameStats(user.id, user.games);
+
+			lobby.emit('updateUser', {
+				id: user.id,
+				gameStats
+			});
+		});
 	};
 
 	/**

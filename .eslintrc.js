@@ -53,6 +53,7 @@ module.exports = {
 		'operator-assignment': 0,
 		'import/no-mutable-exports': 0,
 		'import/named': 0,
+		'import/prefer-default-export': 0,
 		'no-unused-expressions': 0,
 		indent: ['error', 'tab'],
 		'vue/html-indent': ['error', 'tab'],
