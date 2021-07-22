@@ -16,6 +16,7 @@
 					@click="onOpenProfile"
 				>
 					{{ username }}
+					<RagequitIndicator :percentage="message.user.gameStats.ragequitPercentage"/>
 				</div>
 
 				<MessageTimestamp
@@ -37,11 +38,13 @@
 <script>
 	import UserAvatar from '@/components/UserAvatar';
 	import MessageTimestamp from '@/components/chat/MessageTimestamp';
+	import RagequitIndicator from '@/components/RagequitIndicator';
 
 	export default {
 		components: {
 			UserAvatar,
-			MessageTimestamp
+			MessageTimestamp,
+			RagequitIndicator
 		},
 		props: {
 			message: {

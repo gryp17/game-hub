@@ -14,6 +14,7 @@
 				:title="user.username"
 			>
 				{{ user.username }}
+				<RagequitIndicator :percentage="user.gameStats.ragequitPercentage"/>
 			</div>
 			<div
 				v-if="showStatus"
@@ -29,10 +30,12 @@
 <script>
 	import { mapState } from 'vuex';
 	import UserAvatar from '@/components/UserAvatar';
+	import RagequitIndicator from '@/components/RagequitIndicator';
 
 	export default {
 		components: {
-			UserAvatar
+			UserAvatar,
+			RagequitIndicator
 		},
 		props: {
 			user: {

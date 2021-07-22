@@ -41,6 +41,7 @@
 
 							<div class="username">
 								{{ userProfile.username }}
+								<RagequitIndicator :percentage="userProfile.gameStats.ragequitPercentage"/>
 							</div>
 
 							<div class="bio">
@@ -89,6 +90,7 @@
 	import { Tabs, Tab } from 'vue-tabs-component';
 	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
 	import UserAvatar from '@/components/UserAvatar';
+	import RagequitIndicator from '@/components/RagequitIndicator';
 	import ChallengeButton from '@/components/ChallengeButton';
 	import GameResultsChart from '@/components/charts/GameResultsChart';
 	import GamesByTypeChart from '@/components/charts/GamesByTypeChart';
@@ -98,6 +100,7 @@
 			Tabs,
 			Tab,
 			UserAvatar,
+			RagequitIndicator,
 			ChallengeButton,
 			GameResultsChart,
 			GamesByTypeChart

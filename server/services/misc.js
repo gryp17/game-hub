@@ -33,6 +33,7 @@ function calculateGameStats(userId, finishedGames) {
 		won,
 		lost,
 		ragequit,
+		ragequitPercentage: Math.floor((100 / total) * ragequit),
 		byType
 	};
 }
