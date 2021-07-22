@@ -10,7 +10,8 @@ const getDefaultState = () => {
 			total: 0,
 			won: 0,
 			lost: 0,
-			ragequit: 0
+			ragequit: 0,
+			byType: {}
 		}
 	};
 };

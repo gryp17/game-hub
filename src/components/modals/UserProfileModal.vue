@@ -2,6 +2,7 @@
 	<div class="user-profile-modal">
 		<modal
 			:adaptive="true"
+			:scrollable="true"
 			:width="'100%'"
 			:maxWidth="560"
 			:height="'auto'"
@@ -64,12 +65,17 @@
 							name="Stats"
 							class="user-stats"
 						>
-							<GameResultsChart
-								v-if="gameStats"
-								:won="gameStats.won"
-								:lost="gameStats.lost"
-								:ragequit="gameStats.ragequit"
-							/>
+							<template v-if="gameStats">
+								<GameResultsChart
+									:won="gameStats.won"
+									:lost="gameStats.lost"
+									:ragequit="gameStats.ragequit"
+								/>
+
+								<GamesByTypeChart
+									:games="gameStats.byType"
+								/>
+							</template>
 						</Tab>
 					</Tabs>
 				</div>
@@ -85,6 +91,7 @@
 	import UserAvatar from '@/components/UserAvatar';
 	import ChallengeButton from '@/components/ChallengeButton';
 	import GameResultsChart from '@/components/charts/GameResultsChart';
+	import GamesByTypeChart from '@/components/charts/GamesByTypeChart';
 
 	export default {
 		components: {
@@ -92,7 +99,8 @@
 			Tab,
 			UserAvatar,
 			ChallengeButton,
-			GameResultsChart
+			GameResultsChart,
+			GamesByTypeChart
 		},
 		data() {
 			return {
@@ -209,21 +217,6 @@
 
 				.buttons-wrapper {
 					margin-top: 10px;
-				}
-			}
-
-			.user-stats {
-				.game-results-chart {
-					margin: auto;
-					width: 65%;
-				}
-			}
-
-			@media (max-width: 400px) {
-				.user-stats {
-					.game-results-chart {
-						width: 100%;
-					}
 				}
 			}
 		}

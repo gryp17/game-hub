@@ -1,7 +1,7 @@
 <template>
-	<div class="game-results-chart">
+	<div class="games-by-type-chart">
 		<GenericGameStatsChart
-			title="Games by result"
+			title="Games by type"
 			:labels="labels"
 			:chart-data="chartData"
 			:options="chartOptions"
@@ -17,37 +17,26 @@
 			GenericGameStatsChart
 		},
 		props: {
-			won: Number,
-			lost: Number,
-			ragequit: Number
+			games: Object
 		},
 		computed: {
-			stats() {
-				//ragequit games also count as losses
-				return {
-					won: this.won,
-					lost: this.lost - this.ragequit,
-					ragequit: this.ragequit
-				};
-			},
 			labels() {
-				return [
-					{
-						label: 'Won',
-						legendLabel: `Won: ${this.stats.won}`,
-						color: '#43b581'
-					},
-					{
-						label: 'Lost',
-						legendLabel: `Lost: ${this.stats.lost}`,
-						color: '#ff5e59'
-					},
-					{
-						label: 'Ragequit',
-						legendLabel: `Ragequit: ${this.stats.ragequit}`,
-						color: '#ff88de'
-					}
-				];
+				const colors = ['#7289da', '#ffa78b', '#ff88de'];
+				const labels = [];
+
+				Object.keys(this.games).forEach((gameCode, index) => {
+					const game = this.$options.filters.gamesMap(gameCode);
+					const value = this.games[gameCode];
+					const legendLabel = `${game.label}: ${value}`;
+
+					labels.push({
+						label: game.label,
+						legendLabel,
+						color: colors[index]
+					});
+				});
+
+				return labels;
 			},
 			chartData() {
 				const labels = [];
@@ -63,7 +52,7 @@
 					datasets: [
 						{
 							label: 'Games',
-							data: Object.values(this.stats),
+							data: Object.values(this.games),
 							backgroundColor: colors
 						}
 					]

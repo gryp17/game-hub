@@ -3,7 +3,7 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { User } from '../models';
 import { sendResponse, sendApiError, sendError } from '../services/utils';
-import { errorCodes, gameStatuses } from '../config';
+import { errorCodes, gameStatuses, games } from '../config';
 
 const router = express.Router();
 
@@ -25,14 +25,26 @@ router.get('/stats/:userId', isLoggedIn, async (req, res) => {
 			});
 		}
 
-		const games = await userInstance.getGames();
+		const finishedGames = await userInstance.getGames({
+			where: {
+				status: gameStatuses.FINISHED
+			}
+		});
 
-		const total = games.length;
+		const total = finishedGames.length;
 		let won = 0;
 		let lost = 0;
 		let ragequit = 0;
 
-		games.forEach((game) => {
+		const byType = {};
+
+		//generate the byType object
+		Object.keys(games).forEach((key) => {
+			const code = games[key].code;
+			byType[code] = 0;
+		});
+
+		finishedGames.forEach((game) => {
 			if (game.winner === userId) {
 				won++;
 			} else {
@@ -42,13 +54,16 @@ router.get('/stats/:userId', isLoggedIn, async (req, res) => {
 
 				lost++;
 			}
+
+			byType[game.type]++;
 		});
 
 		sendResponse(res, {
 			total,
 			won,
 			lost,
-			ragequit
+			ragequit,
+			byType
 		});
 	} catch (err) {
 		sendApiError(res, err);
@@ -79,7 +94,7 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 			}
 		});
 
-		let games = await userInstance.getGames({
+		let finishedGames = await userInstance.getGames({
 			where: {
 				status: gameStatuses.FINISHED
 			},
@@ -99,7 +114,7 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 		});
 
 		//return only the necessary data
-		games = games.map((item) => {
+		finishedGames = finishedGames.map((item) => {
 			const game = item.toJSON();
 
 			delete game.game_user;
@@ -113,7 +128,7 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 
 		sendResponse(res, {
 			total: total.length,
-			games
+			games: finishedGames
 		});
 	} catch (err) {
 		sendApiError(res, err);
