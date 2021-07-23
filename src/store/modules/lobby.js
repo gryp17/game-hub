@@ -5,7 +5,11 @@ import GameHttpService from '@/services/api/game';
 
 const getDefaultState = () => {
 	return {
-		users: {}
+		users: {},
+		gameHistory: {
+			total: 0,
+			games: []
+		}
 	};
 };
 
@@ -34,6 +38,9 @@ const getters = {
 			//then by username
 			return a.username.localeCompare(b.username);
 		});
+	},
+	gameHistory(state) {
+		return state.gameHistory;
 	}
 };
 
@@ -67,6 +74,9 @@ const mutations = {
 
 			Vue.set(state.users, userId, updatedUser);
 		});
+	},
+	SET_GAME_HISTORY(state, gameHistory) {
+		state.gameHistory = gameHistory;
 	}
 };
 
@@ -211,6 +221,7 @@ const actions = {
 	async getGameHistory(context, { userId, limit, offset }) {
 		try {
 			const { data } = await GameHttpService.getHistory(userId, limit, offset);
+			context.commit('SET_GAME_HISTORY', data);
 			console.log(data);
 		} catch (err) {
 			Vue.toasted.global.apiError({

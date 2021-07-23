@@ -88,7 +88,7 @@
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
-	import UserProfileModal from '@/components/modals/UserProfileModal';
+	import UserProfileModal from '@/components/modals/user-profile/UserProfileModal';
 	import EditProfileModal from '@/components/modals/EditProfileModal';
 
 	export default {

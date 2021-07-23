@@ -29,38 +29,14 @@
 					>
 						<Tab
 							name="Profile"
-							class="user-profile"
 						>
-							<UserAvatar
-								status-type="border"
-								:avatar="userProfile.avatarLink"
-								:title="userProfile.status.formatted"
-								:status="userProfile.status.avatar"
-								:size="160"
+							<ProfileTab
+								:user-profile="userProfile"
+								:user-session="userSession"
+								:user-statuses="userStatuses"
+								@edit-profile="editProfile"
+								@challenge-player="challengePlayer"
 							/>
-
-							<div class="username">
-								{{ userProfile.username }}
-								<RagequitIndicator :percentage="userProfile.gameStats.ragequitPercentage"/>
-							</div>
-
-							<div class="bio">
-								{{ bio }}
-							</div>
-
-							<div class="buttons-wrapper">
-								<FormButton
-									v-if="isOwnUser"
-									@click="editProfile"
-								>
-									Edit profile
-								</FormButton>
-								<ChallengeButton
-									v-else
-									:disabled="!canChallengePLayer"
-									@challenge="challengePlayer"
-								/>
-							</div>
 						</Tab>
 						<Tab
 							name="Stats"
@@ -78,6 +54,17 @@
 								/>
 							</template>
 						</Tab>
+						<Tab
+							name="History"
+							class="game-history"
+						>
+							<GameHistoryTab
+								:total="gameHistory.total"
+								:games="gameHistory.games"
+								:games-per-page="gamesPerPage"
+								@get-games="getGames"
+							/>
+						</Tab>
 					</Tabs>
 				</div>
 			</template>
@@ -89,25 +76,24 @@
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
 	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
-	import UserAvatar from '@/components/UserAvatar';
-	import RagequitIndicator from '@/components/RagequitIndicator';
-	import ChallengeButton from '@/components/ChallengeButton';
 	import GameResultsChart from '@/components/charts/GameResultsChart';
 	import GamesByTypeChart from '@/components/charts/GamesByTypeChart';
+	import ProfileTab from '@/components/modals/user-profile/ProfileTab';
+	import GameHistoryTab from '@/components/modals/user-profile/GameHistoryTab';
 
 	export default {
 		components: {
 			Tabs,
 			Tab,
-			UserAvatar,
-			RagequitIndicator,
-			ChallengeButton,
 			GameResultsChart,
-			GamesByTypeChart
+			GamesByTypeChart,
+			ProfileTab,
+			GameHistoryTab
 		},
 		data() {
 			return {
-				userId: null
+				userId: null,
+				gamesPerPage: 5
 			};
 		},
 		computed: {
@@ -120,6 +106,9 @@
 			...mapGetters('auth', [
 				'userSession'
 			]),
+			...mapGetters('lobby', [
+				'gameHistory'
+			]),
 			userProfile() {
 				if (!this.userId) {
 					return null;
@@ -129,19 +118,6 @@
 			},
 			gameStats() {
 				return this.userProfile.gameStats;
-			},
-			isOwnUser() {
-				return this.userProfile.id === this.userSession.id;
-			},
-			canChallengePLayer() {
-				return (
-					this.userSession.status.raw === this.userStatuses.ONLINE
-					&& this.userProfile.status.raw === this.userStatuses.ONLINE
-					&& !this.isOwnUser
-				);
-			},
-			bio() {
-				return this.userProfile.bio ? this.userProfile.bio : 'Apparently, this user prefers to keep an air of mystery about them.';
 			}
 		},
 		methods: {
@@ -151,9 +127,8 @@
 			onBeforeOpen(e) {
 				this.userId = e.params;
 
-				this.getGameHistory({
-					userId: this.userId,
-					limit: 5,
+				this.getGames({
+					limit: this.gamesPerPage,
 					offset: 0
 				});
 			},
@@ -177,6 +152,13 @@
 				setTimeout(() => {
 					showEditProfileModal();
 				}, 200);
+			},
+			getGames({ limit, offset }) {
+				this.getGameHistory({
+					userId: this.userId,
+					limit,
+					offset
+				});
 			}
 		}
 	};
@@ -199,28 +181,6 @@
 
 			.tabs-component-panels {
 				padding: 10px;
-			}
-
-			.user-profile {
-				text-align: center;
-
-				.user-avatar {
-					margin: 10px auto;
-				}
-
-				.username {
-					margin-bottom: 20px;
-					font-size: 20px;
-					font-weight: bold;
-				}
-
-				.bio {
-					margin-bottom: 20px;
-				}
-
-				.buttons-wrapper {
-					margin-top: 10px;
-				}
 			}
 		}
 	}
