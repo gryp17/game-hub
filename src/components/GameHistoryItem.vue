@@ -12,7 +12,7 @@
 		<div>
 			{{ game.id }} - {{ game.updatedAt }}
 			<br/>
-			{{ game.data }}
+			{{ game.type }}
 		</div>
 	</div>
 </template>

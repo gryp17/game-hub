@@ -40,7 +40,36 @@ const getters = {
 		});
 	},
 	gameHistory(state) {
-		return state.gameHistory;
+		//map the score userId to the corresponding user object
+		const games = state.gameHistory.games.map((game) => {
+			const score = {};
+
+			let data = JSON.parse(game.data);
+
+			Object.keys(data.score).forEach((userId) => {
+				const points = data.score[userId];
+
+				score[userId] = {
+					user: state.users[userId],
+					score: points
+				};
+			});
+
+			data = {
+				...data,
+				score
+			};
+
+			return {
+				...game,
+				data
+			};
+		});
+
+		return {
+			...state.gameHistory,
+			games
+		};
 	}
 };
 
@@ -222,7 +251,6 @@ const actions = {
 		try {
 			const { data } = await GameHttpService.getHistory(userId, limit, offset);
 			context.commit('SET_GAME_HISTORY', data);
-			console.log(data);
 		} catch (err) {
 			Vue.toasted.global.apiError({
 				message: `Failed to fetch the game history: ${err}`
