@@ -70,13 +70,13 @@
 			icon() {
 				if (this.isWinner) {
 					if (this.ragequit) {
-						return 'fas fa-grin-tears pink';
+						return 'fas fa-grin-tears color-pink';
 					}
 
-					return 'fas fa-thumbs-up green';
+					return 'fas fa-thumbs-up color-green';
 				}
 
-				return 'fas fa-meh yellow';
+				return 'fas fa-meh color-yellow';
 			},
 			text() {
 				if (this.isWinner) {
@@ -129,18 +129,6 @@
 			.game-over-icon-wrapper {
 				margin-bottom: 10px;
 				font-size: 84px;
-
-				.green {
-					color: $green;
-				}
-
-				.pink {
-					color: $pink;
-				}
-
-				.yellow {
-					color: $yellow;
-				}
 			}
 
 			.game-over-text {

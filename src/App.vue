@@ -44,6 +44,7 @@
 </script>
 
 <style lang="scss">
+	@import '~@/assets/css/_utils';
 	@import '~@/assets/css/_vue-tabs';
 	@import '~@/assets/css/_vue-toasted';
 	@import '~@/assets/css/_vue-modal';
@@ -83,10 +84,6 @@
 
 		a {
 			color: $purple;
-		}
-
-		.bold {
-			font-weight: bold;
 		}
 
 		#app {
