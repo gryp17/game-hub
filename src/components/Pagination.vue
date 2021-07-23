@@ -104,6 +104,7 @@
 
 <style scoped lang="scss">
 	.pagination {
+		display: flex;
 		justify-content: center;
 		margin: 15px 0px;
 

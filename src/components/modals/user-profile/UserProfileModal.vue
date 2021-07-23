@@ -62,6 +62,7 @@
 								:total="gameHistory.total"
 								:games="gameHistory.games"
 								:games-per-page="gamesPerPage"
+								:user-profile="userProfile"
 								@get-games="getGames"
 							/>
 						</Tab>

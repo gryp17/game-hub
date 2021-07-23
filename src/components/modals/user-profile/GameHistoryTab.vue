@@ -1,19 +1,23 @@
 <template>
 	<div class="game-history-tab">
-		<!-- TODO: show something if no games -->
-		<GameHistoryItem
-			v-for="game in games"
-			:key="game.id"
-			:game="game"
-		/>
+		<div v-if="total === 0" class="no-data">
+			There is no data
+		</div>
+		<template v-else>
+			<GameHistoryItem
+				v-for="game in games"
+				:key="game.id"
+				:game="game"
+				:user-profile="userProfile"
+			/>
 
-		<!-- TODO: fix the pagination styling -->
-		<Pagination
-			v-show="totalPages > 1"
-			:total-pages="totalPages"
-			:current-page="page"
-			@change-page="getGames"
-		/>
+			<Pagination
+				v-show="totalPages > 1"
+				:total-pages="totalPages"
+				:current-page="page"
+				@change-page="getGames"
+			/>
+		</template>
 	</div>
 </template>
 
@@ -29,7 +33,8 @@
 		props: {
 			total: Number,
 			games: Array,
-			gamesPerPage: Number
+			gamesPerPage: Number,
+			userProfile: Object
 		},
 		data() {
 			return {
@@ -56,6 +61,10 @@
 
 <style lang="scss">
 	.game-history-tab {
-
+		.no-data {
+			padding: 50px 20px;
+			text-align: center;
+			font-size: 18px;
+		}
 	}
 </style>
