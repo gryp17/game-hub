@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import GameHistoryItem from '@/components/GameHistoryItem';
+	import GameHistoryItem from '@/components/modals/user-profile/GameHistoryItem';
 	import Pagination from '@/components/Pagination';
 
 	export default {
