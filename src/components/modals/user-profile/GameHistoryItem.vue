@@ -3,11 +3,16 @@
 		:class="['game-history-item', { winner: isWinner, ragequit: isRagequit }]"
 		:title="title"
 	>
-		<div class="icon-wrapper">
+		<i
+			:class="[gameType.icon, 'game-type-icon']"
+			:title="gameType.label"
+		/>
+
+		<div class="result-icon-wrapper">
 			<i
 				:class="icon"
 				:title="title"
-			></i>
+			/>
 		</div>
 
 		<div class="players-wrapper">
@@ -66,6 +71,9 @@
 
 				return 'Loss';
 			},
+			gameType() {
+				return this.$options.filters.gamesMap(this.game.type);
+			},
 			icon() {
 				if (this.isWinner) {
 					return 'fas fa-trophy color-yellow';
@@ -96,19 +104,42 @@
 </script>
 
 <style lang="scss">
+	$border-color-loss: lighten($red, 20%);
+	$border-color-win: lighten($green, 20%);
+	$border-color-ragequit: lighten($pink, 10%);
+
 	.game-history-item {
+		position: relative;
 		margin-bottom: 8px;
 		padding: 5px 10px 10px 10px;
 		border-radius: 5px;
 		box-shadow: 1px 3px 3px $gray-very-light;
-		border: solid 10px lighten($red, 20%);
+		border: solid 10px $border-color-loss;
+
+		&:after {
+			content: '';
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			border-style: solid;
+			border-width: 40px 40px 0 0;
+			border-color: $border-color-loss transparent transparent transparent;
+		}
 
 		&.winner {
-			border-color: lighten($green, 20%);
+			border-color: $border-color-win;
+
+			&:after {
+				border-top-color: $border-color-win;
+			}
 		}
 
 		&.ragequit {
-			border-color: lighten($pink, 10%);
+			border-color: $border-color-ragequit;
+
+			&:after {
+				border-top-color: $border-color-ragequit;
+			}
 		}
 
 		.players-wrapper {
@@ -139,7 +170,16 @@
 			}
 		}
 
-		.icon-wrapper {
+		.game-type-icon {
+			position: absolute;
+			left: -3px;
+			top: -3px;
+			font-size: 20px;
+			color: $white;
+			z-index: 1;
+		}
+
+		.result-icon-wrapper {
 			padding: 5px;
 			text-align: center;
 			font-size: 26px;
