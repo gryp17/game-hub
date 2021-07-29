@@ -155,6 +155,7 @@
 			.player-item {
 				flex: 1;
 				text-align: center;
+				overflow-x: hidden;
 
 				&:first-child {
 					order: 2;
@@ -164,8 +165,16 @@
 					font-size: 20px;
 
 					.username {
-						display: inline-block;
+						padding-bottom: 5px;
+						border-bottom: solid 2px $gray-lightest;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
 						cursor: pointer;
+
+						.user-avatar {
+							margin-right: 5px;
+						}
 					}
 				}
 
@@ -177,7 +186,9 @@
 
 			.vs {
 				display: flex;
+				padding: 0px 20px;
 				align-items: center;
+				justify-content: center;
 				font-size: 18px;
 			}
 		}
