@@ -29,7 +29,7 @@
 				<div class="column">
 					<UserMenu
 						@logout="logout"
-						@edit-profile="openEditProfile"
+						@edit-profile="showEditProfileModal"
 					/>
 				</div>
 			</div>
@@ -44,7 +44,7 @@
 						v-for="user in users"
 						:key="user.id"
 						:user="user"
-						@click="openUserProfile"
+						@click="showProfileModal"
 					/>
 				</div>
 			</div>
@@ -174,10 +174,10 @@
 				'cancelMatchmakingChallenge',
 				'acceptMatchmakingChallenge'
 			]),
-			openEditProfile() {
+			showEditProfileModal() {
 				showEditProfileModal();
 			},
-			openUserProfile(user) {
+			showProfileModal(user) {
 				showProfileModal(user.id);
 			},
 			async onChallengePlayer({ user, game }) {
