@@ -13,6 +13,7 @@
 					<PlayButton
 						:active="matchmakingEnabled"
 						:disabled="matchmakingIsLoading"
+						:available-games="availableGames"
 						@play="onStartMatchmaking"
 						@stop="onStopMatchmaking"
 					/>
@@ -121,6 +122,9 @@
 			]),
 			...mapGetters('lobby', [
 				'users'
+			]),
+			...mapGetters('config', [
+				'availableGames'
 			])
 		},
 		async created() {

@@ -40,7 +40,6 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex';
 	import DropdownMenu from '@/components/DropdownMenu';
 
 	export default {
@@ -55,7 +54,8 @@
 			disabled: {
 				type: Boolean,
 				default: false
-			}
+			},
+			availableGames: Array
 		},
 		data() {
 			return {
@@ -63,9 +63,6 @@
 			};
 		},
 		computed: {
-			...mapGetters('config', [
-				'availableGames'
-			]),
 			enabledGames() {
 				return [
 					//add the "any" option to the list
