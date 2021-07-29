@@ -96,7 +96,7 @@
 		data() {
 			return {
 				userId: null,
-				gamesPerPage: 5
+				gamesPerPage: 3
 			};
 		},
 		computed: {

@@ -3,63 +3,84 @@
 		:class="['game-history-item', { winner: isWinner, ragequit: isRagequit }]"
 		:title="title"
 	>
-		<!-- hackfix for the fontawesome vue icons -->
-		<span
-			:key="gameType.icon"
-			class="game-type-icon-wrapper"
-		>
-			<i
-				:class="gameType.icon"
-				:title="gameType.label"
-			/>
-		</span>
-
-		<!-- hackfix for the fontawesome vue icons -->
-		<div
-			:key="icon"
-			class="result-icon-wrapper"
-		>
-			<i
-				:class="icon"
-				:title="title"
-			/>
-		</div>
-
-		<div class="players-wrapper">
-			<div
-				v-for="{ user, score } in scores"
-				:key="user.id"
-				class="player-item"
+		<div class="inner-wrapper">
+			<!-- hackfix for the fontawesome vue icons -->
+			<span
+				:key="gameType.icon"
+				class="game-type-icon-wrapper"
 			>
-				<div class="username-wrapper">
-					<div
-						class="username"
-						@click="$emit('open-profile', user.id)"
-					>
-						<UserAvatar
-							:avatar="user.avatarLink"
-							:title="user.username"
-						/>
-						<span
-							:title="user.username"
+				<i
+					:class="gameType.icon"
+					:title="gameType.label"
+				/>
+			</span>
+
+			<!-- hackfix for the fontawesome vue icons -->
+			<div
+				:key="icon"
+				class="result-icon-wrapper"
+			>
+				<i
+					:class="icon"
+					:title="title"
+				/>
+			</div>
+
+			<div class="players-wrapper">
+				<div
+					v-for="{ user, score } in scores"
+					:key="user.id"
+					class="player-item"
+				>
+					<div class="username-wrapper">
+						<div
+							class="username"
+							@click="$emit('open-profile', user.id)"
 						>
-							{{ user.username }}
-						</span>
+							<UserAvatar
+								:avatar="user.avatarLink"
+								:title="user.username"
+							/>
+							<span
+								:title="user.username"
+							>
+								{{ user.username }}
+							</span>
+						</div>
+					</div>
+					<div class="score">
+						{{ score }}
 					</div>
 				</div>
-				<div class="score">
-					{{ score }}
+
+				<div class="vs">
+					VS
 				</div>
 			</div>
+		</div>
 
-			<div class="vs">
-				VS
-			</div>
+		<div class="game-footer">
+			<span
+				class="footer-item"
+				:title="dateAndTime"
+			>
+				<i class="far fa-calendar-alt"></i>
+				{{ date }}
+			</span>
+
+			<span
+				class="footer-item"
+				title="Duration"
+			>
+				<i class="far fa-clock"></i>
+				{{ duration }}
+			</span>
 		</div>
 	</div>
 </template>
 
 <script>
+	import moment from 'moment';
 	import UserAvatar from '@/components/UserAvatar';
 
 	export default {
@@ -115,23 +136,41 @@
 				});
 
 				return scores;
+			},
+			date() {
+				return moment(this.game.updatedAt).format('YYYY-MM-DD');
+			},
+			dateAndTime() {
+				return moment(this.game.updatedAt).format('YYYY-MM-DD HH:mm:ss');
+			},
+			durationInSeconds() {
+				return moment(this.game.updatedAt).diff(moment(this.game.createdAt), 'seconds');
+			},
+			duration() {
+				if (this.durationInSeconds > 60) {
+					const durationInMinutes = Math.floor(this.durationInSeconds / 60);
+					const leftoverSeconds = this.durationInSeconds % 60;
+					return `${durationInMinutes} minute(s) and ${leftoverSeconds} second(s)`;
+				}
+
+				return `${this.durationInSeconds} seconds`;
 			}
 		}
 	};
 </script>
 
 <style lang="scss">
-	$border-color-loss: lighten($red, 20%);
-	$border-color-win: lighten($green, 20%);
-	$border-color-ragequit: lighten($pink, 10%);
+	$color-loss: lighten($red, 20%);
+	$color-win: lighten($green, 20%);
+	$color-ragequit: lighten($pink, 10%);
 
 	.game-history-item {
 		position: relative;
 		margin-bottom: 8px;
-		padding: 5px 10px 10px 10px;
 		border-radius: 5px;
 		box-shadow: 1px 3px 3px $gray-very-light;
-		border: solid 10px $border-color-loss;
+		border: solid 10px $color-loss;
+		border-bottom-width: 5px;
 
 		&:after {
 			content: '';
@@ -140,23 +179,35 @@
 			top: 0px;
 			border-style: solid;
 			border-width: 40px 40px 0 0;
-			border-color: $border-color-loss transparent transparent transparent;
+			border-color: $color-loss transparent transparent transparent;
 		}
 
 		&.winner {
-			border-color: $border-color-win;
+			border-color: $color-win;
 
 			&:after {
-				border-top-color: $border-color-win;
+				border-top-color: $color-win;
+			}
+
+			.game-footer {
+				background-color: $color-win;
 			}
 		}
 
 		&.ragequit {
-			border-color: $border-color-ragequit;
+			border-color: $color-ragequit;
 
 			&:after {
-				border-top-color: $border-color-ragequit;
+				border-top-color: $color-ragequit;
 			}
+
+			.game-footer {
+				background-color: $color-ragequit;
+			}
+		}
+
+		.inner-wrapper {
+			padding: 5px 10px 10px 10px;
 		}
 
 		.players-wrapper {
@@ -216,6 +267,24 @@
 			padding: 5px;
 			text-align: center;
 			font-size: 26px;
+		}
+
+		.game-footer {
+			display: flex;
+			justify-content: space-between;
+			padding-top: 5px;
+			color: $white;
+			background-color: $color-loss;
+			font-size: 15px;
+
+			.footer-item {
+				display: flex;
+				align-items: center;
+
+				svg {
+					margin-right: 4px;
+				}
+			}
 		}
 	}
 </style>
