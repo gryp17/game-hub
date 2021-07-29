@@ -21,14 +21,21 @@
 				:key="user.id"
 				class="player-item"
 			>
-				<div class="username">
-					<UserAvatar
-						:avatar="user.avatarLink"
-						:title="user.username"
-					/>
-					<span :title="user.username">
-						{{ user.username }}
-					</span>
+				<div class="username-wrapper">
+					<div
+						class="username"
+						@click="$emit('open-profile', user.id)"
+					>
+						<UserAvatar
+							:avatar="user.avatarLink"
+							:title="user.username"
+						/>
+						<span
+							:title="user.username"
+						>
+							{{ user.username }}
+						</span>
+					</div>
 				</div>
 				<div class="score">
 					{{ score }}
@@ -153,8 +160,13 @@
 					order: 2;
 				}
 
-				.username {
+				.username-wrapper {
 					font-size: 20px;
+
+					.username {
+						display: inline-block;
+						cursor: pointer;
+					}
 				}
 
 				.score {

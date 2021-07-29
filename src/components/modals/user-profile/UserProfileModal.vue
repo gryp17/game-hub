@@ -23,6 +23,7 @@
 				</div>
 				<div class="content">
 					<Tabs
+						ref="tabs"
 						cache-lifetime="0"
 						class="light"
 						:options="{ useUrlFragment: false }"
@@ -64,6 +65,7 @@
 								:games-per-page="gamesPerPage"
 								:user-profile="userProfile"
 								@get-games="getGames"
+								@open-profile="changeUserProfile"
 							/>
 						</Tab>
 					</Tabs>
@@ -160,6 +162,14 @@
 					limit,
 					offset
 				});
+			},
+			changeUserProfile(userId) {
+				//manually call the onBeforeOpen listener with the new user id and switch to the profile tab
+				this.onBeforeOpen({
+					params: userId
+				});
+
+				this.$refs.tabs.selectTab('#profile');
 			}
 		}
 	};

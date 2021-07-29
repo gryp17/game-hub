@@ -9,6 +9,7 @@
 				:key="game.id"
 				:game="game"
 				:user-profile="userProfile"
+				@open-profile="$emit('open-profile', $event)"
 			/>
 
 			<Pagination
@@ -40,6 +41,14 @@
 			return {
 				page: 0
 			};
+		},
+		watch: {
+			userProfile: {
+				handler() {
+					this.page = 0;
+				},
+				deep: true
+			}
 		},
 		computed: {
 			totalPages() {
