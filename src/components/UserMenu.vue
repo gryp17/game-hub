@@ -12,7 +12,7 @@
 			</template>
 			<template v-slot:items>
 				<div
-					@click="onEditProfile"
+					@click="$emit('edit-profile')"
 				>
 					<i class="fas fa-user-edit"></i>
 					Edit Profile
@@ -29,8 +29,6 @@
 </template>
 
 <script>
-	import { mapActions } from 'vuex';
-	import { showEditProfileModal } from '@/services/modal';
 	import DropdownMenu from '@/components/DropdownMenu';
 
 	export default {
@@ -38,23 +36,15 @@
 			DropdownMenu
 		},
 		methods: {
-			...mapActions('auth', [
-				'logout'
-			]),
 			/**
 			 * Logs out the user
 			 */
 			async onLogout() {
-				await this.logout();
+				//use $listeners instead of $emit in order to be able to await the response
+				await this.$listeners.logout();
 				this.$router.push({
 					name: 'authentication'
 				});
-			},
-			/**
-			 * Opens the edit profile modal
-			 */
-			onEditProfile() {
-				showEditProfileModal();
 			}
 		}
 	};

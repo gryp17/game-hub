@@ -27,7 +27,10 @@
 					/>
 				</div>
 				<div class="column">
-					<UserMenu />
+					<UserMenu
+						@logout="logout"
+						@edit-profile="openEditProfile"
+					/>
 				</div>
 			</div>
 			<div class="content-wrapper">
@@ -72,6 +75,7 @@
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import {
 		showProfileModal,
+		showEditProfileModal,
 		showChallengeModal,
 		showChallengePendingModal,
 		showMatchmakingPendingModal,
@@ -145,6 +149,9 @@
 			this.disconnectFromSocket();
 		},
 		methods: {
+			...mapActions('auth', [
+				'logout'
+			]),
 			...mapActions('lobby', [
 				'getUsers',
 				'newUserReceived',
@@ -167,6 +174,9 @@
 				'cancelMatchmakingChallenge',
 				'acceptMatchmakingChallenge'
 			]),
+			openEditProfile() {
+				showEditProfileModal();
+			},
 			openUserProfile(user) {
 				showProfileModal(user.id);
 			},
