@@ -3,12 +3,22 @@
 		:class="['game-history-item', { winner: isWinner, ragequit: isRagequit }]"
 		:title="title"
 	>
-		<i
-			:class="[gameType.icon, 'game-type-icon']"
-			:title="gameType.label"
-		/>
+		<!-- hackfix for the fontawesome vue icons -->
+		<span
+			:key="gameType.icon"
+			class="game-type-icon-wrapper"
+		>
+			<i
+				:class="gameType.icon"
+				:title="gameType.label"
+			/>
+		</span>
 
-		<div class="result-icon-wrapper">
+		<!-- hackfix for the fontawesome vue icons -->
+		<div
+			:key="icon"
+			class="result-icon-wrapper"
+		>
 			<i
 				:class="icon"
 				:title="title"
@@ -193,7 +203,7 @@
 			}
 		}
 
-		.game-type-icon {
+		.game-type-icon-wrapper {
 			position: absolute;
 			left: -3px;
 			top: -3px;
