@@ -160,9 +160,9 @@
 </script>
 
 <style lang="scss">
-	$color-loss: lighten($red, 20%);
-	$color-win: lighten($green, 20%);
-	$color-ragequit: lighten($pink, 10%);
+	$color-loss: $red;
+	$color-win: $green;
+	$color-ragequit: $pink;
 
 	.game-history-item {
 		position: relative;
