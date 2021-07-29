@@ -1,52 +1,30 @@
+//colors map (TODO: add more colors if necessary)
+$colorsMap: (
+ 'black': $black,
+ 'white': $white,
+ 'red': $red,
+ 'purple': $purple,
+ 'green': $green,
+ 'pink': $pink,
+ 'orange': $orange,
+ 'blue': $blue,
+ 'yellow': $yellow,
+ 'brown': $brown,
+ 'gray': $gray,
+ 'gray-light': $gray-light
+);
+
 .bold {
     font-weight: bold;
 }
 
-//colors (TODO: use mixin or something and generate background colors as well)
-.color-black {
-    color: $black;
-}
+//generate the utility color-X and background-color-X classes
+@each $name, $value in $colorsMap {
+    .color-#{$name} {
+        color: #{$value};
+    }
 
-.color-white {
-    color: $white;
-}
-
-.color-red {
-    color: $red;
-}
-
-.color-purple {
-    color: $purple;
-}
-
-.color-green {
-    color: $green;
-}
-
-.color-pink {
-    color: $pink;
-}
-
-.color-orange {
-    color: $orange;
-}
-
-.color-blue {
-    color: $blue;
-}
-
-.color-yellow {
-    color: $yellow;
-}
-
-.color-brown {
-    color: $brown;
-}
-
-.color-gray {
-    color: $gray;
-}
-
-.color-gray-light {
-    color: $gray-light;
+    .background-color-#{$name} {
+        background-color: #{$value};
+    }
 }
