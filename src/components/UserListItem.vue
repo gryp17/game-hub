@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="user-item"
+		class="user-list-item"
 		@click="$emit('click', user)"
 	>
 		<UserAvatar
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
 	import UserAvatar from '@/components/UserAvatar';
 	import RagequitIndicator from '@/components/RagequitIndicator';
 
@@ -41,12 +40,10 @@
 			user: {
 				type: Object,
 				required: true
-			}
+			},
+			userStatuses: Object
 		},
 		computed: {
-			...mapState('config', [
-				'userStatuses'
-			]),
 			onlineStateStatuses() {
 				return [
 					this.userStatuses.ONLINE,
@@ -70,7 +67,7 @@
 </script>
 
 <style lang="scss">
-	.user-item {
+	.user-list-item {
 		display: flex;
 		padding: 10px;
 		cursor: pointer;

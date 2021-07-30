@@ -40,10 +40,11 @@
 				</div>
 
 				<div class="users-list">
-					<UserItem
+					<UserListItem
 						v-for="user in users"
 						:key="user.id"
 						:user="user"
+						:user-statuses="userStatuses"
 						@click="showProfileModal"
 					/>
 				</div>
@@ -85,7 +86,7 @@
 	} from '@/services/modal';
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
-	import UserItem from '@/components/users-list/UserItem';
+	import UserListItem from '@/components/UserListItem';
 	import MessagesList from '@/components/chat/MessagesList';
 	import ChatControls from '@/components/chat/ChatControls';
 	import PlayButton from '@/components/PlayButton';
@@ -99,7 +100,7 @@
 	export default {
 		components: {
 			LoadingIndicator,
-			UserItem,
+			UserListItem,
 			MessagesList,
 			ChatControls,
 			PlayButton,
@@ -119,6 +120,9 @@
 		computed: {
 			...mapState('auth', [
 				'userSession'
+			]),
+			...mapState('config', [
+				'userStatuses'
 			]),
 			...mapState('matchmaking', [
 				'matchmakingEnabled',
