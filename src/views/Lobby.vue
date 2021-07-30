@@ -34,10 +34,7 @@
 				</div>
 			</div>
 			<div class="content-wrapper">
-				<div class="chat">
-					<MessagesList />
-					<ChatControls />
-				</div>
+				<Chat />
 
 				<div class="users-list">
 					<UserListItem
@@ -87,8 +84,7 @@
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UserListItem from '@/components/UserListItem';
-	import MessagesList from '@/components/chat/MessagesList';
-	import ChatControls from '@/components/chat/ChatControls';
+	import Chat from '@/components/chat/Chat';
 	import PlayButton from '@/components/PlayButton';
 	import UserMenu from '@/components/UserMenu';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
@@ -101,8 +97,7 @@
 		components: {
 			LoadingIndicator,
 			UserListItem,
-			MessagesList,
-			ChatControls,
+			Chat,
 			PlayButton,
 			ChallengeModal,
 			ChallengePendingModal,
@@ -331,9 +326,6 @@
 
 			.chat {
 				flex: 1;
-				display: flex;
-				flex-direction: column;
-				background-color: $gray;
 			}
 
 			.users-list {

@@ -5,19 +5,21 @@
 			:key="message.id"
 			:message="message"
 			:own="message.userId === userSession.id"
-			@open-profile="onOpenUserProfile"
+			@open-profile="$emit('open-profile', $event)"
 		/>
 	</div>
 </template>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex';
-	import { showProfileModal } from '@/services/modal';
 	import Message from '@/components/chat/Message';
 
 	export default {
 		components: {
 			Message
+		},
+		props: {
+			messages: Array,
+			userSession: Object
 		},
 		data() {
 			return {
@@ -26,12 +28,6 @@
 			};
 		},
 		computed: {
-			...mapGetters('auth', [
-				'userSession'
-			]),
-			...mapGetters('chat', [
-				'messages'
-			]),
 			offset() {
 				return this.messages.length;
 			}
@@ -58,9 +54,6 @@
 			}
 		},
 		methods: {
-			...mapActions('chat', [
-				'getMessages'
-			]),
 			/**
 			 * Scrolls the chat to the bottom
 			 */
@@ -93,11 +86,8 @@
 						offset: this.offset
 					};
 
-					this.getMessages(params);
+					this.$emit('get-messages', params);
 				}, 500);
-			},
-			onOpenUserProfile(userId) {
-				showProfileModal(userId);
 			}
 		}
 	};

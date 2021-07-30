@@ -26,7 +26,6 @@
 </template>
 
 <script>
-	import { mapActions } from 'vuex';
 	import EmojiPicker from '@/components/chat/EmojiPicker';
 
 	export default {
@@ -43,9 +42,6 @@
 
 		},
 		methods: {
-			...mapActions('chat', [
-				'sendMessage'
-			]),
 			/**
 			 * Adds an emoji to the textarea
 			 * @param {Object} emoji
@@ -68,7 +64,7 @@
 				const message = this.message.trim();
 
 				this.submitting = true;
-				await this.sendMessage(message);
+				await this.$listeners['send-message'](message);
 				this.message = '';
 				this.submitting = false;
 			}
