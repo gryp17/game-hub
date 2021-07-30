@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { socketEvents } from '../config';
 
 function makeHash(value, saltRounds = 10) {
 	return bcrypt.hash(value, saltRounds);
@@ -21,7 +22,7 @@ function sendApiError(res, payload) {
 }
 
 function sendSocketError(io, payload) {
-	io.emit('error', payload.toString ? payload.toString() : payload);
+	io.emit(socketEvents.ERROR, payload.toString ? payload.toString() : payload);
 }
 
 function sendResponse(res, payload) {

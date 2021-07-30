@@ -113,7 +113,8 @@
 				'userSession'
 			]),
 			...mapState('config', [
-				'userStatuses'
+				'userStatuses',
+				'socketEvents'
 			]),
 			...mapState('matchmaking', [
 				'matchmakingEnabled',
@@ -198,40 +199,40 @@
 					upgrade: false
 				});
 
-				this.socket.on('error', (error) => {
+				this.socket.on(this.socketEvents.ERROR, (error) => {
 					this.$toasted.global.apiError({
 						message: this.$options.filters.errorsMap(error)
 					});
 				});
 
-				this.socket.on('newUser', (user) => {
+				this.socket.on(this.socketEvents.LOBBY.NEW_USER, (user) => {
 					this.newUserReceived(user);
 				});
 
-				this.socket.on('updateUser', (user) => {
+				this.socket.on(this.socketEvents.LOBBY.UPDATE_USER, (user) => {
 					this.updateUser(user);
 				});
 
-				this.socket.on('updateUserStatuses', (statuses) => {
+				this.socket.on(this.socketEvents.LOBBY.UPDATE_USER_STATUSES, (statuses) => {
 					this.updateUserStatuses(statuses);
 				});
 
-				this.socket.on('challenge', ({ user, game }) => {
+				this.socket.on(this.socketEvents.LOBBY.CHALLENGE, ({ user, game }) => {
 					showChallengeModal({
 						game,
 						user
 					});
 				});
 
-				this.socket.on('cancelChallenge', () => {
+				this.socket.on(this.socketEvents.LOBBY.CANCEL_CHALLENGE, () => {
 					hideChallengeModal();
 				});
 
-				this.socket.on('declineChallenge', () => {
+				this.socket.on(this.socketEvents.LOBBY.DECLINE_CHALLENGE, () => {
 					hideChallengePendingModal();
 				});
 
-				this.socket.on('foundMatch', (game) => {
+				this.socket.on(this.socketEvents.LOBBY.FOUND_MATCH, (game) => {
 					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);
 
@@ -240,17 +241,17 @@
 					});
 				});
 
-				this.socket.on('cancelMatchmakingChallenge', () => {
+				this.socket.on(this.socketEvents.LOBBY.CANCEL_MATCHMAKING_CHALLENGE, () => {
 					hideMatchmakingPendingModal();
 				});
 
-				this.socket.on('goToGame', (game) => {
+				this.socket.on(this.socketEvents.LOBBY.GO_TO_GAME, (game) => {
 					this.$router.push({
 						name: game
 					});
 				});
 
-				this.socket.on('newMessage', (message) => {
+				this.socket.on(this.socketEvents.LOBBY.NEW_MESSAGE, (message) => {
 					this.messageReceived(message);
 				});
 			},

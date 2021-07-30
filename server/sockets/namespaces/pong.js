@@ -1,5 +1,5 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses, gameStatuses, games } from '../../config';
+import { userStatuses, gameStatuses, games, socketEvents } from '../../config';
 import { User, Game } from '../../models';
 import { lobby } from '..';
 import cache from '../../services/cache';
@@ -10,13 +10,13 @@ export default function (io, app) {
 
 	pong.use(socketIsLoggedIn(app));
 
-	pong.on('connection', async (socket) => {
+	pong.on(socketEvents.CONNECTION, async (socket) => {
 		lobby.setUserStatus(socket.user.id, userStatuses.PONG);
 
 		let gameInstance = await pong.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {
-			return pong.to(socket.id).emit('exitGame');
+			return pong.to(socket.id).emit(socketEvents.GAME.EXIT_GAME);
 		}
 
 		const gameRoomId = gameInstance.id;
@@ -42,7 +42,7 @@ export default function (io, app) {
 
 			const game = new Pong(gameId, games.PONG, players, {
 				onUpdate(data) {
-					pong.to(gameRoomId).emit('updateData', data);
+					pong.to(gameRoomId).emit(socketEvents.GAME.UPDATE_DATA, data);
 				},
 				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
@@ -56,7 +56,7 @@ export default function (io, app) {
 						}
 					});
 
-					pong.to(gameRoomId).emit('gameOver', {
+					pong.to(gameRoomId).emit(socketEvents.GAME.GAME_OVER, {
 						winner: winner.id,
 						ragequit,
 						score: scores
@@ -72,21 +72,21 @@ export default function (io, app) {
 
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
-				pong.to(player.socketId).emit('startGame', {
+				pong.to(player.socketId).emit(socketEvents.GAME.START_GAME, {
 					config: games.PONG,
 					player: index + 1
 				});
 			});
 		}
 
-		socket.on('updateInputs', (inputs) => {
+		socket.on(socketEvents.GAME.UPDATE_INPUTS, (inputs) => {
 			//find the game that this player belongs to and update it's inputs
 			const game = cache.findGameStateByUserId(socket.user.id);
 			game.updateInputs({ socketId: socket.id, inputs });
 		});
 
 		//disconnect event handler
-		socket.on('disconnect', async () => {
+		socket.on(socketEvents.DISCONNECT, async () => {
 			//update the user status
 			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
 

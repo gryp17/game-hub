@@ -29,7 +29,7 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex';
+	import { mapState, mapGetters } from 'vuex';
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import GameOverModal from '@/components/modals/GameOverModal';
@@ -60,6 +60,9 @@
 			this.disconnectFromSocket();
 		},
 		computed: {
+			...mapState('config', [
+				'socketEvents'
+			]),
 			...mapGetters('auth', [
 				'userSession'
 			]),
@@ -82,13 +85,13 @@
 					upgrade: false
 				});
 
-				this.socket.on('error', (error) => {
+				this.socket.on(this.socketEvents.ERROR, (error) => {
 					this.$toasted.global.apiError({
 						message: this.$options.filters.errorsMap(error)
 					});
 				});
 
-				this.socket.on('startGame', ({ config, player }) => {
+				this.socket.on(this.socketEvents.GAME.START_GAME, ({ config, player }) => {
 					this.game = new Pong('game-canvas', config, player, {
 						onUpdateInputs: this.updateInputs
 					});
@@ -97,11 +100,11 @@
 					this.loading = false;
 				});
 
-				this.socket.on('updateData', (data) => {
+				this.socket.on(this.socketEvents.GAME.UPDATE_DATA, (data) => {
 					this.game.updateData(data);
 				});
 
-				this.socket.on('gameOver', ({ winner, ragequit, score }) => {
+				this.socket.on(this.socketEvents.GAME.GAME_OVER, ({ winner, ragequit, score }) => {
 					showGameOverModal({
 						winner,
 						ragequit,
@@ -109,14 +112,14 @@
 					});
 				});
 
-				this.socket.on('exitGame', () => {
+				this.socket.on(this.socketEvents.GAME.EXIT_GAME, () => {
 					this.$router.push({
 						name: 'lobby'
 					});
 				});
 			},
 			updateInputs(inputs) {
-				this.socket.emit('updateInputs', inputs);
+				this.socket.emit(this.socketEvents.GAME.UPDATE_INPUTS, inputs);
 			},
 			/**
 			 * Disconnects from the socket.io server

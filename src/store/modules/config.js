@@ -4,7 +4,8 @@ import ConfigHttpService from '@/services/api/config';
 const getDefaultState = () => {
 	return {
 		userStatuses: {},
-		availableGames: []
+		availableGames: [],
+		socketEvents: {}
 	};
 };
 
@@ -28,6 +29,9 @@ const mutations = {
 	},
 	SET_AVAILABLE_GAMES(state, availableGames) {
 		state.availableGames = availableGames;
+	},
+	SET_SOCKET_EVENTS(state, socketEvents) {
+		state.socketEvents = socketEvents;
 	}
 };
 
@@ -44,6 +48,7 @@ const actions = {
 			const { data } = await ConfigHttpService.getConfig();
 			context.commit('SET_USER_STATUSES', data.userStatuses);
 			context.commit('SET_AVAILABLE_GAMES', data.availableGames);
+			context.commit('SET_SOCKET_EVENTS', data.socketEvents);
 			return data;
 		} catch (err) {
 			Vue.toasted.global.apiError({
