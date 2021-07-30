@@ -36,15 +36,11 @@
 			<div class="content-wrapper">
 				<Chat />
 
-				<div class="users-list">
-					<UserListItem
-						v-for="user in users"
-						:key="user.id"
-						:user="user"
-						:user-statuses="userStatuses"
-						@click="showProfileModal"
-					/>
-				</div>
+				<UsersList
+					:users="users"
+					:user-statuses="userStatuses"
+					@open-profile="showProfileModal"
+				/>
 			</div>
 		</template>
 
@@ -83,7 +79,7 @@
 	} from '@/services/modal';
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
-	import UserListItem from '@/components/UserListItem';
+	import UsersList from '@/components/users-list/UsersList';
 	import Chat from '@/components/chat/Chat';
 	import PlayButton from '@/components/PlayButton';
 	import UserMenu from '@/components/UserMenu';
@@ -96,7 +92,7 @@
 	export default {
 		components: {
 			LoadingIndicator,
-			UserListItem,
+			UsersList,
 			Chat,
 			PlayButton,
 			ChallengeModal,
@@ -326,13 +322,6 @@
 
 			.chat {
 				flex: 1;
-			}
-
-			.users-list {
-				height: 100%;
-				width: 250px;
-				background-color: $gray-dark;
-				overflow-y: auto;
 			}
 		}
 	}

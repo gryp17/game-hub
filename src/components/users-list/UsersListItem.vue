@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="user-list-item"
+		class="users-list-item"
 		@click="$emit('click', user)"
 	>
 		<UserAvatar
@@ -67,7 +67,7 @@
 </script>
 
 <style lang="scss">
-	.user-list-item {
+	.users-list-item {
 		display: flex;
 		padding: 10px;
 		cursor: pointer;
