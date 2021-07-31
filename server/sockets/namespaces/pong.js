@@ -63,6 +63,7 @@ export default function (io, app) {
 					});
 
 					lobby.updateGameStats(players);
+					lobby.updateUsersExperience(winner.id, players);
 				}
 			});
 

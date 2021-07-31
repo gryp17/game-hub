@@ -1,5 +1,5 @@
 import { socketIsLoggedIn } from '../../middleware/authentication';
-import { userStatuses, gameStatuses, socketEvents } from '../../config';
+import { userStatuses, gameStatuses, experienceRewards, socketEvents } from '../../config';
 import { calculateGameStats } from '../../services/misc';
 import matchmaking from '../../services/matchmaking';
 import cache from '../../services/cache';
@@ -167,6 +167,21 @@ export default function (io, app) {
 			lobby.emit(socketEvents.LOBBY.UPDATE_USER, {
 				id: user.id,
 				gameStats
+			});
+		});
+	};
+
+	lobby.updateUsersExperience = async (winnerId, users) => {
+		users.forEach(async (user) => {
+			const experienceGained = user.id === winnerId ? experienceRewards.WIN : experienceRewards.LOSS;
+
+			const userInstance = await User.findByPk(user.id);
+			userInstance.experience = userInstance.experience + experienceGained;
+			await userInstance.save();
+
+			lobby.emit(socketEvents.LOBBY.UPDATE_USER, {
+				id: user.id,
+				experience: userInstance.experience
 			});
 		});
 	};

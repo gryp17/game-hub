@@ -12,6 +12,10 @@ export default (db) => {
 		password: {
 			type: Sequelize.STRING
 		},
+		experience: {
+			type: Sequelize.INTEGER,
+			defaultValue: 0
+		},
 		bio: {
 			type: Sequelize.STRING
 		},

@@ -65,6 +65,7 @@ router.get('/all', isLoggedIn, async (req, res) => {
 				'id',
 				'username',
 				'bio',
+				'experience',
 				'avatar',
 				'avatarLink',
 				'createdAt',
@@ -72,6 +73,7 @@ router.get('/all', isLoggedIn, async (req, res) => {
 			],
 			include: {
 				model: Game,
+				required: false,
 				where: {
 					status: gameStatuses.FINISHED
 				}
