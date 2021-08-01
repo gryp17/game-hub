@@ -12,6 +12,9 @@
 			<div
 				class="username"
 				:title="user.username"
+				:style="{
+					color: user.experience.color
+				}"
 			>
 				{{ user.username }}
 				<RagequitIndicator :percentage="user.gameStats.ragequitPercentage"/>
@@ -84,6 +87,7 @@
 				text-overflow: ellipsis;
 				overflow-x: hidden;
 				white-space: nowrap;
+				font-weight: bold;
 			}
 
 			.status {

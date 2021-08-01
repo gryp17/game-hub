@@ -1,3 +1,14 @@
+function calculateColor(level, maxLevel) {
+	const minHue = 2;
+	const maxHue = 85;
+	const huePerLevel = maxHue / maxLevel;
+
+	const hue = level === maxLevel ? minHue : maxHue - (huePerLevel * (level - 1));
+	const color = `hsl(${hue}, 100%, 67%)`;
+
+	return color;
+}
+
 export default (experience) => {
 	const experienceLevels = [
 		30,
@@ -38,12 +49,16 @@ export default (experience) => {
 	const current = experience - currentLevelExperience;
 	const percentage = experience >= nextLevelExperience ? 100 : (current * 100) / difference;
 
+	//color
+	const color = calculateColor(level, maxLevel);
+
 	return {
 		value: experience,
 		level,
 		nextLevel,
 		currentLevelExperience,
 		nextLevelExperience,
-		percentage: Math.floor(percentage)
+		percentage: Math.floor(percentage),
+		color
 	};
 };
