@@ -22,25 +22,28 @@ export default (experience) => {
 		index = experienceLevels.length;
 	}
 
+	const currentLevelExperienceValue = experienceLevels[index];
+	const lastLevelExperienceValue = experienceLevels[experienceLevels.length - 1];
+
 	//levels
 	const level = index + 1;
 	const nextLevel = level < maxLevel ? level + 1 : maxLevel;
 
 	//ranges
-	const rangeFrom = index > 0 ? experienceLevels[index - 1] : 0;
-	const rangeTo = index < experienceLevels.length - 1 ? experienceLevels[index] : experienceLevels[experienceLevels.length - 1];
+	const currentLevelExperience = index > 0 ? experienceLevels[index - 1] : 0;
+	const nextLevelExperience = index < experienceLevels.length - 1 ? currentLevelExperienceValue : lastLevelExperienceValue;
 
 	//percentage
-	const difference = rangeTo - rangeFrom;
-	const current = experience - rangeFrom;
-	const percentage = experience >= rangeTo ? 100 : (current * 100) / difference;
+	const difference = nextLevelExperience - currentLevelExperience;
+	const current = experience - currentLevelExperience;
+	const percentage = experience >= nextLevelExperience ? 100 : (current * 100) / difference;
 
 	return {
 		value: experience,
 		level,
 		nextLevel,
-		rangeFrom,
-		rangeTo,
+		currentLevelExperience,
+		nextLevelExperience,
 		percentage: Math.floor(percentage)
 	};
 };

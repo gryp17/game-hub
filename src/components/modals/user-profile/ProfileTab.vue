@@ -20,8 +20,8 @@
 		<ExperienceBar
 			v-if="isOwnUser"
 			:experience="userProfile.experience.value"
-			:min-experience="userProfile.experience.rangeFrom"
-			:max-experience="userProfile.experience.rangeTo"
+			:min-experience="userProfile.experience.currentLevelExperience"
+			:max-experience="userProfile.experience.nextLevelExperience"
 			:level="userProfile.experience.level"
 			:next-level="userProfile.experience.nextLevel"
 			:percentage="userProfile.experience.percentage"
