@@ -97,6 +97,10 @@
 			margin-bottom: 20px;
 		}
 
+		.experience-bar {
+			margin-bottom: 20px;
+		}
+
 		.buttons-wrapper {
 			margin-top: 10px;
 		}
