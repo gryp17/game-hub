@@ -10,6 +10,7 @@
 
 	import errorsMap from '@/filters/errorsMap';
 	import gamesMap from '@/filters/gamesMap';
+	import experienceMap from '@/filters/experienceMap';
 	import FormInput from '@/components/forms/FormInput';
 	import FormFileInput from '@/components/forms/FormFileInput';
 	import FormButton from '@/components/forms/FormButton';
@@ -18,6 +19,7 @@
 	//global filters
 	Vue.filter('errorsMap', errorsMap);
 	Vue.filter('gamesMap', gamesMap);
+	Vue.filter('experienceMap', experienceMap);
 
 	//global components
 	Vue.component('FormInput', FormInput);

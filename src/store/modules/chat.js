@@ -11,8 +11,8 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
-	messages(state, getters, rootState) {
-		const usersMap = rootState.lobby.users;
+	messages(state, getters, rootState, rootGetters) {
+		const usersMap = rootGetters['lobby/usersMap'];
 
 		return [...state.messages].map((message) => {
 			//set the user/author field for each message

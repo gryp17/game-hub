@@ -103,8 +103,8 @@
 			...mapState('config', [
 				'userStatuses'
 			]),
-			...mapState('lobby', [
-				'users'
+			...mapGetters('lobby', [
+				'usersMap'
 			]),
 			...mapGetters('auth', [
 				'userSession'
@@ -117,7 +117,7 @@
 					return null;
 				}
 
-				return this.users[this.userId];
+				return this.usersMap[this.userId];
 			},
 			gameStats() {
 				return this.userProfile.gameStats;

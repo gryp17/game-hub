@@ -37,7 +37,7 @@
 				<Chat />
 
 				<UsersList
-					:users="users"
+					:users="lobbyUsers"
 					:user-statuses="userStatuses"
 					@open-profile="showProfileModal"
 				/>
@@ -121,7 +121,7 @@
 				'matchmakingIsLoading'
 			]),
 			...mapGetters('lobby', [
-				'users'
+				'lobbyUsers'
 			]),
 			...mapGetters('config', [
 				'availableGames'

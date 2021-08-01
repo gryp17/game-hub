@@ -17,6 +17,16 @@
 			{{ bio }}
 		</div>
 
+		<ExperienceBar
+			v-if="isOwnUser"
+			:experience="userProfile.experience.value"
+			:min-experience="userProfile.experience.rangeFrom"
+			:max-experience="userProfile.experience.rangeTo"
+			:level="userProfile.experience.level"
+			:next-level="userProfile.experience.nextLevel"
+			:percentage="userProfile.experience.percentage"
+		/>
+
 		<div class="buttons-wrapper">
 			<FormButton
 				v-if="isOwnUser"
@@ -36,12 +46,14 @@
 <script>
 	import UserAvatar from '@/components/UserAvatar';
 	import RagequitIndicator from '@/components/RagequitIndicator';
+	import ExperienceBar from '@/components/modals/user-profile/ExperienceBar';
 	import ChallengeButton from '@/components/ChallengeButton';
 
 	export default {
 		components: {
 			UserAvatar,
 			RagequitIndicator,
+			ExperienceBar,
 			ChallengeButton
 		},
 		props: {

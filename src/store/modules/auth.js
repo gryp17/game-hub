@@ -16,12 +16,10 @@ const getters = {
 		}
 
 		const userStatuses = rootState.config.userStatuses;
-		const users = rootGetters['lobby/users'];
+		const usersMap = rootGetters['lobby/usersMap'];
 
-		//get the current user status from the users list
-		const user = users.find((user) => {
-			return user.id === state.userSession.id;
-		});
+		//get the current user status from the users map
+		const user = usersMap[state.userSession.id];
 
 		return {
 			...state.userSession,

@@ -16,14 +16,29 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
-	users(state) {
-		return Object.values(state.users).map((user) => {
+	usersMap(state) {
+		const map = {};
+
+		Object.values(state.users).forEach((item) => {
+			const user = {
+				...item
+			};
+
+			//default status
 			if (!user.status) {
 				user.status = 'offline';
 			}
 
-			return user;
-		}).sort((a, b) => {
+			//generate the experience object
+			user.experience = Vue.options.filters.experienceMap(user.experience);
+
+			map[user.id] = user;
+		});
+
+		return map;
+	},
+	lobbyUsers(state, getters) {
+		return Object.values(getters.usersMap).sort((a, b) => {
 			//first sort by status
 			if (a.status.raw !== b.status.raw) {
 				if (a.status.raw === 'offline') {
@@ -39,7 +54,7 @@ const getters = {
 			return a.username.localeCompare(b.username);
 		});
 	},
-	gameHistory(state) {
+	gameHistory(state, getters) {
 		//map the score userId to the corresponding user object
 		const games = state.gameHistory.games.map((game) => {
 			const score = {};
@@ -50,7 +65,7 @@ const getters = {
 				const points = data.score[userId];
 
 				score[userId] = {
-					user: state.users[userId],
+					user: getters.usersMap[userId],
 					score: points
 				};
 			});
