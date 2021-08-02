@@ -16,8 +16,10 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
-	usersMap(state) {
+	usersMap(state, getters, rootState) {
 		const map = {};
+
+		const userStatuses = rootState.config.userStatuses;
 
 		Object.values(state.users).forEach((item) => {
 			const user = {
@@ -26,7 +28,7 @@ const getters = {
 
 			//default status
 			if (!user.status) {
-				user.status = 'offline';
+				user.status = userStatuses.OFFLINE;
 			}
 
 			//generate the experience object
@@ -37,15 +39,17 @@ const getters = {
 
 		return map;
 	},
-	lobbyUsers(state, getters) {
+	lobbyUsers(state, getters, rootState) {
+		const userStatuses = rootState.config.userStatuses;
+
 		return Object.values(getters.usersMap).sort((a, b) => {
 			//first sort by status
 			if (a.status.raw !== b.status.raw) {
-				if (a.status.raw === 'offline') {
+				if (a.status.raw === userStatuses.OFFLINE) {
 					return 1;
 				}
 
-				if (b.status.raw === 'offline') {
+				if (b.status.raw === userStatuses.OFFLINE) {
 					return -1;
 				}
 			}
@@ -163,8 +167,8 @@ const actions = {
 
 		//for each user generate 3 types of status (raw, formatted and avatar)
 		Object.keys(context.state.users).forEach((userId) => {
-			const rawStatus = statuses[userId] || 'offline';
-			const avatarStatus = gameStatuses.includes(rawStatus) ? 'busy' : rawStatus;
+			const rawStatus = statuses[userId] || userStatuses.OFFLINE;
+			const avatarStatus = gameStatuses.includes(rawStatus) ? userStatuses.BUSY : rawStatus;
 			let formattedStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1);
 
 			if (gameStatuses.includes(rawStatus)) {
