@@ -2,11 +2,15 @@
 	<div
 		class="users-list-item"
 		@click="$emit('click', user)"
+		@mouseover="onMouseOver"
+		@mouseleave="onMouseLeave"
 	>
 		<UserAvatar
 			:avatar="user.avatarLink"
 			:title="formattedStatus"
 			:status="avatarStatus"
+			:level="user.experience.level"
+			:show-level="hover"
 		/>
 		<div class="user-info">
 			<div
@@ -46,6 +50,11 @@
 			},
 			userStatuses: Object
 		},
+		data() {
+			return {
+				hover: false
+			};
+		},
 		computed: {
 			onlineStateStatuses() {
 				return [
@@ -64,6 +73,14 @@
 			},
 			showStatus() {
 				return !this.onlineStateStatuses.includes(this.rawStatus);
+			}
+		},
+		methods: {
+			onMouseOver() {
+				this.hover = true;
+			},
+			onMouseLeave() {
+				this.hover = false;
 			}
 		}
 	};

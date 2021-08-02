@@ -4,8 +4,15 @@
 		@click="$emit('click')"
 	>
 		<img
+			v-show="!showLevel"
 			class="avatar-image"
 			:src="avatar"
+			:title="title"
+			:style="avatarStyle"
+		/>
+		<LevelIndicator
+			v-show="showLevel"
+			:level="level"
 			:title="title"
 			:style="avatarStyle"
 		/>
@@ -13,7 +20,12 @@
 </template>
 
 <script>
+	import LevelIndicator from '@/components/LevelIndicator';
+
 	export default {
+		components: {
+			LevelIndicator
+		},
 		props: {
 			avatar: {
 				type: String,
@@ -31,6 +43,12 @@
 			size: {
 				type: Number,
 				default: 40
+			},
+			level: {
+				type: Number
+			},
+			showLevel: {
+				type: Boolean
 			}
 		},
 		computed: {
