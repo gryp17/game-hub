@@ -1,10 +1,12 @@
 function calculateColor(level, maxLevel) {
 	const minHue = 2;
-	const maxHue = 85;
+	const maxHue = 90;
 	const huePerLevel = maxHue / maxLevel;
+	const midLevel = Math.floor(maxLevel / 2);
 
 	const hue = level === maxLevel ? minHue : maxHue - (huePerLevel * (level - 1));
-	const color = `hsl(${hue}, 100%, 67%)`;
+	const saturation = level > midLevel ? '100%' : '86%';
+	const color = `hsl(${hue}, ${saturation}, 67%)`;
 
 	return color;
 }
