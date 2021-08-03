@@ -1,23 +1,28 @@
 <template>
-	<div :class="['message', { own }]">
+	<div
+		:class="['message', { own }]"
+		@mouseover="onMouseOver"
+		@mouseleave="onMouseLeave"
+	>
 		<div class="avatar-wrapper">
 			<UserAvatar
 				:avatar="message.user.avatarLink"
 				:title="message.user.status.formatted"
 				:status="message.user.status.avatar"
+				:level="message.user.experience.level"
+				:show-level="hover"
 				@click="onOpenProfile"
 			/>
 		</div>
 		<div class="message-wrapper">
 			<div class="message-header">
-				<div
+				<ColoredUsername
+					:username="username"
+					:color="usernameColor"
+					:ragequit-percentage="message.user.gameStats.ragequitPercentage"
 					:title="username"
-					class="author"
 					@click="onOpenProfile"
-				>
-					{{ username }}
-					<RagequitIndicator :percentage="message.user.gameStats.ragequitPercentage"/>
-				</div>
+				/>
 
 				<MessageTimestamp
 					alignment="left"
@@ -37,14 +42,14 @@
 
 <script>
 	import UserAvatar from '@/components/UserAvatar';
+	import ColoredUsername from '@/components/ColoredUsername';
 	import MessageTimestamp from '@/components/chat/MessageTimestamp';
-	import RagequitIndicator from '@/components/RagequitIndicator';
 
 	export default {
 		components: {
 			UserAvatar,
-			MessageTimestamp,
-			RagequitIndicator
+			ColoredUsername,
+			MessageTimestamp
 		},
 		props: {
 			message: {
@@ -55,6 +60,7 @@
 		},
 		data() {
 			return {
+				hover: false,
 				linkifiedOptions: {
 					className: 'linkified-link',
 					attributes(href) {
@@ -68,9 +74,18 @@
 		computed: {
 			username() {
 				return this.message.user.username;
+			},
+			usernameColor() {
+				return this.message.user.experience.color;
 			}
 		},
 		methods: {
+			onMouseOver() {
+				this.hover = true;
+			},
+			onMouseLeave() {
+				this.hover = false;
+			},
 			onOpenProfile() {
 				this.$emit('open-profile', this.message.userId);
 			}
@@ -82,6 +97,10 @@
 	.message {
 		display: flex;
 		padding: 10px 15px;
+
+		&:hover {
+			background-color: $gray-medium-dark;
+		}
 
 		.avatar-wrapper {
 			text-align: center;
@@ -98,13 +117,6 @@
 			.message-header {
 				display: flex;
 
-				.author {
-					font-size: 16px;
-					font-weight: bold;
-					color: $blue;
-					cursor: pointer;
-				}
-
 				.message-timestamp {
 					margin-left: 5px;
 				}
@@ -114,14 +126,6 @@
 				margin-top: 3px;
 				color: $text-color;
 				word-break: break-word;
-			}
-		}
-
-		&.own {
-			.message-wrapper {
-				.author {
-					color: $pink;
-				}
 			}
 		}
 	}

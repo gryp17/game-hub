@@ -13,16 +13,12 @@
 			:show-level="hover"
 		/>
 		<div class="user-info">
-			<div
-				class="username"
+			<ColoredUsername
+				:username="user.username"
+				:color="user.experience.color"
+				:ragequit-percentage="user.gameStats.ragequitPercentage"
 				:title="user.username"
-				:style="{
-					color: user.experience.color
-				}"
-			>
-				{{ user.username }}
-				<RagequitIndicator :percentage="user.gameStats.ragequitPercentage"/>
-			</div>
+			/>
 			<div
 				v-if="showStatus"
 				class="status"
@@ -36,12 +32,12 @@
 
 <script>
 	import UserAvatar from '@/components/UserAvatar';
-	import RagequitIndicator from '@/components/RagequitIndicator';
+	import ColoredUsername from '@/components/ColoredUsername';
 
 	export default {
 		components: {
 			UserAvatar,
-			RagequitIndicator
+			ColoredUsername
 		},
 		props: {
 			user: {
@@ -99,13 +95,6 @@
 			padding-left: 10px;
 			color: $gray-very-light;
 			overflow-x: hidden;
-
-			.username {
-				text-overflow: ellipsis;
-				overflow-x: hidden;
-				white-space: nowrap;
-				font-weight: bold;
-			}
 
 			.status {
 				font-size: 14px;
