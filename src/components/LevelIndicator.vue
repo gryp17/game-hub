@@ -21,7 +21,7 @@
 	};
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.level-indicator {
 		display: flex;
 		flex-direction: column;

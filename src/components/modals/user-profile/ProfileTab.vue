@@ -8,9 +8,15 @@
 			:size="160"
 		/>
 
-		<div class="username">
+		<div class="username-wrapper">
 			{{ userProfile.username }}
+
 			<RagequitIndicator :percentage="userProfile.gameStats.ragequitPercentage"/>
+
+			<LevelLabel
+				:level="userProfile.experience.level"
+				:color=" userProfile.experience.color"
+			/>
 		</div>
 
 		<div class="bio">
@@ -46,6 +52,7 @@
 <script>
 	import UserAvatar from '@/components/UserAvatar';
 	import RagequitIndicator from '@/components/RagequitIndicator';
+	import LevelLabel from '@/components/modals/user-profile/LevelLabel';
 	import ExperienceBar from '@/components/modals/user-profile/ExperienceBar';
 	import ChallengeButton from '@/components/ChallengeButton';
 
@@ -53,6 +60,7 @@
 		components: {
 			UserAvatar,
 			RagequitIndicator,
+			LevelLabel,
 			ExperienceBar,
 			ChallengeButton
 		},
@@ -87,10 +95,17 @@
 			margin: 10px auto;
 		}
 
-		.username {
+		.username-wrapper {
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			margin-bottom: 20px;
 			font-size: 20px;
 			font-weight: bold;
+		}
+
+		.ragequit-indicator {
+			margin-left: 5px;
 		}
 
 		.bio {
