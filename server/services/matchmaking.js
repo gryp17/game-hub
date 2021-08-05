@@ -12,10 +12,11 @@ function getAvailablePlayers() {
 	});
 }
 
-function join(userId, socketId, game) {
+function join(userId, socketId, experience, game) {
 	cache.addMatchmakingEntry(userId, {
 		id: userId,
 		socketId,
+		experience,
 		game,
 		joined: new Date()
 	});
@@ -25,10 +26,24 @@ function leave(userId) {
 	cache.deleteMatchmakingEntry(userId);
 }
 
-function findOpponentIndex(game, players) {
-	return players.findIndex((opponent) => {
+function findOpponent(game, experience, players) {
+	//filter the players by game
+	//calculate the experience difference between the current player and the possible opponents
+	//sort them by experienceDifference
+	const validOpponents = [...players].filter((opponent) => {
 		return game === 'any' || opponent.game === 'any' || opponent.game === game;
+	}).map((opponent) => {
+		opponent.experienceDifference = Math.abs(experience - opponent.experience);
+		return opponent;
+	}).sort((a, b) => {
+		return a.experienceDifference - b.experienceDifference;
 	});
+
+	if (validOpponents.length === 0) {
+		return null;
+	}
+
+	return validOpponents[0];
 }
 
 function pickGame(playerGame, opponentGame) {
@@ -45,7 +60,7 @@ function pickGame(playerGame, opponentGame) {
 }
 
 function matchPlayers(matchFound) {
-	const players = getAvailablePlayers();
+	let players = getAvailablePlayers();
 
 	//match the available players
 	while (players.length > 1) {
@@ -53,22 +68,23 @@ function matchPlayers(matchFound) {
 		players.shift();
 
 		//find the first compatible opponent
-		const opponentIndex = findOpponentIndex(player.game, players);
+		const opponent = findOpponent(player.game, player.experience, players);
 
-		if (opponentIndex === -1) {
+		if (!opponent) {
 			continue;
 		}
 
-		//and remove him from the list
-		const opponent = players[opponentIndex];
-		players.splice(opponentIndex, 1);
+		//remove the opponent from the players queue
+		players = players.filter((user) => {
+			return user.id !== opponent.id;
+		});
 
 		//pick a game that works for both players
 		const selectedGame = pickGame(player.game, opponent.game);
 
 		//remove both players from the matchmaking
-		[player, opponent].forEach((player) => {
-			leave(player.id);
+		[player, opponent].forEach((user) => {
+			leave(user.id);
 		});
 
 		//add the cache entry for this match/challenge

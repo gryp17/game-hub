@@ -5,7 +5,7 @@ import { sendResponse, sendError } from '../services/utils';
 import matchmaking from '../services/matchmaking';
 import { lobby } from '../sockets';
 import { errorCodes, userStatuses, gameCodes } from '../config';
-import { Game } from '../models';
+import { Game, User } from '../models';
 import cache from '../services/cache';
 
 const router = express.Router();
@@ -26,7 +26,7 @@ router.get('/status', isLoggedIn, (req, res) => {
 	sendResponse(res, status);
 });
 
-router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), (req, res) => {
+router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), async (req, res) => {
 	const { game } = req.body;
 
 	//get the user socket id from the lobby
@@ -34,7 +34,10 @@ router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), (req, res) => 
 
 	lobby.setUserStatus(req.session.user.id, userStatuses.MATCHMAKING);
 
-	matchmaking.join(req.session.user.id, user.socketId, game);
+	//get the current experience value
+	const userInstance = await User.findByPk(req.session.user.id);
+
+	matchmaking.join(req.session.user.id, user.socketId, userInstance.experience, game);
 	sendResponse(res, true);
 });
 
