@@ -1,8 +1,6 @@
 <template>
 	<div class="game-history-tab">
-		<div v-if="total === 0" class="no-data">
-			There is no data
-		</div>
+		<NoData v-if="total === 0" />
 		<template v-else>
 			<GameHistoryItem
 				v-for="game in games"
@@ -25,11 +23,13 @@
 <script>
 	import GameHistoryItem from '@/components/modals/user-profile/GameHistoryItem';
 	import Pagination from '@/components/Pagination';
+	import NoData from '@/components/modals/user-profile/NoData';
 
 	export default {
 		components: {
 			GameHistoryItem,
-			Pagination
+			Pagination,
+			NoData
 		},
 		props: {
 			total: Number,
@@ -67,13 +67,3 @@
 		}
 	};
 </script>
-
-<style lang="scss">
-	.game-history-tab {
-		.no-data {
-			padding: 50px 20px;
-			text-align: center;
-			font-size: 18px;
-		}
-	}
-</style>

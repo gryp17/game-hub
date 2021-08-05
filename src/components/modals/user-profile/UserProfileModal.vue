@@ -43,7 +43,8 @@
 							name="Stats"
 							class="user-stats"
 						>
-							<template v-if="gameStats">
+							<NoData v-if="gameStats.total === 0" />
+							<template v-else>
 								<GameResultsChart
 									:won="gameStats.won"
 									:lost="gameStats.lost"
@@ -83,6 +84,7 @@
 	import GamesByTypeChart from '@/components/charts/GamesByTypeChart';
 	import ProfileTab from '@/components/modals/user-profile/ProfileTab';
 	import GameHistoryTab from '@/components/modals/user-profile/GameHistoryTab';
+	import NoData from '@/components/modals/user-profile/NoData';
 
 	export default {
 		components: {
@@ -91,7 +93,8 @@
 			GameResultsChart,
 			GamesByTypeChart,
 			ProfileTab,
-			GameHistoryTab
+			GameHistoryTab,
+			NoData
 		},
 		data() {
 			return {
