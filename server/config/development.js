@@ -22,5 +22,6 @@ module.exports = {
 			defaultAvatar: 'default.png'
 		}
 	},
-	minPasswordLength: 6
+	minPasswordLength: 6,
+	maxMessagesPerRequest: 30
 };

@@ -134,7 +134,7 @@
 			]);
 
 			this.getMessages({
-				limit: 15,
+				limit: 30,
 				offset: 0
 			});
 

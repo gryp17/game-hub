@@ -5,6 +5,7 @@ import { validate } from '../middleware/validator';
 import { Message } from '../models';
 import { sendResponse, sendApiError } from '../services/utils';
 import { lobby } from '../sockets';
+import { maxMessagesPerRequest } from '../config';
 
 const router = express.Router();
 
@@ -41,8 +42,6 @@ router.post('/', isLoggedIn, validate(rules.addMessage), async (req, res) => {
  * Returns all messages
  */
 router.get('/', isLoggedIn, validate(rules.getMessages), async (req, res) => {
-	const maxMessagesPerRequest = 20;
-
 	let limit = parseInt(req.query.limit);
 	const offset = parseInt(req.query.offset);
 
