@@ -4,20 +4,19 @@
 		:title="title"
 		@click="toggleChat"
 	>
-		<!-- hackfix for the fontawesome vue icons -->
-		<span
-			:key="icon"
-			class="game-type-icon-wrapper"
-		>
-			<i
-				:class="icon"
-			/>
-		</span>
+		<DynamicIcon
+			:icon="icon"
+		/>
 	</FormButton>
 </template>
 
 <script>
+	import DynamicIcon from '@/components/DynamicIcon';
+
 	export default {
+		components: {
+			DynamicIcon
+		},
 		props: {
 			active: Boolean
 		},
@@ -47,10 +46,12 @@
 		font-size: 25px;
 		z-index: 2;
 
-		svg {
-			margin: 0px;
-			width: 25px;
-			height: 25px;
+		&::v-deep .dynamic-icon {
+			svg {
+				margin: 0px;
+				width: 25px;
+				height: 25px;
+			}
 		}
 	}
 </style>

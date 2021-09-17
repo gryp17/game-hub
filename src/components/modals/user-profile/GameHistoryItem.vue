@@ -4,27 +4,18 @@
 		:title="title"
 	>
 		<div class="inner-wrapper">
-			<!-- hackfix for the fontawesome vue icons -->
-			<span
-				:key="gameType.icon"
-				class="game-type-icon-wrapper"
-			>
-				<i
-					:class="gameType.icon"
-					:title="gameType.label"
-				/>
-			</span>
+			<DynamicIcon
+				className="game-type-icon-wrapper"
+				:icon="gameType.icon"
+				:title="gameType.label"
+			/>
 
-			<!-- hackfix for the fontawesome vue icons -->
-			<div
-				:key="icon"
-				class="result-icon-wrapper"
-			>
-				<i
-					:class="icon"
-					:title="title"
-				/>
-			</div>
+			<DynamicIcon
+				className="result-icon-wrapper"
+				type="block"
+				:icon="icon"
+				:title="title"
+			/>
 
 			<div class="players-wrapper">
 				<div
@@ -82,10 +73,12 @@
 <script>
 	import moment from 'moment';
 	import UserAvatar from '@/components/UserAvatar';
+	import DynamicIcon from '@/components/DynamicIcon';
 
 	export default {
 		components: {
-			UserAvatar
+			UserAvatar,
+			DynamicIcon
 		},
 		props: {
 			game: Object,
