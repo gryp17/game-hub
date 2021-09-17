@@ -34,9 +34,15 @@
 				</div>
 			</div>
 			<div class="content-wrapper">
-				<Chat />
+				<ToggleChatButton
+					:active="showChat"
+					@toggle="onChatToggled"
+				/>
+
+				<Chat :style="chatStyles.chat" />
 
 				<UsersList
+					:style="chatStyles.usersList"
 					:users="lobbyUsers"
 					:user-statuses="userStatuses"
 					@open-profile="showProfileModal"
@@ -83,6 +89,7 @@
 	import Chat from '@/components/chat/Chat';
 	import PlayButton from '@/components/PlayButton';
 	import UserMenu from '@/components/UserMenu';
+	import ToggleChatButton from '@/components/ToggleChatButton';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
 	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
@@ -95,6 +102,7 @@
 			UsersList,
 			Chat,
 			PlayButton,
+			ToggleChatButton,
 			ChallengeModal,
 			ChallengePendingModal,
 			MatchmakingPendingModal,
@@ -105,7 +113,8 @@
 		data() {
 			return {
 				loading: true,
-				socket: null
+				socket: null,
+				showChat: false
 			};
 		},
 		computed: {
@@ -125,7 +134,17 @@
 			]),
 			...mapGetters('config', [
 				'availableGames'
-			])
+			]),
+			chatStyles() {
+				return {
+					chat: {
+						zIndex: this.showChat ? 1 : null
+					},
+					usersList: {
+						zIndex: !this.showChat ? 1 : null
+					}
+				};
+			}
 		},
 		async created() {
 			await Promise.all([
@@ -283,6 +302,9 @@
 			},
 			onStopMatchmaking() {
 				this.stopMatchmaking();
+			},
+			onChatToggled(status) {
+				this.showChat = status;
 			}
 		}
 	};
@@ -317,12 +339,35 @@
 		}
 
 		.content-wrapper {
+			position: relative;
 			display: flex;
 			flex: 1;
 			height: calc(100% - #{$header-height});
 
+			.toggle-chat-button {
+				display: none;
+			}
+
 			.chat {
 				flex: 1;
+			}
+		}
+
+		@media (max-width: $small) {
+			.content-wrapper {
+				flex-direction: column;
+
+				.toggle-chat-button {
+					display: block;
+				}
+
+				.chat, .users-list {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+				}
 			}
 		}
 	}

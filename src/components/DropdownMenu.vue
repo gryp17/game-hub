@@ -80,7 +80,7 @@
 			min-width: 200px;
 			background-color: $white;
 			text-align: left;
-			z-index: 1;
+			z-index: 5;
 			border: solid 1px $gray;
 			border-radius: 3px;
 			color: $text-color-dark;
