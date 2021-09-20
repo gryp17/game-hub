@@ -90,7 +90,7 @@ module.exports = {
 			fps: 60,
 			width: 1024,
 			height: 768,
-			maxScore: 1,
+			maxScore: 10,
 			ball: {
 				size: 60,
 				initialSpeed: 7,

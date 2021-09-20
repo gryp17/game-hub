@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	configureWebpack: {
@@ -9,7 +10,15 @@ module.exports = {
 				jQuery: 'jquery',
 				$: 'jquery',
 				'global.jQuery': 'jquery'
-			})
+			}),
+			//copy all game images from "games/pong/img" to "/dist/game-images/pong"
+			//TODO: update this when adding a new game
+			new CopyWebpackPlugin([
+				{
+					from: './games/pong/img',
+					to: './game-images/pong'
+				}
+			])
 		],
 		resolve: {
 			alias: {

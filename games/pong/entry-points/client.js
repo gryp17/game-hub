@@ -3,6 +3,8 @@ import Keyboard from '../keyboard';
 import Paddle from '../paddle';
 import Ball from '../ball';
 import CollisionsManager from '../collisions-manager';
+import ImageRepository from '../image-repository';
+import gameImages from '../resources/images';
 
 /**
  * requestAnim shim layer by Paul Irish
@@ -21,18 +23,20 @@ window.requestAnimFrame = (function anim() {
 }());
 
 export default class Pong {
-	constructor(canvasId, config, player, { onUpdateInputs }) {
+	constructor(canvasId, config, player, { onGameReady, onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.player = player;
 		this.gameLoopInterval;
 		this.inputs;
+		this.images = {};
 		this.paddles = [];
 		this.scores = {};
 		this.ball;
 
 		//events
 		this.onUpdateInputs = onUpdateInputs;
+		this.onGameReady = onGameReady;
 
 		this.gameControls = config.controls;
 
@@ -47,6 +51,11 @@ export default class Pong {
 		this.contexts.game.setSize(this.config.width, this.config.height);
 
 		this.collisionsManager = new CollisionsManager(this);
+
+		new ImageRepository(gameImages, (images) => {
+			this.images = images;
+			this.onGameReady();
+		});
 	}
 
 	start() {

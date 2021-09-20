@@ -14,10 +14,8 @@ export default class Ball {
 		this.initialSpeed = initialSpeed;
 		this.acceleration = acceleration;
 
-		// TODO: load this image in a different way and save it in the "game" object
 		if (!game.isServer) {
-			this.image = new Image();
-			this.image.src = 'https://www.pinclipart.com/picdir/big/544-5446703_transparent-background-red-ball-icon-clipart.png';
+			this.image = game.images.ball;
 		}
 
 		this.center();

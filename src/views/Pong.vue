@@ -93,11 +93,12 @@
 
 				this.socket.on(this.socketEvents.GAME.START_GAME, ({ config, player }) => {
 					this.game = new Pong('game-canvas', config, player, {
+						onGameReady: () => {
+							this.game.start();
+							this.loading = false;
+						},
 						onUpdateInputs: this.updateInputs
 					});
-
-					this.game.start();
-					this.loading = false;
 				});
 
 				this.socket.on(this.socketEvents.GAME.UPDATE_DATA, (data) => {
