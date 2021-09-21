@@ -1,9 +1,9 @@
 import _ from 'lodash';
 
 export default class Ball {
-	constructor(game, size, initialSpeed, acceleration) {
-		this.context = game.contexts.game.context;
-		this.canvas = game.contexts.game.canvas;
+	constructor(game, size, initialSpeed, acceleration, initialRotationSpeed, rotationAcceleration) {
+		this.context = game.contexts.ball.context;
+		this.canvas = game.contexts.ball.canvas;
 
 		this.width = size;
 		this.height = size;
@@ -13,6 +13,10 @@ export default class Ball {
 		this.dy = 0;
 		this.initialSpeed = initialSpeed;
 		this.acceleration = acceleration;
+		this.initialRotationSpeed = initialRotationSpeed;
+		this.rotationSpeed = initialRotationSpeed;
+		this.rotationAcceleration = rotationAcceleration;
+		this.angle = 0;
 
 		if (!game.isServer) {
 			this.image = game.images.ball;
@@ -46,6 +50,8 @@ export default class Ball {
 
 		this.dx = 0;
 		this.dy = 0;
+		this.rotationSpeed = this.initialRotationSpeed;
+		this.angle = 0;
 
 		//start moving the ball again after some delay
 		setTimeout(() => {
@@ -61,15 +67,41 @@ export default class Ball {
 
 		this.dx = Ball.increaseSpeed(this.dx, this.acceleration);
 		this.dy = Ball.increaseSpeed(this.dy, verticalAcceleration);
+
+		this.rotationSpeed = this.rotationSpeed + this.rotationAcceleration;
 	}
 
 	move() {
 		this.x = this.x + this.dx;
 		this.y = this.y + this.dy;
+
+		this.rotate();
+	}
+
+	rotate() {
+		//rotate the ball only if it's moving
+		if (this.dx === 0) {
+			return;
+		}
+
+		const speed = this.dx > 0 ? this.rotationSpeed : this.rotationSpeed * -1;
+		this.angle = this.angle + speed;
 	}
 
 	draw() {
-		this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
+		this.context.save();
+
+		//move to the middle of where we want to draw our image
+		this.context.translate(this.x + this.width / 2, this.y + this.height / 2);
+
+		//rotate around that point, converting our angle from degrees to radians
+		this.context.rotate((this.angle * Math.PI) / 180);
+
+		//draw it up and to the left by half the width and height of the image
+		this.context.drawImage(this.image, -(this.width / 2), -(this.height / 2), this.width, this.height);
+
+		//and restore the co-ords to how they were when we began
+		this.context.restore();
 	}
 
 	moveAndDraw() {
@@ -95,7 +127,9 @@ export default class Ball {
 			x: this.x,
 			y: this.y,
 			dx: this.dx,
-			dy: this.dy
+			dy: this.dy,
+			rotationSpeed: this.rotationSpeed,
+			angle: this.angle
 		};
 	}
 
@@ -104,5 +138,7 @@ export default class Ball {
 		this.y = state.y;
 		this.dx = state.dx;
 		this.dy = state.dy;
+		this.rotationSpeed = state.rotationSpeed;
+		this.angle = state.angle;
 	}
 }

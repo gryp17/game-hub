@@ -94,7 +94,9 @@ module.exports = {
 			ball: {
 				size: 60,
 				initialSpeed: 7,
-				acceleration: 0.5
+				acceleration: 0.2,
+				initialRotationSpeed: 5,
+				rotationAcceleration: 1
 			},
 			paddle: {
 				acceleration: 2,

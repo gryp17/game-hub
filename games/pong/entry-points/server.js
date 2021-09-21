@@ -33,8 +33,16 @@ export default class Pong {
 
 		this.ball;
 
+		//mocked contexts/canvas objects (not really needed on the server)
 		this.contexts = {
 			game: {
+				context: {},
+				canvas: {
+					width: this.config.width,
+					height: this.config.height
+				}
+			},
+			ball: {
 				context: {},
 				canvas: {
 					width: this.config.width,
@@ -97,7 +105,14 @@ export default class Pong {
 			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, true, player.socketId);
 		});
 
-		this.ball = new Ball(this, this.config.ball.size, this.config.ball.initialSpeed, this.config.ball.acceleration);
+		this.ball = new Ball(
+			this,
+			this.config.ball.size,
+			this.config.ball.initialSpeed,
+			this.config.ball.acceleration,
+			this.config.ball.initialRotationSpeed,
+			this.config.ball.rotationAcceleration
+		);
 
 		this.gameLoopInterval = setInterval(() => {
 			this.paddles.forEach((paddle) => {

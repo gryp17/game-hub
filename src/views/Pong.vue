@@ -23,6 +23,7 @@
 		<canvas id="game-canvas" class="canvas">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
+		<canvas id="ball-canvas" class="canvas"></canvas>
 
 		<GameOverModal />
 	</div>
@@ -51,7 +52,10 @@
 			};
 		},
 		async mounted() {
-			this.connectToSocket();
+			//preload the game images before connecting to the socket and starting the game
+			Pong.preloadGameImages((gameImages) => {
+				this.initGame(gameImages);
+			});
 		},
 		beforeDestroy() {
 			if (this.game) {
@@ -78,7 +82,7 @@
 			/**
 			 * Connects to the socket.io server and listens for it's events
 			 */
-			connectToSocket() {
+			initGame(gameImages) {
 				//initialize the socket connection
 				this.socket = SocketIO(`${config.socketUrl}/pong`, {
 					transports: ['websocket'],
@@ -91,14 +95,14 @@
 					});
 				});
 
+				//start the game
 				this.socket.on(this.socketEvents.GAME.START_GAME, ({ config, player }) => {
-					this.game = new Pong('game-canvas', config, player, {
-						onGameReady: () => {
-							this.game.start();
-							this.loading = false;
-						},
+					this.game = new Pong('game-canvas', 'ball-canvas', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs
 					});
+
+					this.loading = false;
+					this.game.start();
 				});
 
 				this.socket.on(this.socketEvents.GAME.UPDATE_DATA, (data) => {
@@ -162,9 +166,13 @@
 			}
 		}
 
-		#game-canvas {
+		.canvas {
+			position: absolute;
+			top: 0;
+			left: 0;
 			display: none;
 			width: 100%;
+			height: 100%;
 			border: solid 3px $purple;
 		}
 	}

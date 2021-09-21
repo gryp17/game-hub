@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Context from '../context';
 import Keyboard from '../keyboard';
 import Paddle from '../paddle';
@@ -23,20 +24,19 @@ window.requestAnimFrame = (function anim() {
 }());
 
 export default class Pong {
-	constructor(canvasId, config, player, { onGameReady, onUpdateInputs }) {
+	constructor(gameCanvasId, ballCanvasId, images, config, player, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.player = player;
 		this.gameLoopInterval;
 		this.inputs;
-		this.images = {};
+		this.images = images;
 		this.paddles = [];
 		this.scores = {};
 		this.ball;
 
 		//events
 		this.onUpdateInputs = onUpdateInputs;
-		this.onGameReady = onGameReady;
 
 		this.gameControls = config.controls;
 
@@ -45,21 +45,24 @@ export default class Pong {
 
 		//canvas/context objects
 		this.contexts = {
-			game: new Context(canvasId)
+			game: new Context(gameCanvasId),
+			ball: new Context(ballCanvasId)
 		};
 
-		this.contexts.game.setSize(this.config.width, this.config.height);
+		_.forOwn(this.contexts, (value, key) => {
+			this.contexts[key].setSize(this.config.width, this.config.height);
+		});
 
 		this.collisionsManager = new CollisionsManager(this);
+	}
 
-		new ImageRepository(gameImages, (images) => {
-			this.images = images;
-			this.onGameReady();
-		});
+	static preloadGameImages(callback) {
+		new ImageRepository(gameImages, callback);
 	}
 
 	start() {
 		this.contexts.game.show();
+		this.contexts.ball.show();
 		this.contexts.game.focus();
 
 		//game objects
@@ -69,7 +72,14 @@ export default class Pong {
 			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, controllable);
 		});
 
-		this.ball = new Ball(this, this.config.ball.size, this.config.ball.initialSpeed, this.config.ball.acceleration);
+		this.ball = new Ball(
+			this,
+			this.config.ball.size,
+			this.config.ball.initialSpeed,
+			this.config.ball.acceleration,
+			this.config.ball.initialRotationSpeed,
+			this.config.ball.rotationAcceleration
+		);
 
 		//listen for the keyboard events
 		this.keyboard.listen();
@@ -124,7 +134,9 @@ export default class Pong {
 
 	drawGame() {
 		//clear the whole canvas before drawing anything (this used to be in the paddle class)
-		this.contexts.game.context.clearRect(0, 0, this.contexts.game.canvas.width, this.contexts.game.canvas.height);
+		_.forOwn(this.contexts, (value, key) => {
+			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
+		});
 
 		this.paddles.forEach((paddle) => {
 			paddle.draw();
