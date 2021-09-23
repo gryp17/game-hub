@@ -50,6 +50,11 @@ export default class Paddle {
 	}
 
 	processInputs(inputs) {
+		//stop moving
+		if (!inputs.down && !inputs.up) {
+			this.dy = 0;
+		}
+
 		//up
 		if (inputs.up) {
 			if (this.dy > (this.maxSpeed * -1)) {

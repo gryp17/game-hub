@@ -1,6 +1,6 @@
-import Paddle from '../paddle';
-import Ball from '../ball';
-import CollisionsManager from '../collisions-manager';
+import Paddle from '../game-entities/paddle';
+import Ball from '../game-entities/ball';
+import CollisionsManager from '../misc/collisions-manager';
 
 export default class Pong {
 	constructor(id, config, players, { onUpdate, onGameOver }) {

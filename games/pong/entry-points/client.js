@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import Context from '../context';
-import Keyboard from '../keyboard';
-import Paddle from '../paddle';
-import Ball from '../ball';
-import CollisionsManager from '../collisions-manager';
-import ImageRepository from '../image-repository';
+import Context from '../misc/context';
+import Keyboard from '../inputs/keyboard';
+import Touchscreen from '../inputs/touchscreen';
+import Paddle from '../game-entities/paddle';
+import Ball from '../game-entities/ball';
+import CollisionsManager from '../misc/collisions-manager';
+import ImageRepository from '../misc/image-repository';
 import gameImages from '../resources/images';
 
 /**
@@ -40,8 +41,9 @@ export default class Pong {
 
 		this.gameControls = config.controls;
 
-		//initialize the keyboard controls
+		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls);
+		this.touchscreen = new Touchscreen(this.gameControls);
 
 		//canvas/context objects
 		this.contexts = {
@@ -81,8 +83,9 @@ export default class Pong {
 			this.config.ball.rotationAcceleration
 		);
 
-		//listen for the keyboard events
+		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
+		this.touchscreen.listen();
 
 		this.gameLoopInterval = setInterval(() => {
 			this.gameLoop();
@@ -111,12 +114,32 @@ export default class Pong {
 		}
 	}
 
+	getInputs() {
+		const result = {};
+
+		const controllablePaddle = this.paddles.find((paddle) => {
+			return paddle.controllable;
+		});
+
+		//get both types of inputs
+		const keyboardInputs = this.keyboard.getInputs();
+		const touchscreenInputs = this.touchscreen.getInputs(controllablePaddle);
+
+		//and merge them
+		_.forOwn(this.gameControls, (data, key) => {
+			result[key] = keyboardInputs[key] || touchscreenInputs[key];
+		});
+
+		return result;
+	}
+
 	gameLoop() {
 		//get the current inputs status
 		const oldInputs = {
 			...this.inputs
 		};
-		this.inputs = this.keyboard.getInputs();
+
+		this.inputs = this.getInputs();
 
 		//emit the updateInputs only if the inputs have changed
 		if (!_.isEqual(oldInputs, this.inputs)) {
