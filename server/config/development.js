@@ -94,7 +94,7 @@ module.exports = {
 			ball: {
 				size: 60,
 				initialSpeed: 7,
-				acceleration: 0.2,
+				acceleration: 0.5,
 				initialRotationSpeed: 5,
 				rotationAcceleration: 1
 			},

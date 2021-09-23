@@ -52,9 +52,8 @@ export default class CollisionsManager {
 
 				ball.dx = ball.dx * -1;
 
-				//calculate the paddle acceleration and use it to calculate the vertical acceleration of the ball
-				const paddleAcceleration = paddle.dy === 0 ? 0 : Math.abs(paddle.dy * 0.3);
-				ball.speedUp(paddleAcceleration);
+				//speed up the ball and use the paddle acceleration to calculate the ball's vertical acceleration
+				ball.speedUp(paddle.dy);
 			}
 		});
 	}
