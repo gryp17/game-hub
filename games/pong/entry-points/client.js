@@ -97,6 +97,10 @@ export default class Pong {
 	}
 
 	stop() {
+		//clear all input event listeners
+		this.keyboard.removeAllEventListeners();
+		this.touchscreen.removeAllEventListeners();
+
 		clearInterval(this.gameLoopInterval);
 	}
 

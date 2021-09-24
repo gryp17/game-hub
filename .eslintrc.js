@@ -55,6 +55,8 @@ module.exports = {
 		'import/named': 0,
 		'import/prefer-default-export': 0,
 		'no-unused-expressions': 0,
+		'class-methods-use-this': 0,
+		'no-useless-constructor': 0,
 		indent: ['error', 'tab'],
 		'vue/html-indent': ['error', 'tab'],
 		'vue/script-indent': ['error', 'tab', {

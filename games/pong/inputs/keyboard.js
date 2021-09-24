@@ -1,25 +1,13 @@
+import InputDevice from './input-device';
+
 /**
  * Keyboard class that handles all keyboard inputs
  * @param {Object} inputs
  * @returns {Keyboard}
  */
-export default class Keyboard {
+export default class Keyboard extends InputDevice {
 	constructor(inputs) {
-		this.inputs = inputs;
-	}
-
-	/**
-	 * Returns all input statuses
-	 * @returns {Object}
-	 */
-	getInputs() {
-		const result = {};
-
-		_.forOwn(this.inputs, (data, key) => {
-			result[key] = data.status || false;
-		});
-
-		return result;
+		super(inputs);
 	}
 
 	/**
@@ -27,21 +15,25 @@ export default class Keyboard {
 	 */
 	listen() {
 		//key down
-		$('body').keydown((e) => {
-			_.forOwn(this.inputs, (data, key) => {
-				if (_.includes(data.keys, e.which)) {
-					data.status = true;
-				}
-			});
-		});
+		this.addEventListener('keydown', this.onKeyDown);
 
 		//key up
-		$('body').keyup((e) => {
-			_.forOwn(this.inputs, (data, key) => {
-				if (_.includes(data.keys, e.which)) {
-					data.status = false;
-				}
-			});
+		this.addEventListener('keyup', this.onKeyUp);
+	}
+
+	onKeyDown(e) {
+		_.forOwn(this.inputs, (data, key) => {
+			if (_.includes(data.keys, e.which)) {
+				data.status = true;
+			}
+		});
+	}
+
+	onKeyUp(e) {
+		_.forOwn(this.inputs, (data, key) => {
+			if (_.includes(data.keys, e.which)) {
+				data.status = false;
+			}
 		});
 	}
 }

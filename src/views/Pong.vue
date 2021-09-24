@@ -51,7 +51,7 @@
 				loading: true
 			};
 		},
-		async mounted() {
+		mounted() {
 			//preload the game images before connecting to the socket and starting the game
 			Pong.preloadGameImages((gameImages) => {
 				this.initGame(gameImages);

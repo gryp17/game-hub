@@ -1,15 +1,22 @@
+import InputDevice from './input-device';
+
 /**
  * Touchscreen class that handles all touchscreen inputs
  * @param {Object} inputs
  * @returns {Touchscreen}
  */
-export default class Touchscreen {
+export default class Touchscreen extends InputDevice {
 	constructor(inputs) {
-		this.inputs = inputs;
+		super(inputs);
+
 		this.mousedown = false;
 		this.touchTarget;
 	}
 
+	/**
+	 * Returns all input statuses
+	 * @returns {Object}
+	 */
 	getInputs(paddle) {
 		const result = {};
 
@@ -48,32 +55,42 @@ export default class Touchscreen {
 	 */
 	listen() {
 		//touchstart
-		$('body').on('touchstart', (e) => {
-			this.touchTarget = e.touches[0].clientY;
-		});
+		this.addEventListener('touchstart', this.onTouchStart);
 
 		//touchmove
-		$('body').on('touchmove', (e) => {
-			this.touchTarget = e.touches[0].clientY;
-		});
+		this.addEventListener('touchmove', this.onTouchMove);
 
 		//mousedown
-		$('body').on('mousedown', (e) => {
-			this.mousedown = true;
-			this.touchTarget = e.clientY;
-		});
+		this.addEventListener('mousedown', this.onMouseDown);
 
 		//mouseup
-		$('body').on('mouseup', (e) => {
-			this.mousedown = false;
-			this.touchTarget = e.clientY;
-		});
+		this.addEventListener('mouseup', this.onMouseUp);
 
 		//mousemove
-		$('body').on('mousemove', (e) => {
-			if (this.mousedown) {
-				this.touchTarget = e.clientY;
-			}
-		});
+		this.addEventListener('mousemove', this.onMouseMove);
+	}
+
+	onTouchStart(e) {
+		this.touchTarget = e.touches[0].clientY;
+	}
+
+	onTouchMove(e) {
+		this.touchTarget = e.touches[0].clientY;
+	}
+
+	onMouseDown(e) {
+		this.mousedown = true;
+		this.touchTarget = e.clientY;
+	}
+
+	onMouseUp(e) {
+		this.mousedown = false;
+		this.touchTarget = e.clientY;
+	}
+
+	onMouseMove(e) {
+		if (this.mousedown) {
+			this.touchTarget = e.clientY;
+		}
 	}
 }

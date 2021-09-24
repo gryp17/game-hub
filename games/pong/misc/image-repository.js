@@ -6,7 +6,7 @@
  */
 export default class ImageRepository {
 	constructor(images, callback) {
-		this.images = images;
+		this.images = { ...images };
 		this.callback = callback;
 
 		this.loadedImages = 0;
