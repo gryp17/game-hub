@@ -3,11 +3,12 @@ import InputDevice from './input-device';
 /**
  * Touchscreen class that handles all touchscreen inputs
  * @param {Object} inputs
+ * @param {Object} canvas
  * @returns {Touchscreen}
  */
 export default class Touchscreen extends InputDevice {
-	constructor(inputs) {
-		super(inputs);
+	constructor(inputs, canvas) {
+		super(inputs, canvas);
 
 		this.mousedown = false;
 		this.touchTarget;

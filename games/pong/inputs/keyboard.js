@@ -3,11 +3,12 @@ import InputDevice from './input-device';
 /**
  * Keyboard class that handles all keyboard inputs
  * @param {Object} inputs
+ * @param {Object} canvas
  * @returns {Keyboard}
  */
 export default class Keyboard extends InputDevice {
-	constructor(inputs) {
-		super(inputs);
+	constructor(inputs, canvas) {
+		super(inputs, canvas);
 	}
 
 	/**

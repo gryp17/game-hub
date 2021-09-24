@@ -41,10 +41,6 @@ export default class Pong {
 
 		this.gameControls = config.controls;
 
-		//initialize the keyboard and touchscreen controls
-		this.keyboard = new Keyboard(this.gameControls);
-		this.touchscreen = new Touchscreen(this.gameControls);
-
 		//canvas/context objects
 		this.contexts = {
 			game: new Context(gameCanvasId),
@@ -54,6 +50,10 @@ export default class Pong {
 		_.forOwn(this.contexts, (value, key) => {
 			this.contexts[key].setSize(this.config.width, this.config.height);
 		});
+
+		//initialize the keyboard and touchscreen controls
+		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
+		this.touchscreen = new Touchscreen(this.gameControls, this.contexts.game.canvas);
 
 		this.collisionsManager = new CollisionsManager(this);
 	}

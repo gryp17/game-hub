@@ -1,11 +1,11 @@
 export default class InputDevice {
-	constructor(inputs) {
+	constructor(inputs, canvas) {
 		if (this.constructor === InputDevice) {
 			throw new Error('Abstract class "InputDevice" can not be instantiated');
 		}
 
 		this.inputs = inputs;
-		this.element = $('body');
+		this.canvas = $(canvas);
 		this.listeners = {};
 	}
 
@@ -13,15 +13,15 @@ export default class InputDevice {
 		const boundListener = listener.bind(this);
 
 		this.listeners[event] = boundListener;
-		this.element.on(event, boundListener);
+		this.canvas.on(event, boundListener);
 	}
 
 	removeEventListener(event, listener) {
-		this.element.off(event, listener);
+		this.canvas.off(event, listener);
 	}
 
 	removeAllEventListeners() {
-		this.element.off(this.listeners);
+		this.canvas.off(this.listeners);
 	}
 
 	/**
