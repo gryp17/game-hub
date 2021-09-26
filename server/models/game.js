@@ -9,7 +9,7 @@ export default (db) => {
 			type: Sequelize.STRING
 		},
 		data: {
-			type: Sequelize.JSON
+			type: Sequelize.STRING(500)
 		},
 		ragequit: {
 			type: Sequelize.BOOLEAN,

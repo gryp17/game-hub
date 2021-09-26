@@ -68,6 +68,9 @@
 		font-family:  $font-family;
 		color: $text-color;
 
+		//prevent the page refresh on scroll on mobile devices
+		overscroll-behavior-y: contain;
+
 		:focus {
 			outline: none;
 		}

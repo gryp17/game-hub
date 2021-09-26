@@ -63,7 +63,7 @@ const getters = {
 		const games = state.gameHistory.games.map((game) => {
 			const score = {};
 
-			let data = JSON.parse(game.data);
+			let data = game.data;
 
 			Object.keys(data.score).forEach((userId) => {
 				const points = data.score[userId];

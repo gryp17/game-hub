@@ -47,13 +47,16 @@ export default function (io, app) {
 				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
 
+					//the game data is saved as a string
+					const gameData = JSON.stringify({
+						score: scores
+					});
+
 					await gameInstance.update({
 						status: gameStatuses.FINISHED,
 						winner: winner.id,
 						ragequit,
-						data: {
-							score: scores
-						}
+						data: gameData
 					});
 
 					pong.to(gameRoomId).emit(socketEvents.GAME.GAME_OVER, {
