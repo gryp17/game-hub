@@ -70,7 +70,8 @@ export default class Touchscreen extends InputDevice {
 	}
 
 	/**
-	 * Calculates the relative touch position using the absolute one by using the game height and the actual/client canvas height
+	 * Calculates the relative (game) touch position using the absolute (client/screen) one by using the game height and the actual/client canvas height
+	 * This is needed because the game has a fixed width/height (1000/768) while the actual browser page size might be different
 	 * @param {Number} touchY
 	 * @returns {Number}
 	 */
@@ -78,6 +79,7 @@ export default class Touchscreen extends InputDevice {
 		const gameHeight = this.canvas.attr('height');
 		const clientHeight = this.canvas.innerHeight();
 
+		//figure out where is the point/percentage where the touch event has occured on the screen and calculate it's game position
 		const percentage = (touchY / clientHeight) * 100;
 		const relativeTouchY = (percentage * gameHeight) / 100;
 
