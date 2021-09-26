@@ -86,7 +86,10 @@ export default function (io, app) {
 		socket.on(socketEvents.GAME.UPDATE_INPUTS, (inputs) => {
 			//find the game that this player belongs to and update it's inputs
 			const game = cache.findGameStateByUserId(socket.user.id);
-			game.updateInputs({ socketId: socket.id, inputs });
+
+			if (game) {
+				game.updateInputs({ socketId: socket.id, inputs });
+			}
 		});
 
 		//disconnect event handler
