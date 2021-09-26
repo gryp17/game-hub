@@ -11,7 +11,7 @@ export default class Touchscreen extends InputDevice {
 		super(inputs, canvas);
 
 		this.mousedown = false;
-		this.touchTarget;
+		this.touchPosition;
 	}
 
 	/**
@@ -21,19 +21,17 @@ export default class Touchscreen extends InputDevice {
 	getInputs(paddle) {
 		const result = {};
 
-		if (this.touchTarget) {
+		if (this.touchPosition) {
 			//use the paddle and touch positions to figure out when to stop moving up or down
-			const touchY = this.touchTarget;
-
 			const paddlePosition = (paddle.y + (paddle.height / 2));
-			const difference = Math.abs(touchY - paddlePosition);
+			const difference = Math.abs(this.touchPosition - paddlePosition);
 
 			//target reached
-			if (difference < 5) {
+			if (difference < 20) {
 				this.inputs.down.status = false;
 				this.inputs.up.status = false;
-				this.touchTarget = null;
-			} else if (touchY > paddlePosition) {
+				this.touchPosition = null;
+			} else if (this.touchPosition > paddlePosition) {
 				//go down
 				this.inputs.down.status = true;
 				this.inputs.up.status = false;
@@ -71,27 +69,46 @@ export default class Touchscreen extends InputDevice {
 		this.addEventListener('mousemove', this.onMouseMove);
 	}
 
+	/**
+	 * Calculates the relative touch position using the absolute one by using the game height and the actual/client canvas height
+	 * @param {Number} touchY
+	 * @returns {Number}
+	 */
+	calculateTouchPosition(touchY) {
+		const gameHeight = this.canvas.attr('height');
+		const clientHeight = this.canvas.innerHeight();
+
+		const percentage = (touchY / clientHeight) * 100;
+		const relativeTouchY = (percentage * gameHeight) / 100;
+
+		return relativeTouchY;
+	}
+
 	onTouchStart(e) {
-		this.touchTarget = e.touches[0].clientY;
+		e.preventDefault();
+		e.stopPropagation();
+		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
 	}
 
 	onTouchMove(e) {
-		this.touchTarget = e.touches[0].clientY;
+		e.preventDefault();
+		e.stopPropagation();
+		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
 	}
 
 	onMouseDown(e) {
 		this.mousedown = true;
-		this.touchTarget = e.clientY;
+		this.touchPosition = e.clientY;
 	}
 
 	onMouseUp(e) {
 		this.mousedown = false;
-		this.touchTarget = e.clientY;
+		this.touchPosition = e.clientY;
 	}
 
 	onMouseMove(e) {
 		if (this.mousedown) {
-			this.touchTarget = e.clientY;
+			this.touchPosition = e.clientY;
 		}
 	}
 }
