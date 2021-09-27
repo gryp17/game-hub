@@ -5,7 +5,12 @@
 			<FormButton
 				@click="stop"
 			>
-				Stop matchmaking
+				<span class="action">
+					Stop
+				</span>
+				<span class="action long">
+					Stop matchmaking
+				</span>
 			</FormButton>
 		</template>
 		<template v-else>
@@ -13,7 +18,12 @@
 				:disabled="disabled"
 				@click="play"
 			>
-				{{ playButtonText }}
+				<span class="action">
+					{{ playButtonText }}
+				</span>
+				<span class="action long">
+					{{ playButtonTextLong }}
+				</span>
 			</FormButton>
 
 			<DropdownMenu
@@ -70,8 +80,14 @@
 					...this.availableGames
 				];
 			},
+			selectedGameName() {
+				return this.selectedGame.value === 'any' ? null : this.selectedGame.label;
+			},
 			playButtonText() {
-				return this.selectedGame.value === 'any' ? 'Play' : `Play ${this.selectedGame.label}`;
+				return this.selectedGameName ? this.selectedGameName : 'Play';
+			},
+			playButtonTextLong() {
+				return this.selectedGameName ? `Play ${this.selectedGameName}` : 'Play';
 			}
 		},
 		created() {
@@ -100,6 +116,14 @@
 			margin-right: 10px;
 		}
 
+		.action {
+			display: none;
+
+			&.long {
+				display: inline;
+			}
+		}
+
 		.arrow-btn {
 			padding: 10px 5px;
 			margin-left: 1px;
@@ -114,6 +138,20 @@
 				margin-top: 0px;
 
 				&:before {
+					display: none;
+				}
+			}
+		}
+
+		@media (max-width: $small) {
+			> .form-button {
+				padding: 10px;
+			}
+
+			.action {
+				display: inline;
+
+				&.long {
 					display: none;
 				}
 			}
