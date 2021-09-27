@@ -53,12 +53,18 @@
 
 		@media (max-width: $small) {
 			.logo {
-				width: 60%;
+				width: 55%;
 			}
 
 			.tabs-wrapper {
 				padding: 0px 10px;
 				width: 100%;
+			}
+		}
+
+		@media (max-width: $extra-small) {
+			.logo {
+				width: 50%;
 			}
 		}
 	}

@@ -25,6 +25,12 @@
 						title="GameHub"
 						src="@/assets/img/logo-white.png"
 					/>
+					<img
+						alt="logo"
+						class="logo small"
+						title="GameHub"
+						src="@/assets/img/logo-small.png"
+					/>
 				</div>
 				<div class="column">
 					<UserMenu
@@ -331,6 +337,12 @@
 				margin: auto;
 				margin-top: -2px;
 				width: 135px;
+
+				&.small {
+					display: none;
+					margin-top: 3px;
+					width: 82px;
+				}
 			}
 
 			.user-menu {
@@ -367,6 +379,18 @@
 					left: 0;
 					width: 100%;
 					height: 100%;
+				}
+			}
+		}
+
+		@media (max-width: $extra-small) {
+			.page-header {
+				.logo {
+					display: none;
+
+					&.small {
+						display: block;
+					}
 				}
 			}
 		}
