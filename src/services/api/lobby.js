@@ -1,10 +1,11 @@
 import API from './API';
 
 export default {
-	challengePlayer(userId, game) {
+	challengePlayer(userId, game, settings) {
 		return API.post('/lobby/challenge', {
 			userId,
-			game
+			game,
+			settings
 		});
 	},
 	cancelChallenge(userId) {

@@ -199,10 +199,11 @@
 			showProfileModal(user) {
 				showProfileModal(user.id);
 			},
-			async onChallengePlayer({ user, game }) {
+			async onChallengePlayer({ user, game, settings }) {
 				return this.challengePlayer({
 					userId: user.id,
-					game
+					game,
+					settings
 				});
 			},
 			/**
@@ -233,10 +234,11 @@
 					this.updateUserStatuses(statuses);
 				});
 
-				this.socket.on(this.socketEvents.LOBBY.CHALLENGE, ({ user, game }) => {
+				this.socket.on(this.socketEvents.LOBBY.CHALLENGE, ({ user, game, settings }) => {
 					showChallengeModal({
+						user,
 						game,
-						user
+						settings
 					});
 				});
 

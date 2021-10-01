@@ -3,7 +3,7 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, gameStatuses, gameCodes } from '../config';
+import { errorCodes, userStatuses, gameStatuses, games, gameCodes } from '../config';
 import { Game, User } from '../models';
 import cache from '../services/cache';
 
@@ -27,9 +27,37 @@ const rules = {
 	}
 };
 
+function validateGameSettings(game, settings) {
+	if (game === games.PONG.code) {
+		const validSettings = {};
+
+		//check if every setting key is set and it's value is valid
+		Object.keys(games.PONG.configurableSettings).forEach((settingType) => {
+			let value = settings ? settings[settingType] : null;
+			const validValuesMap = games.PONG.configurableSettings[settingType];
+			const validValues = Object.values(validValuesMap);
+
+			//if the value is not set or is not valid fallback to the default/normal value
+			if (!value || !validValues.includes(value)) {
+				value = validValuesMap.NORMAL;
+			}
+
+			validSettings[settingType] = value;
+		});
+
+		return validSettings;
+	}
+
+	//TODO: add more game types if necessary
+
+	return {};
+}
+
 //challenge player
 router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res) => {
-	const { userId, game } = req.body;
+	const { userId, game, settings } = req.body;
+
+	const gameSettings = validateGameSettings(game, settings);
 
 	const challengedUser = lobby.getUserById(userId);
 	const ownUser = lobby.getUserById(req.session.user.id);
@@ -47,10 +75,10 @@ router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res
 	}, {
 		id: challengedUser.id,
 		socketId: challengedUser.socketId
-	}, game);
+	}, game, gameSettings);
 
 	//send the socketio event to the challenged player
-	lobby.challengePlayer(challengedUser, ownUser, game);
+	lobby.challengePlayer(challengedUser, ownUser, game, gameSettings);
 
 	//set both users status to busy while the challenge is still active
 	lobby.setUserStatus(ownUser.id, userStatuses.BUSY);

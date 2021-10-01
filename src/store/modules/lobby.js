@@ -204,9 +204,9 @@ const actions = {
 			context.commit('auth/SET_USER_SESSION', user, { root: true });
 		}
 	},
-	async challengePlayer(context, { userId, game }) {
+	async challengePlayer(context, { userId, game, settings }) {
 		try {
-			const { data } = await LobbyHttpService.challengePlayer(userId, game);
+			const { data } = await LobbyHttpService.challengePlayer(userId, game, settings);
 
 			//throw the errors and show them using a toast instead of handling them in a form or something
 			if (data && data.errors) {

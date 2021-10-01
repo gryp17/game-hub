@@ -109,6 +109,28 @@ module.exports = {
 				down: {
 					keys: [40, 83] //arrow down, S
 				}
+			},
+			configurableSettings: {
+				gameLength: {
+					SHORT: 'long',
+					NORMAL: 'normal',
+					LONG: 'short'
+				},
+				paddleSize: {
+					BIG: 'big',
+					NORMAL: 'normal',
+					SMALL: 'small'
+				},
+				ballSpeed: {
+					SLOW: 'slow',
+					NORMAL: 'normal',
+					FAST: 'fast'
+				},
+				ballSize: {
+					BIG: 'big',
+					NORMAL: 'normal',
+					SMALL: 'small'
+				}
 			}
 		}
 	}

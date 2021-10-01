@@ -168,7 +168,13 @@
 				//use $listeners instead of $emit in order to be able to await the response
 				const success = await this.$listeners.challenge({
 					user: this.user,
-					game: this.game.value
+					game: this.game.value,
+					settings: {
+						gameLength: this.gameLength,
+						ballSpeed: this.ballSpeed,
+						ballSize: this.ballSize,
+						paddleSize: this.paddleSize
+					}
 				});
 
 				if (success) {

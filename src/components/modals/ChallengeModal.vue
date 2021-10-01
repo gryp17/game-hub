@@ -16,6 +16,10 @@
 			</div>
 			<div class="content center">
 				You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
+				with the following rules:
+
+				<!-- TODO: display the settings somehow -->
+				{{ settings }}
 
 				<TimeoutCountdown
 					ref="countdown"
@@ -52,13 +56,15 @@
 		data() {
 			return {
 				user: {},
-				game: {}
+				game: {},
+				settings: null
 			};
 		},
 		methods: {
 			onBeforeOpen(e) {
 				this.user = e.params.user;
 				this.game = this.$options.filters.gamesMap(e.params.game);
+				this.settings = e.params.settings;
 			},
 			startCountdown() {
 				if (this.$refs.countdown) {

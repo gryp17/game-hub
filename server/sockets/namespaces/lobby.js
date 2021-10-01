@@ -85,10 +85,11 @@ export default function (io, app) {
 		lobby.updateUserStatuses();
 	};
 
-	lobby.challengePlayer = (challengedUser, challenger, game) => {
+	lobby.challengePlayer = (challengedUser, challenger, game, settings) => {
 		lobby.to(challengedUser.socketId).emit(socketEvents.LOBBY.CHALLENGE, {
+			user: challenger,
 			game,
-			user: challenger
+			settings
 		});
 	};
 
