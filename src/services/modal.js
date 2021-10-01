@@ -4,7 +4,7 @@ const modals = {
 	profile: 'user-profile-modal',
 	editProfile: 'edit-profile-modal',
 	challenge: 'challenge-modal',
-	challengePending: 'challenge-pending-modal',
+	challengeSettings: 'challenge-settings-modal',
 	matchmakingPending: 'matchmaking-pending-modal',
 	gameOver: 'game-over-modal'
 };
@@ -45,12 +45,12 @@ function hideChallengeModal() {
 	hideModal(modals.challenge);
 }
 
-function showChallengePendingModal(params) {
-	showModal(modals.challengePending, params);
+function showChallengeSettingsModal(params) {
+	showModal(modals.challengeSettings, params);
 }
 
-function hideChallengePendingModal() {
-	hideModal(modals.challengePending);
+function hideChallengeSettingsModal() {
+	hideModal(modals.challengeSettings);
 }
 
 function showMatchmakingPendingModal(params) {
@@ -78,8 +78,8 @@ export {
 	hideEditProfileModal,
 	showChallengeModal,
 	hideChallengeModal,
-	showChallengePendingModal,
-	hideChallengePendingModal,
+	showChallengeSettingsModal,
+	hideChallengeSettingsModal,
 	showMatchmakingPendingModal,
 	hideMatchmakingPendingModal,
 	showGameOverModal,

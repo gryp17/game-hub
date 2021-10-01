@@ -79,7 +79,7 @@
 <script>
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import { Tabs, Tab } from 'vue-tabs-component';
-	import { showEditProfileModal, hideProfileModal } from '@/services/modal';
+	import { showEditProfileModal, hideProfileModal, showChallengeSettingsModal } from '@/services/modal';
 	import GameResultsChart from '@/components/charts/GameResultsChart';
 	import GamesByTypeChart from '@/components/charts/GamesByTypeChart';
 	import ProfileTab from '@/components/modals/user-profile/ProfileTab';
@@ -147,8 +147,8 @@
 			challengePlayer(game) {
 				this.closeModal();
 				setTimeout(() => {
-					this.$emit('challenge', {
-						user: this.userProfile,
+					showChallengeSettingsModal({
+						userId: this.userId,
 						game
 					});
 				}, 200);

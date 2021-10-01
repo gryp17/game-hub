@@ -15,6 +15,7 @@
 	import FormFileInput from '@/components/forms/FormFileInput';
 	import FormButton from '@/components/forms/FormButton';
 	import FormSwitch from '@/components/forms/FormSwitch';
+	import FormSelect from '@/components/forms/FormSelect';
 
 	//global filters
 	Vue.filter('errorsMap', errorsMap);
@@ -26,6 +27,7 @@
 	Vue.component('FormFileInput', FormFileInput);
 	Vue.component('FormButton', FormButton);
 	Vue.component('FormSwitch', FormSwitch);
+	Vue.component('FormSelect', FormSelect);
 
 	export default {
 		data() {

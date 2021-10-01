@@ -60,7 +60,8 @@
 			@accept="onChallengeAccepted"
 			@decline="onChallengeDeclined"
 		/>
-		<ChallengePendingModal
+		<ChallengeSettingsModal
+			@challenge="onChallengePlayer"
 			@cancel="onChallengeCanceled"
 		/>
 		<MatchmakingPendingModal
@@ -68,9 +69,7 @@
 			@cancel="onMatchmakingChallengeCanceled"
 		/>
 
-		<UserProfileModal
-			@challenge="onChallengePlayer"
-		/>
+		<UserProfileModal />
 
 		<EditProfileModal />
 	</div>
@@ -83,10 +82,9 @@
 		showProfileModal,
 		showEditProfileModal,
 		showChallengeModal,
-		showChallengePendingModal,
 		showMatchmakingPendingModal,
 		hideChallengeModal,
-		hideChallengePendingModal,
+		hideChallengeSettingsModal,
 		hideMatchmakingPendingModal
 	} from '@/services/modal';
 	import config from '@/config';
@@ -97,7 +95,7 @@
 	import UserMenu from '@/components/UserMenu';
 	import ToggleChatButton from '@/components/ToggleChatButton';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
-	import ChallengePendingModal from '@/components/modals/ChallengePendingModal';
+	import ChallengeSettingsModal from '@/components/modals/ChallengeSettingsModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 	import UserProfileModal from '@/components/modals/user-profile/UserProfileModal';
 	import EditProfileModal from '@/components/modals/EditProfileModal';
@@ -110,7 +108,7 @@
 			PlayButton,
 			ToggleChatButton,
 			ChallengeModal,
-			ChallengePendingModal,
+			ChallengeSettingsModal,
 			MatchmakingPendingModal,
 			UserProfileModal,
 			EditProfileModal,
@@ -202,17 +200,10 @@
 				showProfileModal(user.id);
 			},
 			async onChallengePlayer({ user, game }) {
-				const success = await this.challengePlayer({
+				return this.challengePlayer({
 					userId: user.id,
 					game
 				});
-
-				if (success) {
-					showChallengePendingModal({
-						game,
-						user
-					});
-				}
 			},
 			/**
 			 * Connects to the socket.io server and listens for it's events
@@ -254,7 +245,7 @@
 				});
 
 				this.socket.on(this.socketEvents.LOBBY.DECLINE_CHALLENGE, () => {
-					hideChallengePendingModal();
+					hideChallengeSettingsModal();
 				});
 
 				this.socket.on(this.socketEvents.LOBBY.FOUND_MATCH, (game) => {
