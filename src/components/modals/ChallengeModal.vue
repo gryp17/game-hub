@@ -15,11 +15,16 @@
 				Game challenge
 			</div>
 			<div class="content center">
-				You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
-				with the following rules:
+				<div class="challenge-text">
+					You have been challenged in a game of <span class="bold">{{ game.label }}</span> by <span class="bold">{{ user.username }}</span>
+					with the following rules:
+				</div>
 
-				<!-- TODO: display the settings somehow -->
-				{{ settings }}
+				<GameSettingsSummary
+					v-if="settings"
+					:game="game.value"
+					:settings="settings"
+				/>
 
 				<TimeoutCountdown
 					ref="countdown"
@@ -48,10 +53,12 @@
 <script>
 	import { hideChallengeModal } from '@/services/modal';
 	import TimeoutCountdown from '@/components/TimeoutCountdown';
+	import GameSettingsSummary from '@/components/GameSettingsSummary';
 
 	export default {
 		components: {
-			TimeoutCountdown
+			TimeoutCountdown,
+			GameSettingsSummary
 		},
 		data() {
 			return {
@@ -94,3 +101,14 @@
 		}
 	};
 </script>
+
+<style scoped lang="scss">
+	.challenge-modal {
+		.content {
+			.challenge-text {
+				padding: 10px 0px;
+				font-size: 20px;
+			}
+		}
+	}
+</style>

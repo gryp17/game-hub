@@ -64,7 +64,14 @@
 				<div v-show="challengeSent">
 					<div class="challenge-message-sent">
 						You have challenged <span class="bold">{{ user.username }}</span> in a game of <span class="bold">{{ game.label }}</span>
+						with the following rules:
 					</div>
+
+					<GameSettingsSummary
+						v-if="settings"
+						:game="game.value"
+						:settings="settings"
+					/>
 
 					<TimeoutCountdown
 						ref="countdown"
@@ -89,15 +96,18 @@
 	import { mapState, mapGetters } from 'vuex';
 	import { hideChallengeSettingsModal } from '@/services/modal';
 	import TimeoutCountdown from '@/components/TimeoutCountdown';
+	import GameSettingsSummary from '@/components/GameSettingsSummary';
 
 	export default {
 		components: {
-			TimeoutCountdown
+			TimeoutCountdown,
+			GameSettingsSummary
 		},
 		data() {
 			return {
 				userId: null,
 				game: {},
+				settings: null,
 				loading: false,
 				challengeSent: false,
 				gameLength: 'normal',
@@ -165,16 +175,18 @@
 
 				this.loading = true;
 
+				this.settings = {
+					gameLength: this.gameLength,
+					ballSpeed: this.ballSpeed,
+					ballSize: this.ballSize,
+					paddleSize: this.paddleSize
+				};
+
 				//use $listeners instead of $emit in order to be able to await the response
 				const success = await this.$listeners.challenge({
 					user: this.user,
 					game: this.game.value,
-					settings: {
-						gameLength: this.gameLength,
-						ballSpeed: this.ballSpeed,
-						ballSize: this.ballSize,
-						paddleSize: this.paddleSize
-					}
+					settings: this.settings
 				});
 
 				if (success) {
@@ -235,7 +247,10 @@
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-between;
-				padding: 20px 0px;
+				margin-bottom: 10px;
+				padding: 15px;
+				background-color: $gray-almost-white;
+				border-radius: 5px;
 
 				.form-select {
 					width: 48%;
