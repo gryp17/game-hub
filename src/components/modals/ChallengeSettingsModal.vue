@@ -3,7 +3,7 @@
 		<modal
 			:adaptive="true"
 			:width="'100%'"
-			:maxWidth="500"
+			:maxWidth="520"
 			:height="'auto'"
 			:clickToClose="canCloseModal"
 			name="challenge-settings-modal"

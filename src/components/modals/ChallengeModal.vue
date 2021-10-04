@@ -3,7 +3,7 @@
 		<modal
 			:adaptive="true"
 			:width="'100%'"
-			:maxWidth="460"
+			:maxWidth="520"
 			:height="'auto'"
 			:clickToClose="false"
 			name="challenge-modal"
@@ -13,6 +13,14 @@
 		>
 			<div class="header">
 				Game challenge
+
+				<FormButton
+					transparent
+					class="close-btn"
+					@click="decline"
+				>
+					<i class="fas fa-times"></i>
+				</FormButton>
 			</div>
 			<div class="content center">
 				<div class="challenge-text">

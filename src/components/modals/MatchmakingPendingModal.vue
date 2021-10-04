@@ -3,7 +3,7 @@
 		<modal
 			:adaptive="true"
 			:width="'100%'"
-			:maxWidth="460"
+			:maxWidth="480"
 			:height="'auto'"
 			:clickToClose="false"
 			name="matchmaking-pending-modal"
@@ -13,6 +13,14 @@
 		>
 			<div class="header">
 				Opponent found
+
+				<FormButton
+					transparent
+					class="close-btn"
+					@click="cancel"
+				>
+					<i class="fas fa-times"></i>
+				</FormButton>
 			</div>
 			<div class="content center">
 				<div class="matchmaking-text">
@@ -89,8 +97,9 @@
 	.matchmaking-pending-modal {
 		.content {
 			.matchmaking-text {
-				margin-bottom: 10px;
-				font-size: 18px;
+				padding: 10px 0px;
+				margin-bottom: 5px;
+				font-size: 20px;
 			}
 		}
 	}
