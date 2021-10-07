@@ -65,7 +65,7 @@ router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 
 	if (!challenge) {
 		return sendError(res, {
-			userId: errorCodes.CHALLENGE_NOT_FOUND
+			userId: errorCodes.challengeNotFound
 		});
 	}
 

@@ -96,7 +96,7 @@ const generateAsyncTasks = (asyncValidations, req) => {
 							if (user) {
 								return {
 									field,
-									error: errorCodes.ALREADY_IN_USE
+									error: errorCodes.alreadyInUse
 								};
 							}
 						})()
@@ -116,7 +116,7 @@ const generateAsyncTasks = (asyncValidations, req) => {
 							if (user) {
 								return {
 									field,
-									error: errorCodes.ALREADY_IN_USE
+									error: errorCodes.alreadyInUse
 								};
 							}
 						})()
@@ -134,7 +134,7 @@ const generateAsyncTasks = (asyncValidations, req) => {
 						if (!valid) {
 							return {
 								field,
-								error: errorCodes.WRONG_PASSWORD
+								error: errorCodes.wrongPassword
 							};
 						}
 					})()
@@ -190,7 +190,7 @@ const validate = (rules) => {
 				//"required" rule
 				if (rule === 'required') {
 					if (!isSet(data, files, field)) {
-						errors[field] = errorCodes.REQUIRED;
+						errors[field] = errorCodes.required;
 						continue fieldLoop;
 					}
 				}
@@ -198,7 +198,7 @@ const validate = (rules) => {
 				//"boolean" rule
 				if (rule === 'boolean') {
 					if (!isBoolean(fieldValue)) {
-						errors[field] = errorCodes.INVALID_BOOLEAN;
+						errors[field] = errorCodes.invalidBoolean;
 						continue fieldLoop;
 					}
 				}
@@ -206,7 +206,7 @@ const validate = (rules) => {
 				//"integer"
 				if (rule === 'integer') {
 					if (!isInteger(fieldValue)) {
-						errors[field] = errorCodes.INVALID_INTEGER;
+						errors[field] = errorCodes.invalidInteger;
 						continue fieldLoop;
 					}
 				}
@@ -214,7 +214,7 @@ const validate = (rules) => {
 				//"email" rule
 				if (rule === 'email') {
 					if (!isEmail(fieldValue)) {
-						errors[field] = errorCodes.INVALID_EMAIL;
+						errors[field] = errorCodes.invalidEmail;
 						continue fieldLoop;
 					}
 				}
@@ -222,7 +222,7 @@ const validate = (rules) => {
 				//"strong-password" rule
 				if (rule === 'strong-password') {
 					if (!isStrongPassword(fieldValue)) {
-						errors[field] = errorCodes.STRONG_PASSWORD_LENGTH_ + minPasswordLength;
+						errors[field] = errorCodes.strongPasswordLength + minPasswordLength;
 						continue fieldLoop;
 					}
 				}
@@ -236,13 +236,13 @@ const validate = (rules) => {
 
 					//max file size
 					if (file.size > maxSize) {
-						errors[field] = errorCodes.EXCEEDS_MAX_FILE_SIZE_ + maxSize;
+						errors[field] = errorCodes.exceedsMaxFileSize + maxSize;
 						continue fieldLoop;
 					}
 
 					//valid extensions
 					if (validExtensions.indexOf(extension) === -1) {
-						errors[field] = `${errorCodes.INVALID_FILE_EXTENSION_}[${validExtensions.join(',')}]`;
+						errors[field] = `${errorCodes.invalidFileExtension}[${validExtensions.join(',')}]`;
 						continue fieldLoop;
 					}
 				}
@@ -254,7 +254,7 @@ const validate = (rules) => {
 
 					//max file size
 					if (file.size > maxSize) {
-						errors[field] = errorCodes.EXCEEDS_MAX_FILE_SIZE_ + maxSize;
+						errors[field] = errorCodes.exceedsMaxFileSize + maxSize;
 						continue fieldLoop;
 					}
 				}
@@ -266,7 +266,7 @@ const validate = (rules) => {
 					const limit = minMatches[1];
 
 					if (fieldValue.trim().length < limit) {
-						errors[field] = errorCodes.BELOW_CHARACTERS_ + limit;
+						errors[field] = errorCodes.belowCharacters + limit;
 						continue fieldLoop;
 					}
 				}
@@ -278,7 +278,7 @@ const validate = (rules) => {
 					const limit = maxMatches[1];
 
 					if (fieldValue.trim().length > limit) {
-						errors[field] = errorCodes.EXCEEDS_CHARACTERS_ + limit;
+						errors[field] = errorCodes.exceedsCharacters + limit;
 						continue fieldLoop;
 					}
 				}
@@ -290,7 +290,7 @@ const validate = (rules) => {
 					const matchField = matches[1];
 
 					if (fieldValue !== data[matchField]) {
-						errors[field] = errorCodes.FIELDS_DONT_MATCH;
+						errors[field] = errorCodes.fieldsDontMatch;
 						continue fieldLoop;
 					}
 				}
@@ -308,7 +308,7 @@ const validate = (rules) => {
 					});
 
 					if (index === -1) {
-						errors[field] = `${errorCodes.NOT_IN_LIST_}[${values.join(',')}]`;
+						errors[field] = `${errorCodes.notInList}[${values.join(',')}]`;
 						continue fieldLoop;
 					}
 				}

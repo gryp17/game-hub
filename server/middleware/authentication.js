@@ -13,7 +13,7 @@ function isLoggedIn(req, res, next) {
 	if (req.session.user) {
 		next();
 	} else {
-		return sendApiError(res, config.errorCodes.INVALID_AUTHENTICATION_TOKEN);
+		return sendApiError(res, config.errorCodes.invalidAuthenticationToken);
 	}
 }
 
@@ -27,7 +27,7 @@ function socketIsLoggedIn(app) {
 	//hackfix to avoid circular dependency when requiring the app object
 	return (socket, next) => {
 		if (!socket.handshake.headers.cookie) {
-			return next(new Error(config.errorCodes.INVALID_AUTHENTICATION_TOKEN));
+			return next(new Error(config.errorCodes.invalidAuthenticationToken));
 		}
 
 		//parse all cookies
@@ -36,7 +36,7 @@ function socketIsLoggedIn(app) {
 		const sessionToken = cookies[config.session.sessionId];
 
 		if (!sessionToken) {
-			return next(new Error(config.errorCodes.INVALID_AUTHENTICATION_TOKEN));
+			return next(new Error(config.errorCodes.invalidAuthenticationToken));
 		}
 
 		//check if the session token is valid
@@ -44,7 +44,7 @@ function socketIsLoggedIn(app) {
 
 		//if the signed and unsigned tokens match then the token is not valid
 		if (sessionToken === unsignedToken) {
-			return next(new Error(config.errorCodes.INVALID_AUTHENTICATION_TOKEN));
+			return next(new Error(config.errorCodes.invalidAuthenticationToken));
 		}
 
 		//find the session data that matches this token and attach it to the socket
@@ -55,7 +55,7 @@ function socketIsLoggedIn(app) {
 			}
 
 			if (!session || !session.user) {
-				return next(new Error(config.errorCodes.INVALID_AUTHENTICATION_TOKEN));
+				return next(new Error(config.errorCodes.invalidAuthenticationToken));
 			}
 
 			socket.user = session.user;

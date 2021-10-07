@@ -28,7 +28,7 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 
 		if (!userInstance) {
 			return sendError(res, {
-				userId: errorCodes.INVALID_USER_ID
+				userId: errorCodes.invalidUserId
 			});
 		}
 

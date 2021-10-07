@@ -37,7 +37,7 @@ router.post('/login', validate(rules.login), async (req, res) => {
 
 		if (!record) {
 			return sendError(res, {
-				password: errorCodes.WRONG_PASSWORD
+				password: errorCodes.wrongPassword
 			});
 		}
 
@@ -45,7 +45,7 @@ router.post('/login', validate(rules.login), async (req, res) => {
 
 		if (!valid) {
 			return sendError(res, {
-				password: errorCodes.WRONG_PASSWORD
+				password: errorCodes.wrongPassword
 			});
 		}
 

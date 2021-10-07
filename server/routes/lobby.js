@@ -64,7 +64,7 @@ router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res
 
 	if (!challengedUser) {
 		return sendError(res, {
-			userId: errorCodes.INVALID_USER_ID
+			userId: errorCodes.invalidUserId
 		});
 	}
 
@@ -96,7 +96,7 @@ router.delete('/challenge', isLoggedIn, validate(rules.cancelChallenge), (req, r
 
 	if (!challengedUser) {
 		return sendError(res, {
-			userId: errorCodes.INVALID_USER_ID
+			userId: errorCodes.invalidUserId
 		});
 	}
 
@@ -120,7 +120,7 @@ router.post('/challenge/decline', isLoggedIn, validate(rules.declineChallenge), 
 
 	if (!challenger) {
 		return sendError(res, {
-			userId: errorCodes.INVALID_USER_ID
+			userId: errorCodes.invalidUserId
 		});
 	}
 
@@ -145,13 +145,13 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 
 	if (!challenger) {
 		return sendError(res, {
-			userId: errorCodes.INVALID_USER_ID
+			userId: errorCodes.invalidUserId
 		});
 	}
 
 	if (!challenge) {
 		return sendError(res, {
-			userId: errorCodes.CHALLENGE_NOT_FOUND
+			userId: errorCodes.challengeNotFound
 		});
 	}
 
