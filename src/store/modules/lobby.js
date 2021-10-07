@@ -28,7 +28,7 @@ const getters = {
 
 			//default status
 			if (!user.status) {
-				user.status = userStatuses.OFFLINE;
+				user.status = userStatuses.offline;
 			}
 
 			//generate the experience object
@@ -45,11 +45,11 @@ const getters = {
 		return Object.values(getters.usersMap).sort((a, b) => {
 			//first sort by status
 			if (a.status.raw !== b.status.raw) {
-				if (a.status.raw === userStatuses.OFFLINE) {
+				if (a.status.raw === userStatuses.offline) {
 					return 1;
 				}
 
-				if (b.status.raw === userStatuses.OFFLINE) {
+				if (b.status.raw === userStatuses.offline) {
 					return -1;
 				}
 			}
@@ -162,13 +162,13 @@ const actions = {
 
 		//TODO: update this list when more games are added
 		const gameStatuses = [
-			userStatuses.PONG
+			userStatuses.pong
 		];
 
 		//for each user generate 3 types of status (raw, formatted and avatar)
 		Object.keys(context.state.users).forEach((userId) => {
-			const rawStatus = statuses[userId] || userStatuses.OFFLINE;
-			const avatarStatus = gameStatuses.includes(rawStatus) ? userStatuses.BUSY : rawStatus;
+			const rawStatus = statuses[userId] || userStatuses.offline;
+			const avatarStatus = gameStatuses.includes(rawStatus) ? userStatuses.busy : rawStatus;
 			let formattedStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1);
 
 			if (gameStatuses.includes(rawStatus)) {

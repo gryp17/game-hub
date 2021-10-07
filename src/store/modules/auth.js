@@ -23,7 +23,7 @@ const getters = {
 
 		return {
 			...state.userSession,
-			status: user ? user.status : userStatuses.OFFLINE
+			status: user ? user.status : userStatuses.offline
 		};
 	},
 	isLoggedIn(state) {

@@ -75,8 +75,8 @@
 			},
 			canChallengePLayer() {
 				return (
-					this.userSession.status.raw === this.userStatuses.ONLINE
-					&& this.userProfile.status.raw === this.userStatuses.ONLINE
+					this.userSession.status.raw === this.userStatuses.online
+					&& this.userProfile.status.raw === this.userStatuses.online
 					&& !this.isOwnUser
 				);
 			},

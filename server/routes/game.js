@@ -34,13 +34,13 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 
 		const total = await userInstance.getGames({
 			where: {
-				status: gameStatuses.FINISHED
+				status: gameStatuses.finished
 			}
 		});
 
 		let finishedGames = await userInstance.getGames({
 			where: {
-				status: gameStatuses.FINISHED
+				status: gameStatuses.finished
 			},
 			limit,
 			offset,

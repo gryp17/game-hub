@@ -32,7 +32,7 @@ router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), async (req, re
 	//get the user socket id from the lobby
 	const user = lobby.getUserById(req.session.user.id);
 
-	lobby.setUserStatus(req.session.user.id, userStatuses.MATCHMAKING);
+	lobby.setUserStatus(req.session.user.id, userStatuses.matchmaking);
 
 	//get the current experience value
 	const userInstance = await User.findByPk(req.session.user.id);
@@ -42,7 +42,7 @@ router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), async (req, re
 });
 
 router.post('/leave', isLoggedIn, (req, res) => {
-	lobby.setUserStatus(req.session.user.id, userStatuses.ONLINE);
+	lobby.setUserStatus(req.session.user.id, userStatuses.online);
 
 	matchmaking.leave(req.session.user.id);
 	sendResponse(res, true);
@@ -82,8 +82,8 @@ router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 		//create the game with both users
 		const gameInstance = await Game.create({
 			type: gameType,
-			mode: gameModes.MATCHMAKING,
-			status: gameStatuses.PENDING
+			mode: gameModes.matchmaking,
+			status: gameStatuses.pending
 		});
 
 		await gameInstance.setUsers(Object.keys(challenge.players));

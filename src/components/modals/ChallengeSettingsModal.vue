@@ -155,7 +155,7 @@
 			},
 			canChallengePLayer() {
 				return (
-					this.userSession.status.raw === this.userStatuses.ONLINE && this.user.status.raw === this.userStatuses.ONLINE
+					this.userSession.status.raw === this.userStatuses.online && this.user.status.raw === this.userStatuses.online
 				);
 			},
 			canCloseModal() {

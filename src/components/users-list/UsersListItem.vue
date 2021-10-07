@@ -54,8 +54,8 @@
 		computed: {
 			onlineStateStatuses() {
 				return [
-					this.userStatuses.ONLINE,
-					this.userStatuses.OFFLINE
+					this.userStatuses.online,
+					this.userStatuses.offline
 				];
 			},
 			rawStatus() {

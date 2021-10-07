@@ -75,7 +75,7 @@ router.get('/all', isLoggedIn, async (req, res) => {
 				model: Game,
 				required: false,
 				where: {
-					status: gameStatuses.FINISHED
+					status: gameStatuses.finished
 				}
 			}
 		});

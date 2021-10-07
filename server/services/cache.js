@@ -13,7 +13,7 @@ function getUserStatuses() {
 }
 
 function setUserStatus(userId, status) {
-	if (status === userStatuses.OFFLINE) {
+	if (status === userStatuses.offline) {
 		delete cache.userStatus[userId];
 	} else {
 		cache.userStatus[userId] = status;

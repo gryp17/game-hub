@@ -68,20 +68,20 @@ module.exports = {
 		}
 	},
 	gameModes: {
-		CHALLENGE: 'challenge',
-		MATCHMAKING: 'matchmaking'
+		challenge: 'challenge',
+		matchmaking: 'matchmaking'
 	},
 	userStatuses: {
-		ONLINE: 'online',
-		OFFLINE: 'offline',
-		BUSY: 'busy',
-		MATCHMAKING: 'matchmaking',
-		PONG: 'pong'
+		online: 'online',
+		offline: 'offline',
+		busy: 'busy',
+		matchmaking: 'matchmaking',
+		pong: 'pong'
 	},
 	gameStatuses: {
-		PENDING: 'pending',
-		IN_PROGRESS: 'in-progress',
-		FINISHED: 'finished'
+		pending: 'pending',
+		inProgress: 'in-progress',
+		finished: 'finished'
 	},
 	experienceRewards: {
 		WIN: 10,

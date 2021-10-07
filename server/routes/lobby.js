@@ -81,8 +81,8 @@ router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res
 	lobby.challengePlayer(challengedUser, ownUser, game, gameSettings);
 
 	//set both users status to busy while the challenge is still active
-	lobby.setUserStatus(ownUser.id, userStatuses.BUSY);
-	lobby.setUserStatus(challengedUser.id, userStatuses.BUSY);
+	lobby.setUserStatus(ownUser.id, userStatuses.busy);
+	lobby.setUserStatus(challengedUser.id, userStatuses.busy);
 
 	sendResponse(res, true);
 });
@@ -105,8 +105,8 @@ router.delete('/challenge', isLoggedIn, validate(rules.cancelChallenge), (req, r
 	//send the socketio event to cancel the challenge
 	lobby.cancelChallenge(challengedUser);
 
-	lobby.setUserStatus(ownUser.id, userStatuses.ONLINE);
-	lobby.setUserStatus(challengedUser.id, userStatuses.ONLINE);
+	lobby.setUserStatus(ownUser.id, userStatuses.online);
+	lobby.setUserStatus(challengedUser.id, userStatuses.online);
 
 	sendResponse(res, true);
 });
@@ -129,8 +129,8 @@ router.post('/challenge/decline', isLoggedIn, validate(rules.declineChallenge), 
 	//send the socketio event to decline the challenge
 	lobby.declineChallenge(challenger);
 
-	lobby.setUserStatus(ownUser.id, userStatuses.ONLINE);
-	lobby.setUserStatus(challenger.id, userStatuses.ONLINE);
+	lobby.setUserStatus(ownUser.id, userStatuses.online);
+	lobby.setUserStatus(challenger.id, userStatuses.online);
 
 	sendResponse(res, true);
 });
@@ -164,7 +164,7 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 	//do some clean up by finding any pending/in progress games related to any of the 2 users and deleting them before creating a new one
 	const pendingGames = await Game.findAll({
 		where: {
-			status: [gameStatuses.PENDING, gameStatuses.IN_PROGRESS]
+			status: [gameStatuses.pending, gameStatuses.inProgress]
 		},
 		include: {
 			model: User,
@@ -190,8 +190,8 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 	//create the game with both users
 	const gameInstance = await Game.create({
 		type: gameType,
-		mode: gameModes.CHALLENGE,
-		status: gameStatuses.PENDING,
+		mode: gameModes.challenge,
+		status: gameStatuses.pending,
 		settings: challenge.settings
 	});
 

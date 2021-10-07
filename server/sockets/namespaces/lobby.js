@@ -12,7 +12,7 @@ export default function (io, app) {
 
 	lobby.on(socketEvents.connection, (socket) => {
 		//update the user status
-		lobby.setUserStatus(socket.user.id, userStatuses.ONLINE);
+		lobby.setUserStatus(socket.user.id, userStatuses.online);
 
 		//disconnect event handler
 		socket.on(socketEvents.disconnect, () => {
@@ -26,7 +26,7 @@ export default function (io, app) {
 			lobby.cancelPendingMatchmakingChallenges(socket.user.id);
 
 			//update the user status
-			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
+			lobby.setUserStatus(socket.user.id, userStatuses.offline);
 		});
 	});
 
@@ -117,13 +117,13 @@ export default function (io, app) {
 
 			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
 			const targetUserId = challenge.from.id !== userId ? challenge.from.id : challenge.to.id;
-			lobby.setUserStatus(targetUserId, userStatuses.ONLINE);
+			lobby.setUserStatus(targetUserId, userStatuses.online);
 		}
 	};
 
 	lobby.onMatchFound = (userA, userB, game) => {
 		[userA, userB].forEach((user) => {
-			lobby.setUserStatus(user.id, userStatuses.BUSY);
+			lobby.setUserStatus(user.id, userStatuses.busy);
 
 			lobby.to(user.socketId).emit(socketEvents.lobby.foundMatch, game);
 		});
@@ -137,7 +137,7 @@ export default function (io, app) {
 
 			//send the event to each user and update their status
 			Object.values(challenge.players).forEach((user) => {
-				const userStatus = lobby.getUserById(user.id) ? userStatuses.ONLINE : userStatuses.OFFLINE;
+				const userStatus = lobby.getUserById(user.id) ? userStatuses.online : userStatuses.offline;
 				lobby.setUserStatus(user.id, userStatus);
 				lobby.to(user.socketId).emit(socketEvents.lobby.cancelMatchmakingChallenge);
 			});
@@ -156,7 +156,7 @@ export default function (io, app) {
 			include: {
 				model: Game,
 				where: {
-					status: gameStatuses.FINISHED
+					status: gameStatuses.finished
 				}
 			}
 		});

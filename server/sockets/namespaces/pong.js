@@ -11,7 +11,7 @@ export default function (io, app) {
 	pong.use(socketIsLoggedIn(app));
 
 	pong.on(socketEvents.connection, async (socket) => {
-		lobby.setUserStatus(socket.user.id, userStatuses.PONG);
+		lobby.setUserStatus(socket.user.id, userStatuses.pong);
 
 		let gameInstance = await pong.getPendingGame(socket.user.id);
 
@@ -31,7 +31,7 @@ export default function (io, app) {
 		//once both players have joined the room - mark it as in progress
 		if (playersCount === games.PONG.maxPlayers) {
 			gameInstance.update({
-				status: gameStatuses.IN_PROGRESS
+				status: gameStatuses.inProgress
 			});
 
 			const players = [...roomClients].map((socketId) => {
@@ -51,7 +51,7 @@ export default function (io, app) {
 					cache.deleteGameState(gameId);
 
 					await gameInstance.update({
-						status: gameStatuses.FINISHED,
+						status: gameStatuses.finished,
 						winner: winner.id,
 						ragequit,
 						data: {
@@ -95,13 +95,13 @@ export default function (io, app) {
 		//disconnect event handler
 		socket.on(socketEvents.disconnect, async () => {
 			//update the user status
-			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
+			lobby.setUserStatus(socket.user.id, userStatuses.offline);
 
 			//reload the game instance manually (reload() fails for some reason)
 			gameInstance = await Game.findByPk(gameInstance.id);
 
 			//set the other user as winner if the game hasn't been finished yet
-			if (gameInstance && gameInstance.status !== gameStatuses.FINISHED) {
+			if (gameInstance && gameInstance.status !== gameStatuses.finished) {
 				const game = cache.findGameStateById(gameInstance.id);
 
 				//find the other/remaining user
@@ -150,7 +150,7 @@ export default function (io, app) {
 				required: false,
 				where: {
 					type: games.PONG.code,
-					status: gameStatuses.PENDING
+					status: gameStatuses.pending
 				}
 			}
 		});
