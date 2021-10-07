@@ -1,12 +1,13 @@
+import _ from 'lodash';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
 import CollisionsManager from '../misc/collisions-manager';
 
 export default class Pong {
-	constructor(id, config, players, { onUpdate, onGameOver }) {
+	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
-		this.config = config;
+		this.config = this.applySettings(config, customSettings);
 		this.players = players;
 		this.onUpdate = onUpdate;
 		this.onGameOver = onGameOver;
@@ -53,6 +54,30 @@ export default class Pong {
 
 		//initialize the collisions manager
 		this.collisionsManager = new CollisionsManager(this);
+	}
+
+	applySettings(defaultConfig, customSettings) {
+		const config = {
+			...defaultConfig
+		};
+
+		//map each setting type to the path in the config that it corresponds to
+		const settingsPathMap = {
+			gameLength: 'maxScore',
+			paddleSize: 'paddle.size',
+			ballSize: 'ball.size',
+			ballSpeed: 'ball.initialSpeed'
+		};
+
+		_.forOwn(defaultConfig.configurableSettings, (predefinedValues, settingType) => {
+			if (customSettings[settingType]) {
+				const path = settingsPathMap[settingType];
+				const value = predefinedValues[customSettings[settingType]];
+				_.set(config, path, value);
+			}
+		});
+
+		return config;
 	}
 
 	updateInputs({ socketId, inputs }) {
@@ -102,7 +127,7 @@ export default class Pong {
 	start() {
 		this.paddles = this.players.map((player, index) => {
 			const playerIndex = index + 1;
-			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, true, player.socketId);
+			return new Paddle(this, this.config.paddle.size, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, true, player.socketId);
 		});
 
 		this.ball = new Ball(

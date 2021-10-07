@@ -67,6 +67,10 @@ module.exports = {
 			EXIT_GAME: 'exitGame'
 		}
 	},
+	gameModes: {
+		CHALLENGE: 'challenge',
+		MATCHMAKING: 'matchmaking'
+	},
 	userStatuses: {
 		ONLINE: 'online',
 		OFFLINE: 'offline',
@@ -99,6 +103,7 @@ module.exports = {
 				rotationAcceleration: 1
 			},
 			paddle: {
+				size: 30, //% of the canvas height
 				acceleration: 2,
 				maxSpeed: 8
 			},
@@ -112,24 +117,24 @@ module.exports = {
 			},
 			configurableSettings: {
 				gameLength: {
-					SHORT: 'long',
-					NORMAL: 'normal',
-					LONG: 'short'
+					short: 5,
+					normal: 10,
+					long: 20
 				},
 				paddleSize: {
-					BIG: 'big',
-					NORMAL: 'normal',
-					SMALL: 'small'
+					big: 40,
+					normal: 30,
+					small: 20
 				},
 				ballSpeed: {
-					SLOW: 'slow',
-					NORMAL: 'normal',
-					FAST: 'fast'
+					slow: 5,
+					normal: 7,
+					fast: 10
 				},
 				ballSize: {
-					BIG: 'big',
-					NORMAL: 'normal',
-					SMALL: 'small'
+					big: 90,
+					normal: 60,
+					small: 40
 				}
 			}
 		}

@@ -3,7 +3,7 @@ import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, gameStatuses, games, gameCodes } from '../config';
+import { errorCodes, userStatuses, gameStatuses, gameModes, games, gameCodes } from '../config';
 import { Game, User } from '../models';
 import cache from '../services/cache';
 
@@ -35,11 +35,11 @@ function validateGameSettings(game, settings) {
 		Object.keys(games.PONG.configurableSettings).forEach((settingType) => {
 			let value = settings ? settings[settingType] : null;
 			const validValuesMap = games.PONG.configurableSettings[settingType];
-			const validValues = Object.values(validValuesMap);
+			const validKeys = Object.keys(validValuesMap);
 
 			//if the value is not set or is not valid fallback to the default/normal value
-			if (!value || !validValues.includes(value)) {
-				value = validValuesMap.NORMAL;
+			if (!value || !validKeys.includes(value)) {
+				value = validValuesMap.normal;
 			}
 
 			validSettings[settingType] = value;
@@ -190,7 +190,9 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 	//create the game with both users
 	const gameInstance = await Game.create({
 		type: gameType,
-		status: gameStatuses.PENDING
+		mode: gameModes.CHALLENGE,
+		status: gameStatuses.PENDING,
+		settings: JSON.stringify(challenge.settings)
 	});
 
 	await gameInstance.setUsers(userIds);

@@ -1,5 +1,5 @@
 export default class Paddle {
-	constructor(game, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
+	constructor(game, size, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
 		this.game = game;
 		this.context = game.contexts.game.context;
 		this.canvas = game.contexts.game.canvas;
@@ -11,7 +11,7 @@ export default class Paddle {
 		this.playerId = playerId;
 
 		this.width = this.canvas.width / 46;
-		this.height = this.canvas.height / 3.5;
+		this.height = this.canvas.height * (size / 100);
 		this.x = 0;
 		this.y = 0;
 		this.dx = 0;

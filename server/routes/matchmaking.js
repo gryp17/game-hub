@@ -4,7 +4,7 @@ import { validate } from '../middleware/validator';
 import { sendResponse, sendError } from '../services/utils';
 import matchmaking from '../services/matchmaking';
 import { lobby } from '../sockets';
-import { errorCodes, userStatuses, gameCodes } from '../config';
+import { errorCodes, userStatuses, gameStatuses, gameModes, gameCodes } from '../config';
 import { Game, User } from '../models';
 import cache from '../services/cache';
 
@@ -82,7 +82,8 @@ router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 		//create the game with both users
 		const gameInstance = await Game.create({
 			type: gameType,
-			status: 'pending'
+			mode: gameModes.MATCHMAKING,
+			status: gameStatuses.PENDING
 		});
 
 		await gameInstance.setUsers(Object.keys(challenge.players));

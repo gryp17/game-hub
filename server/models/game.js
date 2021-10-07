@@ -8,7 +8,13 @@ export default (db) => {
 		status: {
 			type: Sequelize.STRING
 		},
+		mode: {
+			type: Sequelize.STRING
+		},
 		data: {
+			type: Sequelize.STRING(500)
+		},
+		settings: {
 			type: Sequelize.STRING(500)
 		},
 		ragequit: {

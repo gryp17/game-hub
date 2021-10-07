@@ -40,7 +40,10 @@ export default function (io, app) {
 
 			const gameId = gameInstance.id;
 
-			const game = new Pong(gameId, games.PONG, players, {
+			const gameConfig = games.PONG;
+			const customSettings = pong.parseGameSettings(gameInstance.settings);
+
+			const game = new Pong(gameId, gameConfig, customSettings, players, {
 				onUpdate(data) {
 					pong.to(gameRoomId).emit(socketEvents.GAME.UPDATE_DATA, data);
 				},
@@ -77,7 +80,7 @@ export default function (io, app) {
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
 				pong.to(player.socketId).emit(socketEvents.GAME.START_GAME, {
-					config: games.PONG,
+					config: game.config,
 					player: index + 1
 				});
 			});
@@ -162,6 +165,22 @@ export default function (io, app) {
 		}
 
 		return pendingGames.pop();
+	};
+
+	pong.parseGameSettings = (settings) => {
+		let result;
+
+		if (!settings) {
+			return null;
+		}
+
+		try {
+			result = JSON.parse(settings);
+		} catch (e) {
+			result = null;
+		}
+
+		return result;
 	};
 
 	return pong;

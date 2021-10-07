@@ -71,7 +71,7 @@ export default class Pong {
 		this.paddles = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
 			const playerIndex = index + 1;
 			const controllable = this.player === playerIndex;
-			return new Paddle(this, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, controllable);
+			return new Paddle(this, this.config.paddle.size, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, controllable);
 		});
 
 		this.ball = new Ball(
