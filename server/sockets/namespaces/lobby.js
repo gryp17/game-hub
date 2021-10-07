@@ -10,12 +10,12 @@ export default function (io, app) {
 
 	lobby.use(socketIsLoggedIn(app));
 
-	lobby.on(socketEvents.CONNECTION, (socket) => {
+	lobby.on(socketEvents.connection, (socket) => {
 		//update the user status
 		lobby.setUserStatus(socket.user.id, userStatuses.ONLINE);
 
 		//disconnect event handler
-		socket.on(socketEvents.DISCONNECT, () => {
+		socket.on(socketEvents.disconnect, () => {
 			//when the user disconnects cancel any pending game challenges that he is part of
 			lobby.cancelPendingChallenges(socket.user.id);
 
@@ -64,7 +64,7 @@ export default function (io, app) {
 	 * @param {Number} userId
 	 */
 	lobby.newUser = async (user) => {
-		lobby.emit(socketEvents.LOBBY.NEW_USER, user);
+		lobby.emit(socketEvents.lobby.newUser, user);
 	};
 
 	/**
@@ -72,12 +72,12 @@ export default function (io, app) {
 	 * @param {Object} user
 	 */
 	lobby.updateUser = (user) => {
-		lobby.emit(socketEvents.LOBBY.UPDATE_USER, user);
+		lobby.emit(socketEvents.lobby.updateUser, user);
 	};
 
 	lobby.updateUserStatuses = () => {
 		const statuses = cache.getUserStatuses();
-		lobby.emit(socketEvents.LOBBY.UPDATE_USER_STATUSES, statuses);
+		lobby.emit(socketEvents.lobby.updateUserStatuses, statuses);
 	};
 
 	lobby.setUserStatus = (userId, status) => {
@@ -86,7 +86,7 @@ export default function (io, app) {
 	};
 
 	lobby.challengePlayer = (challengedUser, challenger, game, settings) => {
-		lobby.to(challengedUser.socketId).emit(socketEvents.LOBBY.CHALLENGE, {
+		lobby.to(challengedUser.socketId).emit(socketEvents.lobby.challenge, {
 			user: challenger,
 			game,
 			settings
@@ -94,16 +94,16 @@ export default function (io, app) {
 	};
 
 	lobby.cancelChallenge = (challengedUser) => {
-		lobby.to(challengedUser.socketId).emit(socketEvents.LOBBY.CANCEL_CHALLENGE);
+		lobby.to(challengedUser.socketId).emit(socketEvents.lobby.cancelChallenge);
 	};
 
 	lobby.declineChallenge = (challenger) => {
-		lobby.to(challenger.socketId).emit(socketEvents.LOBBY.DECLINE_CHALLENGE);
+		lobby.to(challenger.socketId).emit(socketEvents.lobby.declineChallenge);
 	};
 
 	lobby.goToGame = (players, game) => {
 		players.forEach((player) => {
-			lobby.to(player.socketId).emit(socketEvents.LOBBY.GO_TO_GAME, game);
+			lobby.to(player.socketId).emit(socketEvents.lobby.goToGame, game);
 		});
 	};
 
@@ -111,8 +111,8 @@ export default function (io, app) {
 		const challenge = cache.getPendingChallenge(userId);
 
 		if (challenge) {
-			lobby.to(challenge.from.socketId).emit(socketEvents.LOBBY.DECLINE_CHALLENGE);
-			lobby.to(challenge.to.socketId).emit(socketEvents.LOBBY.CANCEL_CHALLENGE);
+			lobby.to(challenge.from.socketId).emit(socketEvents.lobby.declineChallenge);
+			lobby.to(challenge.to.socketId).emit(socketEvents.lobby.cancelChallenge);
 			cache.deletePendingChallenge(userId);
 
 			//figure out which user is still online and change only his status (the other user (userId) is the one that has disconnected)
@@ -125,7 +125,7 @@ export default function (io, app) {
 		[userA, userB].forEach((user) => {
 			lobby.setUserStatus(user.id, userStatuses.BUSY);
 
-			lobby.to(user.socketId).emit(socketEvents.LOBBY.FOUND_MATCH, game);
+			lobby.to(user.socketId).emit(socketEvents.lobby.foundMatch, game);
 		});
 	};
 
@@ -139,7 +139,7 @@ export default function (io, app) {
 			Object.values(challenge.players).forEach((user) => {
 				const userStatus = lobby.getUserById(user.id) ? userStatuses.ONLINE : userStatuses.OFFLINE;
 				lobby.setUserStatus(user.id, userStatus);
-				lobby.to(user.socketId).emit(socketEvents.LOBBY.CANCEL_MATCHMAKING_CHALLENGE);
+				lobby.to(user.socketId).emit(socketEvents.lobby.cancelMatchmakingChallenge);
 			});
 		}
 	};
@@ -165,7 +165,7 @@ export default function (io, app) {
 		userInstances.forEach((user) => {
 			const gameStats = calculateGameStats(user.id, user.games);
 
-			lobby.emit(socketEvents.LOBBY.UPDATE_USER, {
+			lobby.emit(socketEvents.lobby.updateUser, {
 				id: user.id,
 				gameStats
 			});
@@ -180,7 +180,7 @@ export default function (io, app) {
 			userInstance.experience = userInstance.experience + experienceGained;
 			await userInstance.save();
 
-			lobby.emit(socketEvents.LOBBY.UPDATE_USER, {
+			lobby.emit(socketEvents.lobby.updateUser, {
 				id: user.id,
 				experience: userInstance.experience
 			});
@@ -192,7 +192,7 @@ export default function (io, app) {
 	 * @param {Object} message
 	 */
 	lobby.sendMessage = async (message) => {
-		lobby.emit(socketEvents.LOBBY.NEW_MESSAGE, message);
+		lobby.emit(socketEvents.lobby.newMessage, message);
 	};
 
 	return lobby;

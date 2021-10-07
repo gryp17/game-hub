@@ -10,13 +10,13 @@ export default function (io, app) {
 
 	pong.use(socketIsLoggedIn(app));
 
-	pong.on(socketEvents.CONNECTION, async (socket) => {
+	pong.on(socketEvents.connection, async (socket) => {
 		lobby.setUserStatus(socket.user.id, userStatuses.PONG);
 
 		let gameInstance = await pong.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {
-			return pong.to(socket.id).emit(socketEvents.GAME.EXIT_GAME);
+			return pong.to(socket.id).emit(socketEvents.game.exitGame);
 		}
 
 		const gameRoomId = gameInstance.id;
@@ -45,7 +45,7 @@ export default function (io, app) {
 
 			const game = new Pong(gameId, gameConfig, customSettings, players, {
 				onUpdate(data) {
-					pong.to(gameRoomId).emit(socketEvents.GAME.UPDATE_DATA, data);
+					pong.to(gameRoomId).emit(socketEvents.game.updateData, data);
 				},
 				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
@@ -59,7 +59,7 @@ export default function (io, app) {
 						}
 					});
 
-					pong.to(gameRoomId).emit(socketEvents.GAME.GAME_OVER, {
+					pong.to(gameRoomId).emit(socketEvents.game.gameOver, {
 						winner: winner.id,
 						ragequit,
 						score: scores
@@ -76,14 +76,14 @@ export default function (io, app) {
 
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
-				pong.to(player.socketId).emit(socketEvents.GAME.START_GAME, {
+				pong.to(player.socketId).emit(socketEvents.game.startGame, {
 					config: game.config,
 					player: index + 1
 				});
 			});
 		}
 
-		socket.on(socketEvents.GAME.UPDATE_INPUTS, (inputs) => {
+		socket.on(socketEvents.game.updateInputs, (inputs) => {
 			//find the game that this player belongs to and update it's inputs
 			const game = cache.findGameStateByUserId(socket.user.id);
 
@@ -93,7 +93,7 @@ export default function (io, app) {
 		});
 
 		//disconnect event handler
-		socket.on(socketEvents.DISCONNECT, async () => {
+		socket.on(socketEvents.disconnect, async () => {
 			//update the user status
 			lobby.setUserStatus(socket.user.id, userStatuses.OFFLINE);
 

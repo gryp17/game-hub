@@ -89,14 +89,14 @@
 					upgrade: false
 				});
 
-				this.socket.on(this.socketEvents.ERROR, (error) => {
+				this.socket.on(this.socketEvents.error, (error) => {
 					this.$toasted.global.apiError({
 						message: this.$options.filters.errorsMap(error)
 					});
 				});
 
 				//start the game
-				this.socket.on(this.socketEvents.GAME.START_GAME, ({ config, player }) => {
+				this.socket.on(this.socketEvents.game.startGame, ({ config, player }) => {
 					this.game = new Pong('game-canvas', 'ball-canvas', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs
 					});
@@ -105,11 +105,11 @@
 					this.game.start();
 				});
 
-				this.socket.on(this.socketEvents.GAME.UPDATE_DATA, (data) => {
+				this.socket.on(this.socketEvents.game.updateData, (data) => {
 					this.game.updateData(data);
 				});
 
-				this.socket.on(this.socketEvents.GAME.GAME_OVER, ({ winner, ragequit, score }) => {
+				this.socket.on(this.socketEvents.game.gameOver, ({ winner, ragequit, score }) => {
 					showGameOverModal({
 						winner,
 						ragequit,
@@ -117,14 +117,14 @@
 					});
 				});
 
-				this.socket.on(this.socketEvents.GAME.EXIT_GAME, () => {
+				this.socket.on(this.socketEvents.game.exitGame, () => {
 					this.$router.push({
 						name: 'lobby'
 					});
 				});
 			},
 			updateInputs(inputs) {
-				this.socket.emit(this.socketEvents.GAME.UPDATE_INPUTS, inputs);
+				this.socket.emit(this.socketEvents.game.updateInputs, inputs);
 			},
 			/**
 			 * Disconnects from the socket.io server

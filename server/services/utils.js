@@ -22,7 +22,7 @@ function sendApiError(res, payload) {
 }
 
 function sendSocketError(io, payload) {
-	io.emit(socketEvents.ERROR, payload.toString ? payload.toString() : payload);
+	io.emit(socketEvents.error, payload.toString ? payload.toString() : payload);
 }
 
 function sendResponse(res, payload) {

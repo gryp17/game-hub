@@ -69,6 +69,10 @@ export default class Pong {
 			ballSpeed: 'ball.initialSpeed'
 		};
 
+		if (!customSettings) {
+			return config;
+		}
+
 		_.forOwn(defaultConfig.configurableSettings, (predefinedValues, settingType) => {
 			if (customSettings[settingType]) {
 				const path = settingsPathMap[settingType];
