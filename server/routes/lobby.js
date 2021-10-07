@@ -161,10 +161,10 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 		ownUser.id
 	];
 
-	//find any pending games related to any of the 2 users and delete them before creating a new one
+	//do some clean up by finding any pending/in progress games related to any of the 2 users and deleting them before creating a new one
 	const pendingGames = await Game.findAll({
 		where: {
-			status: gameStatuses.PENDING
+			status: [gameStatuses.PENDING, gameStatuses.IN_PROGRESS]
 		},
 		include: {
 			model: User,
