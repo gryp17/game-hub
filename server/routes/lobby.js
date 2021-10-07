@@ -192,7 +192,7 @@ router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), as
 		type: gameType,
 		mode: gameModes.CHALLENGE,
 		status: gameStatuses.PENDING,
-		settings: JSON.stringify(challenge.settings)
+		settings: challenge.settings
 	});
 
 	await gameInstance.setUsers(userIds);

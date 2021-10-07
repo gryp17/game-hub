@@ -61,13 +61,6 @@ router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req,
 		finishedGames = finishedGames.map((item) => {
 			const game = item.toJSON();
 
-			//need to manually parse the game data attribute because sequelize is shit
-			try {
-				game.data = JSON.parse(game.data);
-			} catch (e) {
-				game.data = {};
-			}
-
 			delete game.game_user;
 
 			game.users = game.users.map((user) => {

@@ -41,7 +41,7 @@ export default function (io, app) {
 			const gameId = gameInstance.id;
 
 			const gameConfig = games.PONG;
-			const customSettings = pong.parseGameSettings(gameInstance.settings);
+			const customSettings = gameInstance.settings;
 
 			const game = new Pong(gameId, gameConfig, customSettings, players, {
 				onUpdate(data) {
@@ -50,16 +50,13 @@ export default function (io, app) {
 				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
 
-					//the game data is saved as a string
-					const gameData = JSON.stringify({
-						score: scores
-					});
-
 					await gameInstance.update({
 						status: gameStatuses.FINISHED,
 						winner: winner.id,
 						ragequit,
-						data: gameData
+						data: {
+							score: scores
+						}
 					});
 
 					pong.to(gameRoomId).emit(socketEvents.GAME.GAME_OVER, {
@@ -165,22 +162,6 @@ export default function (io, app) {
 		}
 
 		return pendingGames.pop();
-	};
-
-	pong.parseGameSettings = (settings) => {
-		let result;
-
-		if (!settings) {
-			return null;
-		}
-
-		try {
-			result = JSON.parse(settings);
-		} catch (e) {
-			result = null;
-		}
-
-		return result;
 	};
 
 	return pong;
