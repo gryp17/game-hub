@@ -174,7 +174,7 @@ export default function (io, app) {
 
 	lobby.updateUsersExperience = async (winnerId, users) => {
 		users.forEach(async (user) => {
-			const experienceGained = user.id === winnerId ? experienceRewards.WIN : experienceRewards.LOSS;
+			const experienceGained = user.id === winnerId ? experienceRewards.win : experienceRewards.loss;
 
 			const userInstance = await User.findByPk(user.id);
 			userInstance.experience = userInstance.experience + experienceGained;

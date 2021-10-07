@@ -29,7 +29,7 @@ export default function (io, app) {
 		const playersCount = roomClients ? roomClients.size : 0;
 
 		//once both players have joined the room - mark it as in progress
-		if (playersCount === games.PONG.maxPlayers) {
+		if (playersCount === games.pong.maxPlayers) {
 			gameInstance.update({
 				status: gameStatuses.inProgress
 			});
@@ -40,7 +40,7 @@ export default function (io, app) {
 
 			const gameId = gameInstance.id;
 
-			const gameConfig = games.PONG;
+			const gameConfig = games.pong;
 			const customSettings = gameInstance.settings;
 
 			const game = new Pong(gameId, gameConfig, customSettings, players, {
@@ -149,7 +149,7 @@ export default function (io, app) {
 				model: Game,
 				required: false,
 				where: {
-					type: games.PONG.code,
+					type: games.pong.code,
 					status: gameStatuses.pending
 				}
 			}

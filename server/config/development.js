@@ -84,11 +84,11 @@ module.exports = {
 		finished: 'finished'
 	},
 	experienceRewards: {
-		WIN: 10,
-		LOSS: 1
+		win: 10,
+		loss: 1
 	},
 	games: {
-		PONG: {
+		pong: {
 			code: 'pong',
 			maxPlayers: 2,
 			fps: 60,
