@@ -27,6 +27,12 @@ const rules = {
 	}
 };
 
+/**
+ * Validates the game settings received from the client by comparing them to the valid values for each setting type
+ * @param {String} game
+ * @param {Object} settings
+ * @returns {Object}
+ */
 function validateGameSettings(game, settings) {
 	if (game === games.pong.code) {
 		const validSettings = {};
@@ -53,7 +59,9 @@ function validateGameSettings(game, settings) {
 	return {};
 }
 
-//challenge player
+/**
+ * Sends a game challenge
+ */
 router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res) => {
 	const { userId, game, settings } = req.body;
 
@@ -87,7 +95,9 @@ router.post('/challenge', isLoggedIn, validate(rules.challengePlayer), (req, res
 	sendResponse(res, true);
 });
 
-//cancel challenge
+/**
+ * Cancels a game challenge
+ */
 router.delete('/challenge', isLoggedIn, validate(rules.cancelChallenge), (req, res) => {
 	const { userId } = req.body;
 
@@ -111,7 +121,9 @@ router.delete('/challenge', isLoggedIn, validate(rules.cancelChallenge), (req, r
 	sendResponse(res, true);
 });
 
-//decline challenge
+/**
+ * Declines a game challenge
+ */
 router.post('/challenge/decline', isLoggedIn, validate(rules.declineChallenge), (req, res) => {
 	const { userId } = req.body;
 
@@ -135,7 +147,9 @@ router.post('/challenge/decline', isLoggedIn, validate(rules.declineChallenge), 
 	sendResponse(res, true);
 });
 
-//accept challenge
+/**
+ * Accepts a game challenge and creates a new game record
+ */
 router.post('/challenge/accept', isLoggedIn, validate(rules.acceptChallenge), async (req, res) => {
 	const { userId } = req.body;
 

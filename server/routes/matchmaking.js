@@ -21,11 +21,17 @@ const rules = {
 	}
 };
 
+/**
+ * Returns the current user matchmaking status
+ */
 router.get('/status', isLoggedIn, (req, res) => {
 	const status = matchmaking.hasJoinedMatchmaking(req.session.user.id);
 	sendResponse(res, status);
 });
 
+/**
+ * Joins the matchmaking
+ */
 router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), async (req, res) => {
 	const { game } = req.body;
 
@@ -41,6 +47,9 @@ router.post('/join', isLoggedIn, validate(rules.joinMatchmaking), async (req, re
 	sendResponse(res, true);
 });
 
+/**
+ * Leaves the matchmaking
+ */
 router.post('/leave', isLoggedIn, (req, res) => {
 	lobby.setUserStatus(req.session.user.id, userStatuses.online);
 
@@ -48,14 +57,18 @@ router.post('/leave', isLoggedIn, (req, res) => {
 	sendResponse(res, true);
 });
 
-//cancel matchmaking challenge
+/**
+ * Cancels the matchmaking challenge
+ */
 router.delete('/challenge', isLoggedIn, (req, res) => {
 	lobby.cancelPendingMatchmakingChallenges(req.session.user.id);
 
 	sendResponse(res, true);
 });
 
-//accept matchmaking challenge
+/**
+ * Accepts the matchmaking challenge
+ */
 router.post('/challenge/accept', isLoggedIn, async (req, res) => {
 	const user = req.session.user;
 

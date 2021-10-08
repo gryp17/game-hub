@@ -141,6 +141,11 @@ export default function (io, app) {
 		});
 	};
 
+	/**
+	 * Finds the pending game record that the provided user belongs to
+	 * @param {Number} userId
+	 * @returns {Object}
+	 */
 	pong.getPendingGame = async (userId) => {
 		const userInstance = await User.findByPk(userId, {
 			include: {

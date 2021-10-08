@@ -4,6 +4,10 @@ import { gameCodes } from '../config';
 
 let intervalId = null;
 
+/**
+ * Returns all available players ordered by joined date
+ * @returns {Array}
+ */
 function getAvailablePlayers() {
 	const players = Object.values(cache.getMatchmakingEntries());
 
@@ -12,6 +16,13 @@ function getAvailablePlayers() {
 	});
 }
 
+/**
+ * Joins the matchmaking
+ * @param {Number} userId
+ * @param {Number} socketId
+ * @param {Number} experience
+ * @param {String} game
+ */
 function join(userId, socketId, experience, game) {
 	cache.addMatchmakingEntry(userId, {
 		id: userId,
@@ -22,10 +33,21 @@ function join(userId, socketId, experience, game) {
 	});
 }
 
+/**
+ * Leaves the matchmaking
+ * @param {Number} userId
+ */
 function leave(userId) {
 	cache.deleteMatchmakingEntry(userId);
 }
 
+/**
+ * Finds the first compatible opponent
+ * @param {String} game
+ * @param {Number} experience
+ * @param {Array} players
+ * @returns {Object}
+ */
 function findOpponent(game, experience, players) {
 	//filter the players by game
 	//calculate the experience difference between the current player and the possible opponents
@@ -46,6 +68,12 @@ function findOpponent(game, experience, players) {
 	return validOpponents[0];
 }
 
+/**
+ * Picks a game that works for both users
+ * @param {String} playerGame
+ * @param {String} opponentGame
+ * @returns {String}
+ */
 function pickGame(playerGame, opponentGame) {
 	if (playerGame !== 'any') {
 		return playerGame;
@@ -59,6 +87,10 @@ function pickGame(playerGame, opponentGame) {
 	return _.sample(gameCodes);
 }
 
+/**
+ * Loops through the available players and matches them with each other by checking their game preferences and experience levels
+ * @param {Function} matchFound
+ */
 function matchPlayers(matchFound) {
 	let players = getAvailablePlayers();
 
@@ -95,16 +127,29 @@ function matchPlayers(matchFound) {
 	}
 }
 
+/**
+ * Starts the matchmaking service
+ * @param {Function} matchFound
+ * @param {Number} interval
+ */
 function startService(matchFound, interval = 5000) {
 	intervalId = setInterval(() => {
 		matchPlayers(matchFound);
 	}, interval);
 }
 
+/**
+ * Stops the matchmaking service
+ */
 function stopService() {
 	clearInterval(intervalId);
 }
 
+/**
+ * Indicates whether the user has joined the matchmaking
+ * @param {Number} userId
+ * @returns {Boolean}
+ */
 function hasJoinedMatchmaking(userId) {
 	const entry = cache.getMatchmakingEntry(userId);
 	return !!entry;

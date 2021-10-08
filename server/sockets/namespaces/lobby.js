@@ -75,16 +75,31 @@ export default function (io, app) {
 		lobby.emit(socketEvents.lobby.updateUser, user);
 	};
 
+	/**
+	 * Updates all users statuses
+	 */
 	lobby.updateUserStatuses = () => {
 		const statuses = cache.getUserStatuses();
 		lobby.emit(socketEvents.lobby.updateUserStatuses, statuses);
 	};
 
+	/**
+	 * Updates the provided user's status
+	 * @param {Number} userId
+	 * @param {String} status
+	 */
 	lobby.setUserStatus = (userId, status) => {
 		cache.setUserStatus(userId, status);
 		lobby.updateUserStatuses();
 	};
 
+	/**
+	 * Sends a challenge to the provided user
+	 * @param {Object} challengedUser
+	 * @param {Object} challenger
+	 * @param {String} game
+	 * @param {Object} settings
+	 */
 	lobby.challengePlayer = (challengedUser, challenger, game, settings) => {
 		lobby.to(challengedUser.socketId).emit(socketEvents.lobby.challenge, {
 			user: challenger,
@@ -93,20 +108,38 @@ export default function (io, app) {
 		});
 	};
 
+	/**
+	 * Cancels the challenge that was sent to the provided user
+	 * @param {Object} challengedUser
+	 */
 	lobby.cancelChallenge = (challengedUser) => {
 		lobby.to(challengedUser.socketId).emit(socketEvents.lobby.cancelChallenge);
 	};
 
+	/**
+	 * Declines the challenge that was sent from the provided user
+	 * @param {Object} challenger
+	 */
 	lobby.declineChallenge = (challenger) => {
 		lobby.to(challenger.socketId).emit(socketEvents.lobby.declineChallenge);
 	};
 
+	/**
+	 * Tells the players to open the game page
+	 * @param {Array} players
+	 * @param {String} game
+	 */
 	lobby.goToGame = (players, game) => {
 		players.forEach((player) => {
 			lobby.to(player.socketId).emit(socketEvents.lobby.goToGame, game);
 		});
 	};
 
+	/**
+	 * Cancels/declines any pending challenges that the provided user belongs to
+	 * Usually called when the user disconnects
+	 * @param {Number} userId
+	 */
 	lobby.cancelPendingChallenges = (userId) => {
 		const challenge = cache.getPendingChallenge(userId);
 
@@ -121,6 +154,12 @@ export default function (io, app) {
 		}
 	};
 
+	/**
+	 * Sends an event to the provided users telling them that a match was found using the matchmaking service
+	 * @param {Object} userA
+	 * @param {Object} userB
+	 * @param {String} game
+	 */
 	lobby.onMatchFound = (userA, userB, game) => {
 		[userA, userB].forEach((user) => {
 			lobby.setUserStatus(user.id, userStatuses.busy);
@@ -129,6 +168,11 @@ export default function (io, app) {
 		});
 	};
 
+	/**
+	 * Cancels any pending matchmaking challenges that the provided user belongs to
+	 * Usually called when the user disconnects
+	 * @param {Number} userId
+	 */
 	lobby.cancelPendingMatchmakingChallenges = (userId) => {
 		const challenge = cache.getMatchmakingChallenge(userId);
 
@@ -144,6 +188,10 @@ export default function (io, app) {
 		}
 	};
 
+	/**
+	 * Fetches the game stats for the provided users and sends them to the client
+	 * @param {Array} users
+	 */
 	lobby.updateGameStats = async (users) => {
 		const userIds = users.map((user) => {
 			return user.id;
@@ -172,6 +220,11 @@ export default function (io, app) {
 		});
 	};
 
+	/**
+	 * Updates the experience value for both of the provided users
+	 * @param {Number} winnerId
+	 * @param {Array} users
+	 */
 	lobby.updateUsersExperience = async (winnerId, users) => {
 		users.forEach(async (user) => {
 			const experienceGained = user.id === winnerId ? experienceRewards.win : experienceRewards.loss;

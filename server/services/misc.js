@@ -1,5 +1,11 @@
 import { games } from '../config';
 
+/**
+ * Calculates the user's game stats
+ * @param {Number} userId
+ * @param {Array} finishedGames
+ * @returns {Object}
+ */
 function calculateGameStats(userId, finishedGames) {
 	const total = finishedGames.length;
 	let won = 0;

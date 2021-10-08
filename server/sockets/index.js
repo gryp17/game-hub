@@ -6,6 +6,12 @@ let io;
 let lobby;
 let pong;
 
+/**
+ * Inits the sockets listeners
+ * @param {Object} server
+ * @param {Object} app
+ * @returns {Object}
+ */
 function initSockets(server, app) {
 	io = createSocket(server);
 

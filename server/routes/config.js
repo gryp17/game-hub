@@ -4,6 +4,9 @@ import { userStatuses, gameCodes, socketEvents } from '../config';
 
 const router = express.Router();
 
+/**
+ * Returns the app config
+ */
 router.get('/', (req, res) => {
 	sendResponse(res, {
 		userStatuses,

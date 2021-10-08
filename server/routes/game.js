@@ -14,6 +14,9 @@ const rules = {
 	}
 };
 
+/**
+ * Returns the games history of the provided user id
+ */
 router.get('/history/:userId', isLoggedIn, validate(rules.getGames), async (req, res) => {
 	const maxGamesPerRequest = 20;
 
