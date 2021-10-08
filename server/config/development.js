@@ -92,12 +92,12 @@ module.exports = {
 			code: 'pong',
 			maxPlayers: 2,
 			fps: 60,
-			width: 1024,
+			width: 1366,
 			height: 768,
 			maxScore: 10,
 			ball: {
 				size: 60,
-				initialSpeed: 7,
+				initialSpeed: 9,
 				acceleration: 0.5,
 				initialRotationSpeed: 5,
 				rotationAcceleration: 1
@@ -127,9 +127,9 @@ module.exports = {
 					small: 20
 				},
 				ballSpeed: {
-					slow: 5,
-					normal: 7,
-					fast: 10
+					slow: 6,
+					normal: 9,
+					fast: 11
 				},
 				ballSize: {
 					big: 90,
