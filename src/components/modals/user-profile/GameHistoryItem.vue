@@ -117,7 +117,7 @@
 				return 'fas fa-meh color-yellow';
 			},
 			scores() {
-				const scores = Object.values(this.game.data.score);
+				const scores = Object.values(this.game.result);
 
 				//sort the users by showing the current user first
 				scores.sort((a, b) => {

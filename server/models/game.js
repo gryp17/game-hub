@@ -11,13 +11,13 @@ export default (db) => {
 		mode: {
 			type: Sequelize.STRING
 		},
-		data: {
+		result: {
 			type: Sequelize.STRING(500),
 			set(value) {
-				this.setDataValue('data', JSON.stringify(value));
+				this.setDataValue('result', JSON.stringify(value));
 			},
 			get() {
-				const rawValue = this.getDataValue('data');
+				const rawValue = this.getDataValue('result');
 				let value;
 
 				try {

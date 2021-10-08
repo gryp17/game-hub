@@ -54,9 +54,7 @@ export default function (io, app) {
 						status: gameStatuses.finished,
 						winner: winner.id,
 						ragequit,
-						data: {
-							score: scores
-						}
+						result: scores
 					});
 
 					pong.to(gameRoomId).emit(socketEvents.game.gameOver, {

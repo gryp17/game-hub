@@ -61,27 +61,20 @@ const getters = {
 	gameHistory(state, getters) {
 		//map the score userId to the corresponding user object
 		const games = state.gameHistory.games.map((game) => {
-			const score = {};
+			const result = {};
 
-			let data = game.data;
+			Object.keys(game.result).forEach((userId) => {
+				const points = game.result[userId];
 
-			Object.keys(data.score).forEach((userId) => {
-				const points = data.score[userId];
-
-				score[userId] = {
+				result[userId] = {
 					user: getters.usersMap[userId],
 					score: points
 				};
 			});
 
-			data = {
-				...data,
-				score
-			};
-
 			return {
 				...game,
-				data
+				result
 			};
 		});
 
