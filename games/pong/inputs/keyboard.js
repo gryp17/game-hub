@@ -2,17 +2,19 @@ import InputDevice from './input-device';
 
 /**
  * Keyboard class that handles all keyboard inputs
- * @param {Object} inputs
- * @param {Object} canvas
- * @returns {Keyboard}
  */
 export default class Keyboard extends InputDevice {
+	/**
+	 * Creates a new Keyboard instance
+	 * @param {Object} inputs
+ 	 * @param {Object} canvas
+	 */
 	constructor(inputs, canvas) {
 		super(inputs, canvas);
 	}
 
 	/**
-	 * Initializes the keyboard controls
+	 * Registers the keyboard event listeners
 	 */
 	listen() {
 		//key down
@@ -22,6 +24,10 @@ export default class Keyboard extends InputDevice {
 		this.addEventListener('keyup', this.onKeyUp);
 	}
 
+	/**
+	 * Keydown event handler
+	 * @param {Object} e
+	 */
 	onKeyDown(e) {
 		_.forOwn(this.inputs, (data, key) => {
 			if (_.includes(data.keys, e.which)) {
@@ -30,6 +36,10 @@ export default class Keyboard extends InputDevice {
 		});
 	}
 
+	/**
+	 * Keyup event handler
+	 * @param {Object} e
+	 */
 	onKeyUp(e) {
 		_.forOwn(this.inputs, (data, key) => {
 			if (_.includes(data.keys, e.which)) {

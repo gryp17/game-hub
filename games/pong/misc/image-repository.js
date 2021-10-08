@@ -1,10 +1,12 @@
 /**
  * Image repository class that loads all provided images and calls the callback when done
- * @param {Object} images
- * @param {Function} callback
- * @returns {ImageRepository}
  */
 export default class ImageRepository {
+	/**
+	 * Creates a new ImageRepository instance
+	 * @param {Object} images
+	 * @param {Function} callback
+	 */
 	constructor(images, callback) {
 		this.images = { ...images };
 		this.callback = callback;

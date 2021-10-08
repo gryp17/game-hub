@@ -1,4 +1,17 @@
+/**
+ * Paddle class
+ */
 export default class Paddle {
+	/**
+	 * Creates a new paddle instance
+	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} acceleration
+	 * @param {Number} maxSpeed
+	 * @param {Number} player
+	 * @param {Boolean} controllable
+	 * @param {Number} playerId
+	 */
 	constructor(game, size, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
 		this.game = game;
 		this.context = game.contexts.game.context;
@@ -29,6 +42,10 @@ export default class Paddle {
 		}
 	}
 
+	/**
+	 * Moves the paddle
+	 * If the paddle is controllable it processes the current inputs state first
+	 */
 	move() {
 		if (this.controllable) {
 			const inputs = this.playerId ? this.game.inputs[this.playerId] : this.game.inputs;
@@ -39,16 +56,26 @@ export default class Paddle {
 		this.y = this.y + this.dy;
 	}
 
+	/**
+	 * Draws the paddle
+	 */
 	draw() {
 		this.context.fillStyle = this.color;
 		this.context.fillRect(this.x, this.y, this.width, this.height);
 	}
 
+	/**
+	 * Moves and draws the paddle
+	 */
 	moveAndDraw() {
 		this.move();
 		this.draw();
 	}
 
+	/**
+	 * Processes the inputs state and moves the paddle up or down
+	 * @param {Object} inputs
+	 */
 	processInputs(inputs) {
 		//stop moving
 		if (!inputs.down && !inputs.up) {
@@ -83,6 +110,10 @@ export default class Paddle {
 		};
 	}
 
+	/**
+	 * Returns the paddle's state
+	 * @returns {Object}
+	 */
 	getState() {
 		return {
 			player: this.player,
@@ -93,6 +124,10 @@ export default class Paddle {
 		};
 	}
 
+	/**
+	 * Sets the paddle's state
+	 * @param {Object} state
+	 */
 	setState(state) {
 		this.x = state.x;
 		this.y = state.y;

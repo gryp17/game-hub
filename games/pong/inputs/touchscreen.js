@@ -2,11 +2,13 @@ import InputDevice from './input-device';
 
 /**
  * Touchscreen class that handles all touchscreen inputs
- * @param {Object} inputs
- * @param {Object} canvas
- * @returns {Touchscreen}
  */
 export default class Touchscreen extends InputDevice {
+	/**
+	 * Creates a new Touchscreen instance
+	 * @param {Object} inputs
+	 * @param {Object} canvas
+	 */
 	constructor(inputs, canvas) {
 		super(inputs, canvas);
 
@@ -50,7 +52,7 @@ export default class Touchscreen extends InputDevice {
 	}
 
 	/**
-	 * Initializes the touchscreen controls
+	 *  Registers the touchscreen event listeners
 	 */
 	listen() {
 		//touchstart
@@ -86,28 +88,48 @@ export default class Touchscreen extends InputDevice {
 		return relativeTouchY;
 	}
 
+	/**
+	 * Touchstart event handler
+	 * @param {Object} e
+	 */
 	onTouchStart(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
 	}
 
+	/**
+	 * Touchmove event handler
+	 * @param {Object} e
+	 */
 	onTouchMove(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
 	}
 
+	/**
+	 * Mousedown event handler
+	 * @param {Object} e
+	 */
 	onMouseDown(e) {
 		this.mousedown = true;
 		this.touchPosition = e.clientY;
 	}
 
+	/**
+	 * Mouseup event handler
+	 * @param {Object} e
+	 */
 	onMouseUp(e) {
 		this.mousedown = false;
 		this.touchPosition = e.clientY;
 	}
 
+	/**
+	 * Mousemove event handler
+	 * @param {Object} e
+	 */
 	onMouseMove(e) {
 		if (this.mousedown) {
 			this.touchPosition = e.clientY;

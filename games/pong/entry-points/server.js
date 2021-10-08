@@ -3,7 +3,18 @@ import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
 import CollisionsManager from '../misc/collisions-manager';
 
+/**
+ * Pong server class
+ */
 export default class Pong {
+	/**
+	 * Creates a new pong servver instance
+	 * @param {Number} id
+	 * @param {Object} config
+	 * @param {Object} customSettings
+	 * @param {Array} players
+	 * @param {Object} events
+	 */
 	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
@@ -56,6 +67,12 @@ export default class Pong {
 		this.collisionsManager = new CollisionsManager(this);
 	}
 
+	/**
+	 * Merges the defaultConfig and the customSettings
+	 * @param {Object} defaultConfig
+	 * @param {Object} customSettings
+	 * @returns {Object}
+	 */
 	applySettings(defaultConfig, customSettings) {
 		const config = {
 			...defaultConfig
@@ -84,10 +101,19 @@ export default class Pong {
 		return config;
 	}
 
+	/**
+	 * Updates the inputs belonging to the provided socketId/player
+	 * @param {Object} data
+	 */
 	updateInputs({ socketId, inputs }) {
 		this.inputs[socketId] = inputs;
 	}
 
+	/**
+	 * Ends the game
+	 * @param {Object} winner
+	 * @param {Boolean} ragequit
+	 */
 	gameIsOver(winner, ragequit = false) {
 		const scores = {};
 
@@ -104,6 +130,10 @@ export default class Pong {
 		this.onGameOver(winner, scores, ragequit);
 	}
 
+	/**
+	 * Called when one of the players scores
+	 * @param {Number} player
+	 */
 	onPlayerScore(player) {
 		this.scores[player].score = this.scores[player].score + 1;
 
@@ -115,6 +145,9 @@ export default class Pong {
 		}
 	}
 
+	/**
+	 * Sends an update to the clients with the current game state
+	 */
 	onGameStateUpdate() {
 		const paddlesState = this.paddles.map((paddle) => {
 			return paddle.getState();
@@ -128,6 +161,9 @@ export default class Pong {
 		});
 	}
 
+	/**
+	 * Initializes the game entities and starts the game
+	 */
 	start() {
 		this.paddles = this.players.map((player, index) => {
 			const playerIndex = index + 1;
@@ -156,6 +192,9 @@ export default class Pong {
 		}, 1000 / this.config.fps);
 	}
 
+	/**
+	 * Stops the game
+	 */
 	stop() {
 		clearInterval(this.gameLoopInterval);
 	}

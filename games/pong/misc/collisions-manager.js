@@ -2,10 +2,12 @@ import Utils from './utils';
 
 /**
  * Class used for handling all game object collisions
- * @param {Game} game
- * @returns {CollisionsManager}
  */
 export default class CollisionsManager {
+	/**
+	 * Creates a CollisionManager instance
+	 * @param {Object} game
+	 */
 	constructor(game) {
 		this.game = game;
 	}
@@ -58,6 +60,9 @@ export default class CollisionsManager {
 		});
 	}
 
+	/**
+	 * Handles all ball collisions
+	 */
 	handleBall() {
 		const ball = this.game.ball;
 

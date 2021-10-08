@@ -1,6 +1,18 @@
 import _ from 'lodash';
 
+/**
+ * Ball class
+ */
 export default class Ball {
+	/**
+	 * Creates a ball instance
+	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} initialSpeed
+	 * @param {Number} acceleration
+	 * @param {Number} initialRotationSpeed
+	 * @param {Number} rotationAcceleration
+	 */
 	constructor(game, size, initialSpeed, acceleration, initialRotationSpeed, rotationAcceleration) {
 		this.context = game.contexts.ball.context;
 		this.canvas = game.contexts.ball.canvas;
@@ -32,16 +44,28 @@ export default class Ball {
 		}, 2000);
 	}
 
+	/**
+	 * Increases the ball's vertical or horizontal speed
+	 * @param {Number} speed
+	 * @param {Number} increment
+	 * @returns
+	 */
 	static increaseSpeed(speed, increment) {
 		const directionMultiplier = speed > 0 ? 1 : -1;
 		return (Math.abs(speed) + increment) * directionMultiplier;
 	}
 
+	/**
+	 * Puts the ball in the canvas center
+	 */
 	center() {
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = (this.canvas.height / 2) - (this.height / 2);
 	}
 
+	/**
+	 * Resets the ball to it's initial (center) position and shoots it after a delay
+	 */
 	reset() {
 		this.center();
 
@@ -61,6 +85,11 @@ export default class Ball {
 		}, 2000);
 	}
 
+	/**
+	 * Speeds up the ball after each paddle hit
+	 * It uses the paddle vertical speed to change the ball's trajectory
+	 * @param {Number} paddleDy
+	 */
 	speedUp(paddleDy) {
 		const paddleForce = Math.abs(paddleDy / 3);
 		let verticalAcceleration = 0;
@@ -79,6 +108,9 @@ export default class Ball {
 		this.rotationSpeed = this.rotationSpeed + this.rotationAcceleration;
 	}
 
+	/**
+	 * Moves the ball
+	 */
 	move() {
 		this.x = this.x + this.dx;
 		this.y = this.y + this.dy;
@@ -86,6 +118,9 @@ export default class Ball {
 		this.rotate();
 	}
 
+	/**
+	 * Rotates the ball if it's moving
+	 */
 	rotate() {
 		//rotate the ball only if it's moving
 		if (this.dx === 0) {
@@ -96,6 +131,9 @@ export default class Ball {
 		this.angle = this.angle + speed;
 	}
 
+	/**
+	 * Draws the ball
+	 */
 	draw() {
 		this.context.save();
 
@@ -112,13 +150,16 @@ export default class Ball {
 		this.context.restore();
 	}
 
+	/**
+	 * Moves and draws the ball
+	 */
 	moveAndDraw() {
 		this.move();
 		this.draw();
 	}
 
 	/**
-	 * Returns the paddle hitbox
+	 * Returns the ball hitbox
 	 * @returns {Object}
 	 */
 	getHitbox() {
@@ -130,6 +171,10 @@ export default class Ball {
 		};
 	}
 
+	/**
+	 * Returns the ball state
+	 * @returns {Object}
+	 */
 	getState() {
 		return {
 			x: this.x,
@@ -141,6 +186,10 @@ export default class Ball {
 		};
 	}
 
+	/**
+	 * Sets the ball state
+	 * @param {Object} state
+	 */
 	setState(state) {
 		this.x = state.x;
 		this.y = state.y;

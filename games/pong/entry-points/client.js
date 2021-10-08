@@ -24,7 +24,19 @@ window.requestAnimFrame = (function anim() {
 			};
 }());
 
+/**
+ * Pong client class
+ */
 export default class Pong {
+	/**
+	 * Creates a new pong client instance
+	 * @param {String} gameCanvasId
+	 * @param {String} ballCanvasId
+	 * @param {Object} images
+	 * @param {Object} config
+	 * @param {Number} player
+	 * @param {Object} events
+	 */
 	constructor(gameCanvasId, ballCanvasId, images, config, player, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
@@ -58,10 +70,17 @@ export default class Pong {
 		this.collisionsManager = new CollisionsManager(this);
 	}
 
+	/**
+	 * Preloads all the game images and calls the provided callback when done
+	 * @param {Function} callback
+	 */
 	static preloadGameImages(callback) {
 		new ImageRepository(gameImages, callback);
 	}
 
+	/**
+	 * Initializes the game entities and starts the game
+	 */
 	start() {
 		this.contexts.game.show();
 		this.contexts.ball.show();
@@ -96,6 +115,9 @@ export default class Pong {
 		});
 	}
 
+	/**
+	 * Stops the game
+	 */
 	stop() {
 		//clear all input event listeners
 		this.keyboard.removeAllEventListeners();
@@ -104,6 +126,10 @@ export default class Pong {
 		clearInterval(this.gameLoopInterval);
 	}
 
+	/**
+	 * Updates the game state with the data received from the server
+	 * @param {Object} data
+	 */
 	updateData({ paddles, ball, scores, gameOver }) {
 		paddles.forEach((paddle, index) => {
 			this.paddles[index].setState(paddle);
@@ -118,6 +144,10 @@ export default class Pong {
 		}
 	}
 
+	/**
+	 * Returns the current inputs state
+	 * @returns {Object}
+	 */
 	getInputs() {
 		const result = {};
 
@@ -137,6 +167,9 @@ export default class Pong {
 		return result;
 	}
 
+	/**
+	 * The game logic that runs every game tick
+	 */
 	gameLoop() {
 		//get the current inputs status
 		const oldInputs = {
@@ -159,6 +192,9 @@ export default class Pong {
 		this.collisionsManager.handleCollisions();
 	}
 
+	/**
+	 * Draws the game entities
+	 */
 	drawGame() {
 		//clear the whole canvas before drawing anything (this used to be in the paddle class)
 		_.forOwn(this.contexts, (value, key) => {
