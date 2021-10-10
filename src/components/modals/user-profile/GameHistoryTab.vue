@@ -56,6 +56,10 @@
 			}
 		},
 		methods: {
+			/**
+			 * Fetches the games items that match the provided limit and offset
+			 * @param {Number} page
+			 */
 			getGames(page) {
 				this.page = page;
 

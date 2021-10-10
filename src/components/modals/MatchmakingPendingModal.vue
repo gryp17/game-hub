@@ -62,14 +62,24 @@
 			};
 		},
 		methods: {
+			/**
+			 * Bootstraps the modal before its opened
+			 * @param {Object} e
+			 */
 			onBeforeOpen(e) {
 				this.game = this.$options.filters.gamesMap(e.params.game);
 			},
+			/**
+			 * Starts the countdown
+			 */
 			startCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.startCountdown();
 				}
 			},
+			/**
+			 * Stops the countdown
+			 */
 			stopCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.stopCountdown();
@@ -81,10 +91,16 @@
 			closeModal() {
 				hideMatchmakingPendingModal();
 			},
+			/**
+			 * Emits the cancel event
+			 */
 			cancel() {
 				this.$emit('cancel');
 				this.closeModal();
 			},
+			/**
+			 * Emits the accept event
+			 */
 			accept() {
 				this.$emit('accept');
 				this.closeModal();

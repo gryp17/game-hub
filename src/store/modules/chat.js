@@ -11,6 +11,14 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
+	/**
+	 * Contains the messages list sorted by date and adding the author field to each message
+	 * @param {Object} state
+	 * @param {Object} getters
+	 * @param {Object} rootState
+	 * @param {Object} rootGetters
+	 * @returns {Array}
+	 */
 	messages(state, getters, rootState, rootGetters) {
 		const usersMap = rootGetters['lobby/usersMap'];
 

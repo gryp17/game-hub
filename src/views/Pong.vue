@@ -123,6 +123,9 @@
 					});
 				});
 			},
+			/**
+			 * Emits the update inputs event with the player's inputs data
+			 */
 			updateInputs(inputs) {
 				this.socket.emit(this.socketEvents.game.updateInputs, inputs);
 			},

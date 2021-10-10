@@ -16,6 +16,13 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
+	/**
+	 * Contains the users map containing the up to date user information, user status and experience/level data
+	 * @param {Object} state
+	 * @param {Object} getters
+	 * @param {Object} rootState
+	 * @returns {Object}
+	 */
 	usersMap(state, getters, rootState) {
 		const map = {};
 
@@ -39,6 +46,13 @@ const getters = {
 
 		return map;
 	},
+	/**
+	 * Contains the list of lobby users ordered by status
+	 * @param {Object} state
+	 * @param {Object} getters
+	 * @param {Object} rootState
+	 * @returns {Array}
+	 */
 	lobbyUsers(state, getters, rootState) {
 		const userStatuses = rootState.config.userStatuses;
 
@@ -58,6 +72,12 @@ const getters = {
 			return a.username.localeCompare(b.username);
 		});
 	},
+	/**
+	 * Contains the list of game history items
+	 * @param {Object} state
+	 * @param {Object} getters
+	 * @returns {Array}
+	 */
 	gameHistory(state, getters) {
 		//map the score userId to the corresponding user object
 		const games = state.gameHistory.games.map((game) => {
@@ -197,6 +217,12 @@ const actions = {
 			context.commit('auth/SET_USER_SESSION', user, { root: true });
 		}
 	},
+	/**
+	 * Sends a player challenge
+	 * @param {Object} context
+	 * @param {Object} data
+	 * @returns {Promise}
+	 */
 	async challengePlayer(context, { userId, game, settings }) {
 		try {
 			const { data } = await LobbyHttpService.challengePlayer(userId, game, settings);
@@ -214,6 +240,11 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Cancels a player challenge
+	 * @param {Object} context
+	 * @param {Number} userId
+	 */
 	async cancelChallenge(context, userId) {
 		try {
 			const { data } = await LobbyHttpService.cancelChallenge(userId);
@@ -229,6 +260,11 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Declines a player challenge
+	 * @param {Object} context
+	 * @param {Number} userId
+	 */
 	async declineChallenge(context, userId) {
 		try {
 			const { data } = await LobbyHttpService.declineChallenge(userId);
@@ -244,6 +280,11 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Accepts a player challenge
+	 * @param {Object} context
+	 * @param {Number} userId
+	 */
 	async acceptChallenge(context, userId) {
 		try {
 			const { data } = await LobbyHttpService.acceptChallenge(userId);
@@ -259,6 +300,11 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Fetches the user's game history
+	 * @param {Object} context
+	 * @param {Object} data
+	 */
 	async getGameHistory(context, { userId, limit, offset }) {
 		try {
 			const { data } = await GameHttpService.getHistory(userId, limit, offset);

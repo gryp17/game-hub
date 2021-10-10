@@ -10,6 +10,15 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
+	/**
+	 * Returns the user session
+	 * Also adds the user status using the usersMap
+	 * @param {Object} state
+	 * @param {Object} getters
+	 * @param {Object} rootState
+	 * @param {Object} rootGetters
+	 * @returns {Object}
+	 */
 	userSession(state, getters, rootState, rootGetters) {
 		if (!state.userSession) {
 			return null;
@@ -26,6 +35,11 @@ const getters = {
 			status: user ? user.status : userStatuses.offline
 		};
 	},
+	/**
+	 * Indicates whetner the user is authenticated
+	 * @param {Object} state
+	 * @returns {Boolean}
+	 */
 	isLoggedIn(state) {
 		return !!state.userSession;
 	}

@@ -23,6 +23,10 @@ const mutations = {
 };
 
 const actions = {
+	/**
+	 * Fetches the user's matchmaking status
+	 * @param {Object} context
+	 */
 	async getMatchmakingStatus(context) {
 		try {
 			const { data } = await MatchmakingHttpService.getStatus();
@@ -33,9 +37,19 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Updates the matchmaking status
+	 * @param {Object} context
+	 * @param {Boolean} status
+	 */
 	setMatchmakingEnabled(context, status) {
 		context.commit('SET_MATCHMAKING_ENABLED', status);
 	},
+	/**
+	 * Starts/joins the matchmaking
+	 * @param {Object} context
+	 * @param {String} game
+	 */
 	async startMatchmaking(context, game) {
 		context.commit('SET_MATCHMAKING_IS_LOADING', true);
 
@@ -58,6 +72,10 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Stops/leaves the matchmaking
+	 * @param {Object} context
+	 */
 	async stopMatchmaking(context) {
 		context.commit('SET_MATCHMAKING_IS_LOADING', true);
 
@@ -73,6 +91,10 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Cancels the matchmaking challenge
+	 * @param {Object} context
+	 */
 	async cancelMatchmakingChallenge(context) {
 		try {
 			await MatchmakingHttpService.cancelChallenge();
@@ -82,6 +104,10 @@ const actions = {
 			});
 		}
 	},
+	/**
+	 * Accepts the matchmaking challenge
+	 * @param {Object} context
+	 */
 	async acceptMatchmakingChallenge(context) {
 		try {
 			const { data } = await MatchmakingHttpService.acceptChallenge();

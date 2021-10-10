@@ -80,12 +80,21 @@
 			}
 		},
 		methods: {
+			/**
+			 * Mouseover event handler
+			 */
 			onMouseOver() {
 				this.hover = true;
 			},
+			/**
+			 * Mouseleave event handler
+			 */
 			onMouseLeave() {
 				this.hover = false;
 			},
+			/**
+			 * Emits the open-profile event with the message author id
+			 */
 			onOpenProfile() {
 				this.$emit('open-profile', this.message.userId);
 			}

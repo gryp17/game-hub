@@ -130,6 +130,10 @@
 			...mapActions('lobby', [
 				'getGameHistory'
 			]),
+			/**
+			 * Bootstraps the modal before its opened
+			 * @param {Object} e
+			 */
 			onBeforeOpen(e) {
 				this.userId = e.params;
 
@@ -144,6 +148,10 @@
 			closeModal() {
 				hideProfileModal();
 			},
+			/**
+			 * Closes the modal and opens the challenge settings modal
+			 * @param {String} game
+			 */
 			challengePlayer(game) {
 				this.closeModal();
 				setTimeout(() => {
@@ -153,12 +161,19 @@
 					});
 				}, 200);
 			},
+			/**
+			 * Closes the modal and opens the edit profile modal
+			 */
 			editProfile() {
 				this.closeModal();
 				setTimeout(() => {
 					showEditProfileModal();
 				}, 200);
 			},
+			/**
+			 * Fetches the games that match the provided limit and offset
+			 * @param {Object} data
+			 */
 			getGames({ limit, offset }) {
 				this.getGameHistory({
 					userId: this.userId,
@@ -166,6 +181,10 @@
 					offset
 				});
 			},
+			/**
+			 * Opens a different user profile without reopening the modal
+			 * @param {Number} userId
+			 */
 			changeUserProfile(userId) {
 				//manually call the onBeforeOpen listener with the new user id and switch to the profile tab
 				this.onBeforeOpen({

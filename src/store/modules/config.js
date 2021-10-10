@@ -12,6 +12,11 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const getters = {
+	/**
+	 * Contains the list of available games. Uses the gamesMap filter to include the game icon and other data.
+	 * @param {Object} state
+	 * @returns {Array}
+	 */
 	availableGames(state) {
 		//map the game code to the game label, icon etc.
 		return state.availableGames.map((gameCode) => {
@@ -43,6 +48,11 @@ const actions = {
 	resetState(context) {
 		context.commit('RESET_STATE');
 	},
+	/**
+	 * Fetches the application config
+	 * @param {Object} context
+	 * @returns {Promise}
+	 */
 	async getConfig(context) {
 		try {
 			const { data } = await ConfigHttpService.getConfig();

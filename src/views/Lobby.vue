@@ -193,12 +193,23 @@
 				'cancelMatchmakingChallenge',
 				'acceptMatchmakingChallenge'
 			]),
+			/**
+			 * Shows the edit profile modal
+			 */
 			showEditProfileModal() {
 				showEditProfileModal();
 			},
+			/**
+			 * Shows the profile modal
+			 */
 			showProfileModal(user) {
 				showProfileModal(user.id);
 			},
+			/**
+			 * Sends a player challenge
+			 * @param {Object} data
+			 * @returns {Promise}
+			 */
 			async onChallengePlayer({ user, game, settings }) {
 				return this.challengePlayer({
 					userId: user.id,
@@ -281,27 +292,55 @@
 					this.socket.disconnect();
 				}
 			},
+			/**
+			 * Accepts a player challenge
+			 * @param {Object} user
+			 */
 			onChallengeAccepted(user) {
 				this.acceptChallenge(user.id);
 			},
+			/**
+			 * Declines a player challenge
+			 * @param {Object} user
+			 */
 			onChallengeDeclined(user) {
 				this.declineChallenge(user.id);
 			},
+			/**
+			 * Cancels a player challenge
+			 * @param {Object} user
+			 */
 			onChallengeCanceled(user) {
 				this.cancelChallenge(user.id);
 			},
+			/**
+			 * Accepts a matchmaking challenge
+			 */
 			onMatchmakingChallengeAccepted() {
 				this.acceptMatchmakingChallenge();
 			},
+			/**
+			 * Cancels a matchmaking challenge
+			 */
 			onMatchmakingChallengeCanceled() {
 				this.cancelMatchmakingChallenge();
 			},
+			/**
+			 * Starts/joins the matchmaking
+			 * @param {String} game
+			 */
 			onStartMatchmaking(game) {
 				this.startMatchmaking(game);
 			},
+			/**
+			 * Stops/leaves the matchmaking
+			 */
 			onStopMatchmaking() {
 				this.stopMatchmaking();
 			},
+			/**
+			 * Toggles the chat and users list
+			 */
 			onChatToggled(status) {
 				this.showChat = status;
 			}

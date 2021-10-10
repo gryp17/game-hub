@@ -22,6 +22,9 @@
 			this.counter = this.timeout;
 		},
 		methods: {
+			/**
+			 * Starts the countdown
+			 */
 			startCountdown() {
 				this.counter = this.timeout;
 				this.counterInterval = setInterval(() => {
@@ -34,6 +37,9 @@
 					}
 				}, 1000);
 			},
+			/**
+			 * Stops the countdown
+			 */
 			stopCountdown() {
 				clearInterval(this.counterInterval);
 			}

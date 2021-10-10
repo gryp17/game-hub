@@ -91,21 +91,34 @@
 			}
 		},
 		methods: {
+			/**
+			 * Bootstraps the modal before its opened
+			 * @param {Object} e
+			 */
 			onBeforeOpen(e) {
 				this.winner = e.params.winner;
 				this.ragequit = e.params.ragequit;
 				this.score = e.params.score;
 			},
+			/**
+			 * Starts the countodnw
+			 */
 			startCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.startCountdown();
 				}
 			},
+			/**
+			 * Stops the countdown
+			 */
 			stopCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.stopCountdown();
 				}
 			},
+			/**
+			 * Redirects the user to the lobby page
+			 */
 			redirectToLobby() {
 				this.stopCountdown();
 

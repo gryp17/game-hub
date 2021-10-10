@@ -76,16 +76,26 @@
 			};
 		},
 		methods: {
+			/**
+			 * Bootstraps the modal before its opened
+			 * @param {Object} e
+			 */
 			onBeforeOpen(e) {
 				this.user = e.params.user;
 				this.game = this.$options.filters.gamesMap(e.params.game);
 				this.settings = e.params.settings;
 			},
+			/**
+			 * Starts the countdown
+			 */
 			startCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.startCountdown();
 				}
 			},
+			/**
+			 * Stops the countdown
+			 */
 			stopCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.stopCountdown();
@@ -97,11 +107,17 @@
 			closeModal() {
 				hideChallengeModal();
 			},
+			/**
+			 * Emits the accept event with the user data
+			 */
 			accept() {
 				this.stopCountdown();
 				this.$emit('accept', this.user);
 				this.closeModal();
 			},
+			/**
+			 * Emits the decline event with the user data
+			 */
 			decline() {
 				this.$emit('decline', this.user);
 				this.closeModal();

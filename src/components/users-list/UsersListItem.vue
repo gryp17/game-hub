@@ -72,9 +72,15 @@
 			}
 		},
 		methods: {
+			/**
+			 * Mouseover event handler
+			 */
 			onMouseOver() {
 				this.hover = true;
 			},
+			/**
+			 * Mouseleave event handler
+			 */
 			onMouseLeave() {
 				this.hover = false;
 			}

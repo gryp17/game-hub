@@ -38,6 +38,10 @@
 				'getMessages',
 				'sendMessage'
 			]),
+			/**
+			 * Opens the profile modal for the provided user
+			 * @param {Number} userId
+			 */
 			showProfileModal(userId) {
 				showProfileModal(userId);
 			}

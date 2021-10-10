@@ -1,3 +1,9 @@
+/**
+ * Returns a color depending on the user's level
+ * @param {Number} level
+ * @param {Number} maxLevel
+ * @returns {String}
+ */
 function calculateColor(level, maxLevel) {
 	const minHue = 2;
 	const maxHue = 90;
@@ -11,6 +17,11 @@ function calculateColor(level, maxLevel) {
 	return color;
 }
 
+/**
+ * Calculates the experience level, color and other data related to the user experience
+ * @param {Number} experience
+ * @returns {Object}
+ */
 export default (experience) => {
 	const experienceLevels = [
 		30,

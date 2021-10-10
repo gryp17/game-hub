@@ -163,11 +163,18 @@
 			}
 		},
 		methods: {
+			/**
+			 * Bootstraps the modal before its opened
+			 * @param {Object} e
+			 */
 			onBeforeOpen(e) {
 				this.challengeSent = false;
 				this.userId = e.params.userId;
 				this.game = this.$options.filters.gamesMap(e.params.game);
 			},
+			/**
+			 * Sends the challenge and the custom game settings to the target user
+			 */
 			async challenge() {
 				if (this.loading) {
 					return;
@@ -196,11 +203,17 @@
 
 				this.loading = false;
 			},
+			/**
+			 * Starts the countdown
+			 */
 			startCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.startCountdown();
 				}
 			},
+			/**
+			 * Stops the countdown
+			 */
 			stopCountdown() {
 				if (this.$refs.countdown) {
 					this.$refs.countdown.stopCountdown();
@@ -212,10 +225,17 @@
 			closeModal() {
 				hideChallengeSettingsModal();
 			},
+			/**
+			 * Emits the cancel event with the user data
+			 */
 			cancelChallenge() {
 				this.$emit('cancel', this.user);
 				this.closeModal();
 			},
+			/**
+			 * Triggered when the header X icon is clocked
+			 * The behaviour is different whether the challenge has been sent or not
+			 */
 			onHeaderCloseClick() {
 				if (this.challengeSent) {
 					this.cancelChallenge();

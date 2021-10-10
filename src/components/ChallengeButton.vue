@@ -63,9 +63,16 @@
 			this.selectedGame = this.availableGames[0];
 		},
 		methods: {
+			/**
+			 * Sets the selected game
+			 * @param {Object} game
+			 */
 			selectGame(game) {
 				this.selectedGame = game;
 			},
+			/**
+			 * Emits the challenge event with the selected game
+			 */
 			challenge() {
 				this.$emit('challenge', this.selectedGame.value);
 			}

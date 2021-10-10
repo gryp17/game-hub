@@ -4,6 +4,7 @@
  * @returns {Object}
  */
 export default (gameCode) => {
+	//TODO: add more games if necessary
 	const games = {
 		any: {
 			value: 'any',

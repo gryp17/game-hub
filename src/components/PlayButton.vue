@@ -94,12 +94,22 @@
 			this.selectedGame = this.enabledGames[0];
 		},
 		methods: {
+			/**
+			 * Sets the selected game
+			 * @param {Object} game
+			 */
 			selectGame(game) {
 				this.selectedGame = game;
 			},
+			/**
+			 * Emits the stop event
+			 */
 			stop() {
 				this.$emit('stop');
 			},
+			/**
+			 * Emits the play event with the selected game
+			 */
 			play() {
 				this.$emit('play', this.selectedGame.value);
 			}

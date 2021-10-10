@@ -29,6 +29,9 @@
 			}
 		},
 		methods: {
+			/**
+			 * Emits the toggle event with the active state
+			 */
 			toggleChat() {
 				this.$emit('toggle', !this.active);
 			}
