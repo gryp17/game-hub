@@ -51,12 +51,18 @@
 				loading: true
 			};
 		},
+		/**
+		 * Preloads the game assets before starting the game
+		 */
 		mounted() {
 			//preload the game images before connecting to the socket and starting the game
 			Pong.preloadGameImages((gameImages) => {
 				this.initGame(gameImages);
 			});
 		},
+		/**
+		 * Stops the game if it's still running and disconnects from the socket
+		 */
 		beforeDestroy() {
 			if (this.game) {
 				this.game.stop();
@@ -70,6 +76,10 @@
 			...mapGetters('auth', [
 				'userSession'
 			]),
+			/**
+			 * Returns the current game scores
+			 * @returns {Array}
+			 */
 			scores() {
 				if (!this.game) {
 					return [];

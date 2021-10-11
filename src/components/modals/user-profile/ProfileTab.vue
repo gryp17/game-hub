@@ -70,9 +70,17 @@
 			userStatuses: Object
 		},
 		computed: {
+			/**
+			 * Indicates whether the opened profile belongs to the logged in user
+			 * @returns {Boolean}
+			 */
 			isOwnUser() {
 				return this.userProfile.id === this.userSession.id;
 			},
+			/**
+			 * Indicates whether the opened profile can be challenged
+			 * @returns {Boolean}
+			 */
 			canChallengePLayer() {
 				return (
 					this.userSession.status.raw === this.userStatuses.online
@@ -80,6 +88,10 @@
 					&& !this.isOwnUser
 				);
 			},
+			/**
+			 * Returns the user's bio
+			 * @returns {String}
+			 */
 			bio() {
 				return this.userProfile.bio ? this.userProfile.bio : 'Apparently, this user prefers to keep an air of mystery about them.';
 			}

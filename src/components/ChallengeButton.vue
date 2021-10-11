@@ -55,10 +55,17 @@
 			...mapGetters('config', [
 				'availableGames'
 			]),
+			/**
+			 * Returns the play button text depending on the selected game
+			 * @returns {String}
+			 */
 			playButtonText() {
 				return this.selectedGame.value === 'any' ? 'Play' : `Play ${this.selectedGame.label}`;
 			}
 		},
+		/**
+		 * Selects the first available game by default
+		 */
 		created() {
 			this.selectedGame = this.availableGames[0];
 		},

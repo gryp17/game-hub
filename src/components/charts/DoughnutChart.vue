@@ -10,6 +10,9 @@
 			chartData: Object,
 			options: Object
 		},
+		/**
+		 * Renders the chartjs chart once the component is mounted
+		 */
 		mounted() {
 			this.renderChart(this.chartData, this.options);
 		}

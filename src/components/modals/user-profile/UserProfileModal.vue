@@ -115,6 +115,10 @@
 			...mapGetters('lobby', [
 				'gameHistory'
 			]),
+			/**
+			 * Returns the user profile info by mapping the userId to the usersMap
+			 * @returns {Object}
+			 */
 			userProfile() {
 				if (!this.userId) {
 					return null;
@@ -122,6 +126,10 @@
 
 				return this.usersMap[this.userId];
 			},
+			/**
+			 * Returns the user's game stats
+			 * @returns {Object}
+			 */
 			gameStats() {
 				return this.userProfile.gameStats;
 			}

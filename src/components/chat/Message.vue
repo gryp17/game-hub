@@ -72,9 +72,17 @@
 			};
 		},
 		computed: {
+			/**
+			 * Returns the message author username
+			 * @returns {String}
+			 */
 			username() {
 				return this.message.user.username;
 			},
+			/**
+			 * Returns the message author username color
+			 * @returns {String}
+			 */
 			usernameColor() {
 				return this.message.user.experience.color;
 			}

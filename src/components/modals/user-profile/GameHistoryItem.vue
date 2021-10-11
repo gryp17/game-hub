@@ -85,12 +85,24 @@
 			userProfile: Object
 		},
 		computed: {
+			/**
+			 * Indicates whether the user is the game's winner
+			 * @returns {Boolean}
+			 */
 			isWinner() {
 				return this.game.winner === this.userProfile.id;
 			},
+			/**
+			 * Indicates whether the opponent has ragequit
+			 * @returns {Boolean}
+			 */
 			isRagequit() {
 				return !this.isWinner && this.game.ragequit;
 			},
+			/**
+			 * Returns the item's title
+			 * @returns {String}
+			 */
 			title() {
 				if (this.isWinner) {
 					return 'Win';
@@ -102,9 +114,17 @@
 
 				return 'Loss';
 			},
+			/**
+			 * Returns the game information
+			 * @returns {Object}
+			 */
 			gameType() {
 				return this.$options.filters.gamesMap(this.game.type);
 			},
+			/**
+			 * Returns the correct icon depending on the game result
+			 * @returns {String}
+			 */
 			icon() {
 				if (this.isWinner) {
 					return 'fas fa-trophy color-yellow';
@@ -116,6 +136,10 @@
 
 				return 'fas fa-meh color-yellow';
 			},
+			/**
+			 * Returns the game score/result
+			 * @returns {Array}
+			 */
 			scores() {
 				const scores = Object.values(this.game.result);
 
@@ -130,15 +154,31 @@
 
 				return scores;
 			},
+			/**
+			 * Returns the game finished date
+			 * @returns {String}
+			 */
 			date() {
 				return moment(this.game.updatedAt).format('YYYY-MM-DD');
 			},
+			/**
+			 * Returns the full game finished date and time
+			 * @returns {String}
+			 */
 			dateAndTime() {
 				return moment(this.game.updatedAt).format('YYYY-MM-DD HH:mm:ss');
 			},
+			/**
+			 * Returns the game duration in seconds
+			 * @returns {Number}
+			 */
 			durationInSeconds() {
 				return moment(this.game.updatedAt).diff(moment(this.game.createdAt), 'seconds');
 			},
+			/**
+			 * Returns the formatted game duration
+			 * @returns {String}
+			 */
 			duration() {
 				if (this.durationInSeconds > 60) {
 					const durationInMinutes = Math.floor(this.durationInSeconds / 60);

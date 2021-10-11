@@ -38,9 +38,6 @@
 				submitting: false
 			};
 		},
-		computed: {
-
-		},
 		methods: {
 			/**
 			 * Adds an emoji to the textarea

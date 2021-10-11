@@ -22,6 +22,10 @@
 			ragequit: Number
 		},
 		computed: {
+			/**
+			 * Puts all the statistics in a single object and calculates the actual lost games
+			 * @returns {Object}
+			 */
 			stats() {
 				//ragequit games also count as losses
 				return {
@@ -30,6 +34,10 @@
 					ragequit: this.ragequit
 				};
 			},
+			/**
+			 * Returns the list of chart labels with their corresponding colors
+			 * @returns {Array}
+			 */
 			labels() {
 				return [
 					{
@@ -49,6 +57,10 @@
 					}
 				];
 			},
+			/**
+			 * Returns the formated chart data and labels configuration
+			 * @returns {Object}
+			 */
 			chartData() {
 				const labels = [];
 				const colors = [];
@@ -69,6 +81,10 @@
 					]
 				};
 			},
+			/**
+			 * Returns the additional chart options
+			 * @returns {Object}
+			 */
 			chartOptions() {
 				return {
 					legend: {

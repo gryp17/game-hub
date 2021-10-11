@@ -35,6 +35,9 @@
 				loading: true
 			};
 		},
+		/**
+		 * Fetches the application config before rendering the rest of the application views
+		 */
 		async created() {
 			await this.getConfig();
 			this.loading = false;

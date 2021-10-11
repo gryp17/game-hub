@@ -91,6 +91,10 @@
 			};
 		},
 		computed: {
+			/**
+			 * Indicates whether the floating label should be visible
+			 * @returns {Boolean}
+			 */
 			showLabel() {
 				return this.floatingLabel && this.focused && this.value;
 			}

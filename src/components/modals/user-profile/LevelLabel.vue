@@ -17,6 +17,10 @@
 			color: String
 		},
 		computed: {
+			/**
+			 * Returns the level label
+			 * @returns {String}
+			 */
 			title() {
 				return `Level ${this.level}`;
 			}

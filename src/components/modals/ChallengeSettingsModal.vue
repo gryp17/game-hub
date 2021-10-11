@@ -146,6 +146,10 @@
 			...mapGetters('lobby', [
 				'usersMap'
 			]),
+			/**
+			 * Returns the user's profile by mapping the userId using the usersMap
+			 * @returns {Object}
+			 */
 			user() {
 				if (!this.userId) {
 					return null;
@@ -153,11 +157,19 @@
 
 				return this.usersMap[this.userId];
 			},
+			/**
+			 * Indicates whetner the user can be challenged
+			 * @returns {Boolean}
+			 */
 			canChallengePLayer() {
 				return (
 					this.userSession.status.raw === this.userStatuses.online && this.user.status.raw === this.userStatuses.online
 				);
 			},
+			/**
+			 * Indicates whether the modal can be closed
+			 * @returns {Boolean}
+			 */
 			canCloseModal() {
 				return !this.challengeSent;
 			}

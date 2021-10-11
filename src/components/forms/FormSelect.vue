@@ -43,6 +43,10 @@
 			label: String
 		},
 		computed: {
+			/**
+			 * Returns the select options in a unified format
+			 * @returns {Array}
+			 */
 			selectOptions() {
 				return this.options.map((item) => {
 					if (_.isObject(item)) {

@@ -58,14 +58,17 @@
 				pages: []
 			};
 		},
+		/**
+		 * Updates the pages parameters when the component is first created
+		 */
 		created() {
 			this.calculatePages();
 		},
 		watch: {
-			/**
-			 * Watches all props and updates the pages
-			 */
 			$props: {
+				/**
+				 * Watches all props and updates the pages
+				 */
 				handler() {
 					this.calculatePages();
 				},

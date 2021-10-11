@@ -14,9 +14,17 @@
 			}
 		},
 		computed: {
+			/**
+			 * Indicates whether the ragequit icon should be displayed
+			 * @returns {Boolean}
+			 */
 			showRagequitIcon() {
 				return this.percentage >= 5;
 			},
+			/**
+			 * Returns the ragequit title text
+			 * @returns {String}
+			 */
 			ragequitTitle() {
 				return `${this.percentage}% ragequit rate`;
 			}

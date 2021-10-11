@@ -52,9 +52,17 @@
 			}
 		},
 		computed: {
+			/**
+			 * Returns the avatar class depending on the status
+			 * @returns {String}
+			 */
 			avatarClass() {
 				return this.status ? `show-status ${this.status}` : null;
 			},
+			/**
+			 * Returns the avatar styles
+			 * @returns {Object}
+			 */
 			avatarStyle() {
 				return {
 					width: `${this.size}px`,

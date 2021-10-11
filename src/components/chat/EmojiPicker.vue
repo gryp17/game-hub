@@ -33,9 +33,15 @@
 				opened: false
 			};
 		},
+		/**
+		 * Adds the outside click event listener
+		 */
 		mounted() {
 			document.addEventListener('click', this.handleOutsideClick);
 		},
+		/**
+		 * Removes the outside click event listener
+		 */
 		destroyed() {
 			document.removeEventListener('click', this.handleOutsideClick);
 		},

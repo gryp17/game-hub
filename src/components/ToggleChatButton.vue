@@ -21,9 +21,17 @@
 			active: Boolean
 		},
 		computed: {
+			/**
+			 * Returns the current button icon
+			 * @returns {String}
+			 */
 			icon() {
 				return this.active ? 'fas fa-users' : 'far fa-comment-dots';
 			},
+			/**
+			 * Returns the current button text
+			 * @returns {String}
+			 */
 			title() {
 				return this.active ? 'Show players list' : 'Show chat';
 			}

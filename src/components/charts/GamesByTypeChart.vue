@@ -20,6 +20,10 @@
 			games: Object
 		},
 		computed: {
+			/**
+			 * Contains the list of chart labels with their corresponding colors
+			 * @returns {Array}
+			 */
 			labels() {
 				const colors = ['#7289da', '#ffa78b', '#ff88de'];
 				const labels = [];
@@ -38,6 +42,10 @@
 
 				return labels;
 			},
+			/**
+			 * Contains the formated chart data and labels configuration
+			 * @returns {Object}
+			 */
 			chartData() {
 				const labels = [];
 				const colors = [];
@@ -58,6 +66,10 @@
 					]
 				};
 			},
+			/**
+			 * Contains additional chart options
+			 * @returns {Object}
+			 */
 			chartOptions() {
 				return {
 					legend: {

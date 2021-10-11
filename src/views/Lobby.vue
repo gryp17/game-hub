@@ -139,6 +139,10 @@
 			...mapGetters('config', [
 				'availableGames'
 			]),
+			/**
+			 * Returns the chat/users list styles. This is used to toggle between the 2 components in low resolutions.
+			 * @returns {Object}
+			 */
 			chatStyles() {
 				return {
 					chat: {
@@ -150,6 +154,9 @@
 				};
 			}
 		},
+		/**
+		 * Fetches all necessary data from the backend before showing the lobby
+		 */
 		async created() {
 			await Promise.all([
 				this.getUsers(),
@@ -164,6 +171,9 @@
 			this.connectToSocket();
 			this.loading = false;
 		},
+		/**
+		 * Disconnects from the socket
+		 */
 		beforeDestroy() {
 			this.disconnectFromSocket();
 		},

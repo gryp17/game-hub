@@ -27,6 +27,10 @@
 			}
 		},
 		computed: {
+			/**
+			 * Returns the list of available pong settings with their labels
+			 * @returns {Array}
+			 */
 			pongSettings() {
 				return [
 					{

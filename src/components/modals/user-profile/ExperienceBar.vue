@@ -39,11 +39,19 @@
 			percentage: Number
 		},
 		computed: {
+			/**
+			 * Returns the experience bar fill styles
+			 * @returns {Object}
+			 */
 			fillStyle() {
 				return {
 					width: `${this.percentage}%`
 				};
 			},
+			/**
+			 * Returns the experience bar title
+			 * @returns {String}
+			 */
 			title() {
 				return `${this.experience} / ${this.maxExperience} experience`;
 			}

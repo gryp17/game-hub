@@ -18,6 +18,9 @@
 				counter: 20
 			};
 		},
+		/**
+		 * Resets the timeout counter when the component is created
+		 */
 		created() {
 			this.counter = this.timeout;
 		},

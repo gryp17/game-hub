@@ -21,9 +21,17 @@
 			}
 		},
 		computed: {
+			/**
+			 * Returns the message full date and time
+			 * @returns {String}
+			 */
 			fullDate() {
 				return moment(this.date).format('YYYY-MM-DD HH:mm:ss');
 			},
+			/**
+			 * Returns the formatted message date
+			 * @returns {String}
+			 */
 			formattedDate() {
 				const date = moment(this.date);
 

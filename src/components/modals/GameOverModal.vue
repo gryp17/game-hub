@@ -64,9 +64,17 @@
 			...mapGetters('auth', [
 				'userSession'
 			]),
+			/**
+			 * Indicates whether the user has won
+			 * @returns {Boolean}
+			 */
 			isWinner() {
 				return this.userSession.id === this.winner;
 			},
+			/**
+			 * Returns the correct icon depending on the game result
+			 * @returns {String}
+			 */
 			icon() {
 				if (this.isWinner) {
 					if (this.ragequit) {
@@ -78,6 +86,10 @@
 
 				return 'fas fa-meh color-yellow';
 			},
+			/**
+			 * Returns the message depending on the game result
+			 * @returns {String}
+			 */
 			text() {
 				if (this.isWinner) {
 					if (this.ragequit) {

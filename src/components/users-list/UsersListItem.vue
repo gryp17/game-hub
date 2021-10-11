@@ -52,21 +52,41 @@
 			};
 		},
 		computed: {
+			/**
+			 * Returns the list of statuses that indicate whether the user is online or offline
+			 * @returns {Array}
+			 */
 			onlineStateStatuses() {
 				return [
 					this.userStatuses.online,
 					this.userStatuses.offline
 				];
 			},
+			/**
+			 * Returns the user's raw status
+			 * @returns {String}
+			 */
 			rawStatus() {
 				return this.user.status.raw;
 			},
+			/**
+			 * Returns the user's formatted status
+			 * @returns {String}
+			 */
 			formattedStatus() {
 				return this.user.status.formatted;
 			},
+			/**
+			 * Returns the user's avatar status
+			 * @returns {String}
+			 */
 			avatarStatus() {
 				return this.user.status.avatar;
 			},
+			/**
+			 * Indicates whether the text status should be displayed
+			 * @returns {Boolean}
+			 */
 			showStatus() {
 				return !this.onlineStateStatuses.includes(this.rawStatus);
 			}

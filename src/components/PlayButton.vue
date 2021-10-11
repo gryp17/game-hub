@@ -73,6 +73,10 @@
 			};
 		},
 		computed: {
+			/**
+			 * Returns the list of available games and adds the "any" option
+			 * @returns {Array}
+			 */
 			enabledGames() {
 				return [
 					//add the "any" option to the list
@@ -80,16 +84,31 @@
 					...this.availableGames
 				];
 			},
+			/**
+			 * Returns the selected game name
+			 * @returns {String}
+			 */
 			selectedGameName() {
 				return this.selectedGame.value === 'any' ? null : this.selectedGame.label;
 			},
+			/**
+			 * Returns the short version of the play button text
+			 * @returns {String}
+			 */
 			playButtonText() {
 				return this.selectedGameName ? this.selectedGameName : 'Play';
 			},
+			/**
+			 * Returns the long version of the play button text
+			 * @returns {String}
+			 */
 			playButtonTextLong() {
 				return this.selectedGameName ? `Play ${this.selectedGameName}` : 'Play';
 			}
 		},
+		/**
+		 * Selects the first available game by default
+		 */
 		created() {
 			this.selectedGame = this.enabledGames[0];
 		},

@@ -28,18 +28,33 @@
 			};
 		},
 		computed: {
+			/**
+			 * Returns the pagination offset
+			 * @returns {Number}
+			 */
 			offset() {
 				return this.messages.length;
 			}
 		},
+		/**
+		 * Adds the scroll event listener
+		 */
 		mounted() {
 			this.$refs.list.addEventListener('scroll', this.onChatScroll);
 		},
+		/**
+		 * Removes the scroll event listener
+		 */
 		beforeDestroy() {
 			this.$refs.list.removeEventListener('scroll', this.onChatScroll);
 		},
 		watch: {
 			messages: {
+				/**
+				 * Watches the messages list and scrolls to the bottom when a new message arrives
+				 * @param {Array} newMessages
+				 * @param {Array} oldMessages
+				 */
 				handler(newMessages, oldMessages) {
 					//scroll to the bottom only when a new message arrives
 					if (!oldMessages || (

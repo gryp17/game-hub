@@ -44,6 +44,9 @@
 		},
 		watch: {
 			userProfile: {
+				/**
+				 * Watches the userProfile and resets the opened pagination page
+				 */
 				handler() {
 					this.page = 0;
 				},
@@ -51,6 +54,10 @@
 			}
 		},
 		computed: {
+			/**
+			 * Returns the total pages
+			 * @returns {Number}
+			 */
 			totalPages() {
 				return Math.ceil(this.total / this.gamesPerPage);
 			}

@@ -72,6 +72,9 @@
 				errors: (state) => state.errors[formName]
 			})
 		},
+		/**
+		 * Resets the form errors when the form is opened
+		 */
 		created() {
 			this.resetFormErrors(formName);
 		},
