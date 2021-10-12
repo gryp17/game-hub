@@ -5,20 +5,20 @@ It uses a MySQL database and Socket.io for the realtime communication between th
 
 ## Notable folders
 
-> [/server](https://github.com/gryp17/game-hub/blob/master/server) - contains the server side logic
+> [/server](https://github.com/gryp17/game-hub/blob/main/server) - contains the server side logic
 
-> [/src](https://github.com/gryp17/game-hub/blob/master/src) - contains the VueJS client side logic
+> [/src](https://github.com/gryp17/game-hub/blob/main/src) - contains the VueJS client side logic
 
-> [/games](https://github.com/gryp17/game-hub/blob/master/games) - contains the games files
+> [/games](https://github.com/gryp17/game-hub/blob/main/games) - contains the games files
 
 ## Configuration
 The frontend configuration file containing the API server URLs is located in
 
-> [/src/config.js](https://github.com/gryp17/game-hub/blob/master/src/config.js)
+> [/src/config.js](https://github.com/gryp17/game-hub/blob/main/src/config.js)
 
 The backend development configuration file containing the database configuration and other application/game parameters is located in
 
-> [/config/development.js](https://github.com/gryp17/game-hub/blob/master/server/config/development.js)
+> [/config/development.js](https://github.com/gryp17/game-hub/blob/main/server/config/development.js)
 
 ## Project setup
 Configure the database parameters, CDN url, application port... and then run the following commands:
