@@ -34,12 +34,15 @@ function calculateGameStats(userId, finishedGames) {
 		byType[game.type]++;
 	});
 
+	//calculate the ragequit percentage
+	const ragequitPercentage = ragequit > 0 ? Math.floor((100 / total) * ragequit) : 0;
+
 	return {
 		total,
 		won,
 		lost,
 		ragequit,
-		ragequitPercentage: Math.floor((100 / total) * ragequit),
+		ragequitPercentage,
 		byType
 	};
 }

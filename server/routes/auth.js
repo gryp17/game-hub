@@ -4,6 +4,7 @@ import { User } from '../models';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
 import { sendResponse, sendError, sendApiError, compareHash, makeHash } from '../services/utils';
+import { calculateGameStats } from '../services/misc';
 import { lobby } from '../sockets';
 
 const router = express.Router();
@@ -83,6 +84,9 @@ router.post('/signup', validate(rules.signup), async (req, res) => {
 		delete user.password;
 
 		req.session.user = user;
+
+		//calculate the game stats (pass an empty games list since the user just signed up)
+		user.gameStats = calculateGameStats(user.id, []);
 
 		//notify all connected users about the new user
 		lobby.newUser(user);
