@@ -11,7 +11,8 @@
 		"sync-models-dev": "cross-env NODE_ENV=development babel-node server/sync-and-seed.js",
 		"lint:client": "vue-cli-service lint --fix",
 		"lint:server": "eslint \"server/**/*.js\" --fix",
-		"lint:games": "eslint \"games/**/*.js\" --fix"
+		"lint:games": "eslint \"games/**/*.js\" --fix",
+		"lint": "npm run lint:client && npm run lint:server && npm run lint:games"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.11.2",
