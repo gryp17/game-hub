@@ -1,14 +1,14 @@
 /**
  * Utils class containing helper functions
  */
-export default {
+export default class Utils {
 	/**
 	 * RequestAnim shim layer by Paul Irish
 	 * Finds the first API that works to optimize the animation loop,
 	 * otherwise defaults to setTimeout().
 	 * @returns {Function}
 	 */
-	getRequestAnimationFrame() {
+	static getRequestAnimationFrame() {
 		return (function anim() {
 			return window.requestAnimationFrame
 					|| window.webkitRequestAnimationFrame
@@ -19,14 +19,15 @@ export default {
 						window.setTimeout(callback, 1000);
 					};
 		}());
-	},
+	}
+
 	/**
 	 * Checks if the two rectangles intersect
 	 * @param {Object} objectA
 	 * @param {Object} objectB
 	 * @returns {Boolean}
 	 */
-	intersect(objectA, objectB) {
+	static intersects(objectA, objectB) {
 		let result = false;
 
 		//calculate the positions of both objects
@@ -42,7 +43,7 @@ export default {
 		}
 
 		return result;
-	},
+	}
 
 	/**
 	 * Checks if the provided hitboxes collide
@@ -50,7 +51,7 @@ export default {
 	 * @param {Object|Array} hitboxB
 	 * @returns {Boolean}
 	 */
-	collidesWith(hitboxA, hitboxB) {
+	static collidesWith(hitboxA, hitboxB) {
 		let result = false;
 		let a = hitboxA;
 		let b = hitboxB;
@@ -67,21 +68,21 @@ export default {
 		//check if the hitboxes collide
 		a.forEach((ha) => {
 			b.forEach((hb) => {
-				if (this.intersect(ha, hb)) {
+				if (this.intersects(ha, hb)) {
 					result = true;
 				}
 			});
 		});
 
 		return result;
-	},
+	}
 
 	/**
 	 * Private function that calculates the top, right, bottom and left coordinates of the object
 	 * @param {Object} object
 	 * @returns {Object}
 	 */
-	calculatePosition(object) {
+	static calculatePosition(object) {
 		return {
 			left: object.x,
 			top: object.y,
@@ -89,4 +90,4 @@ export default {
 			bottom: object.y + object.height
 		};
 	}
-};
+}
