@@ -11,9 +11,9 @@ export default {
 	intersect(objectA, objectB) {
 		let result = false;
 
-		//calculate the margins for both objects
-		const a = this.calculateMargins(objectA);
-		const b = this.calculateMargins(objectB);
+		//calculate the positions of both objects
+		const a = this.calculatePosition(objectA);
+		const b = this.calculatePosition(objectB);
 
 		//calculate the horizontal and vertical overlap
 		const horizontalOverlap = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
@@ -59,15 +59,16 @@ export default {
 	},
 
 	/**
-	 * Private function that calculates the top, right, bottom and left margins of the object
+	 * Private function that calculates the top, right, bottom and left coordinates of the object
 	 * @param {Object} object
 	 * @returns {Object}
 	 */
-	calculateMargins(object) {
-		object.left = object.x;
-		object.top = object.y;
-		object.right = object.left + object.width;
-		object.bottom = object.top + object.height;
-		return object;
+	calculatePosition(object) {
+		return {
+			left: object.x,
+			top: object.y,
+			right: object.x + object.width,
+			bottom: object.y + object.height
+		};
 	}
 };

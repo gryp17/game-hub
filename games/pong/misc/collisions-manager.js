@@ -1,4 +1,4 @@
-import Utils from './utils';
+import Utils from '../../common/utils';
 
 /**
  * Class used for handling all game object collisions

@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import Context from '../misc/context';
+import Context from '../../common/context';
 import Keyboard from '../inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
 import CollisionsManager from '../misc/collisions-manager';
-import ImageRepository from '../misc/image-repository';
+import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
 
 /**
