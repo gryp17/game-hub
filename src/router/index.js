@@ -61,15 +61,21 @@ const routes = [
 		path: '/lobby',
 		name: 'lobby',
 		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
+		// this generates a separate chunk (lobby.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '@/views/Lobby.vue'),
+		component: () => import(/* webpackChunkName: "lobby" */ '@/views/Lobby.vue'),
 		beforeEnter: mustBeLoggedIn
 	},
 	{
 		path: '/pong',
 		name: 'pong',
-		component: () => import(/* webpackChunkName: "about" */ '@/views/Pong.vue'),
+		component: () => import(/* webpackChunkName: "pong" */ '@/views/Pong.vue'),
+		beforeEnter: mustBeLoggedIn
+	},
+	{
+		path: '/volley',
+		name: 'volley',
+		component: () => import(/* webpackChunkName: "volley" */ '@/views/Volley.vue'),
 		beforeEnter: mustBeLoggedIn
 	}
 ];

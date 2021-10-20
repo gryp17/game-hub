@@ -17,6 +17,10 @@ module.exports = {
 				{
 					from: './games/pong/img',
 					to: './game-images/pong'
+				},
+				{
+					from: './games/volley/img',
+					to: './game-images/volley'
 				}
 			])
 		],
