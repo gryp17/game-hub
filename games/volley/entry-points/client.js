@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Utils from '../../common/utils';
 import Context from '../../common/context';
 import Keyboard from '../inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
@@ -8,21 +9,7 @@ import CollisionsManager from '../misc/collisions-manager';
 import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
 
-/**
- * requestAnim shim layer by Paul Irish
- * Finds the first API that works to optimize the animation loop,
- * otherwise defaults to setTimeout().
- */
-window.requestAnimFrame = (function anim() {
-	return window.requestAnimationFrame
-			|| window.webkitRequestAnimationFrame
-			|| window.mozRequestAnimationFrame
-			|| window.oRequestAnimationFrame
-			|| window.msRequestAnimationFrame
-			|| function anim(callback, element) {
-				window.setTimeout(callback, 1000);
-			};
-}());
+window.requestAnimFrame = Utils.getRequestAnimationFrame();
 
 /**
  * Volley client class
@@ -102,7 +89,7 @@ export default class Volley {
 			this.gameLoop();
 		}, 1000 / this.config.fps);
 
-		requestAnimationFrame(() => {
+		window.requestAnimFrame(() => {
 			this.drawGame();
 		});
 	}
