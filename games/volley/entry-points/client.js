@@ -3,6 +3,7 @@ import Utils from '../../common/utils';
 import Context from '../../common/context';
 import Keyboard from '../inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
+import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
 import Blob from '../game-entities/blob';
 import CollisionsManager from '../misc/collisions-manager';
@@ -17,19 +18,20 @@ window.requestAnimFrame = Utils.getRequestAnimationFrame();
 export default class Volley {
 	/**
 	 * Creates a new volley client instance
-	 * @param {String} gameCanvasId
-	 * @param {String} ballCanvasId
+	 * @param {Object} canvas
 	 * @param {Object} images
 	 * @param {Object} config
 	 * @param {Object} events
 	 */
-	constructor(gameCanvasId, ballCanvasId, images, config, { onUpdateInputs }) {
+	constructor(canvas, images, config, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.gameLoopInterval;
 		this.inputs;
 		this.images = images;
+		this.groundHeight = config.groundHeight;
 		this.scores = {};
+		this.background;
 		this.ball;
 		this.blobs = [];
 
@@ -38,14 +40,12 @@ export default class Volley {
 
 		this.gameControls = config.controls;
 
-		//canvas/context objects
-		this.contexts = {
-			game: new Context(gameCanvasId),
-			ball: new Context(ballCanvasId)
-		};
+		//initialize the canvas/context objects
+		this.contexts = {};
 
-		_.forOwn(this.contexts, (value, key) => {
-			this.contexts[key].setSize(this.config.width, this.config.height);
+		_.forOwn(canvas, (canvasId, name) => {
+			this.contexts[name] = new Context(canvasId);
+			this.contexts[name].setSize(this.config.width, this.config.height);
 		});
 
 		//initialize the keyboard and touchscreen controls
@@ -67,15 +67,17 @@ export default class Volley {
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		this.contexts.game.show();
-		this.contexts.ball.show();
+		//show all contexts and focus the game context where the inputs are handled
+		_.forOwn(this.contexts, (context) => {
+			context.show();
+		});
 		this.contexts.game.focus();
 
 		//game objects
 
-		this.ball = new Ball(
-			this
-		);
+		this.background = new Background(this);
+
+		this.ball = new Ball(this);
 
 		this.blobs = [
 			new Blob(this)
@@ -147,6 +149,8 @@ export default class Volley {
 		_.forOwn(this.contexts, (value, key) => {
 			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
 		});
+
+		this.background.draw();
 
 		this.blobs.forEach((blob) => {
 			blob.draw();

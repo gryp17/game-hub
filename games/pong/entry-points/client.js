@@ -17,14 +17,13 @@ window.requestAnimFrame = Utils.getRequestAnimationFrame();
 export default class Pong {
 	/**
 	 * Creates a new pong client instance
-	 * @param {String} gameCanvasId
-	 * @param {String} ballCanvasId
+	 * @param {Object} canvas
 	 * @param {Object} images
 	 * @param {Object} config
 	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(gameCanvasId, ballCanvasId, images, config, player, { onUpdateInputs }) {
+	constructor(canvas, images, config, player, { onUpdateInputs }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.player = player;
@@ -40,14 +39,12 @@ export default class Pong {
 
 		this.gameControls = config.controls;
 
-		//canvas/context objects
-		this.contexts = {
-			game: new Context(gameCanvasId),
-			ball: new Context(ballCanvasId)
-		};
+		//initialize the canvas/context objects
+		this.contexts = {};
 
-		_.forOwn(this.contexts, (value, key) => {
-			this.contexts[key].setSize(this.config.width, this.config.height);
+		_.forOwn(canvas, (canvasId, name) => {
+			this.contexts[name] = new Context(canvasId);
+			this.contexts[name].setSize(this.config.width, this.config.height);
 		});
 
 		//initialize the keyboard and touchscreen controls
@@ -69,8 +66,10 @@ export default class Pong {
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		this.contexts.game.show();
-		this.contexts.ball.show();
+		//show all contexts and focus the game context where the inputs are handled
+		_.forOwn(this.contexts, (context) => {
+			context.show();
+		});
 		this.contexts.game.focus();
 
 		//game objects

@@ -107,7 +107,12 @@
 
 				//start the game
 				this.socket.on(this.socketEvents.game.startGame, ({ config, player }) => {
-					this.game = new Pong('game-canvas', 'ball-canvas', gameImages, config, player, {
+					const canvasIds = {
+						game: 'game-canvas',
+						ball: 'ball-canvas'
+					};
+
+					this.game = new Pong(canvasIds, gameImages, config, player, {
 						onUpdateInputs: this.updateInputs
 					});
 

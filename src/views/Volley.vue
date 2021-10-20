@@ -3,6 +3,7 @@
 		<canvas id="game-canvas" class="canvas" tabindex="1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
+		<canvas id="background-canvas" class="canvas"></canvas>
 		<canvas id="ball-canvas" class="canvas"></canvas>
 	</div>
 </template>
@@ -45,6 +46,7 @@
 					fps: 60,
 					width: 1366,
 					height: 768,
+					groundHeight: 15,
 					controls: {
 						up: {
 							keys: [38, 87] //arrow up, W
@@ -61,7 +63,13 @@
 					}
 				};
 
-				this.game = new Volley('game-canvas', 'ball-canvas', gameImages, config, {
+				const canvasIds = {
+					game: 'game-canvas',
+					ball: 'ball-canvas',
+					background: 'background-canvas'
+				};
+
+				this.game = new Volley(canvasIds, gameImages, config, {
 					onUpdateInputs: this.updateInputs
 				});
 				this.game.start();

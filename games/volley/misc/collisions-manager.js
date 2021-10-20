@@ -25,10 +25,11 @@ export default class CollisionsManager {
 	 */
 	handleBall() {
 		const ball = this.game.ball;
+		const background = this.game.background;
 
 		//bottom end of scren
-		if (ball.bottom >= ball.canvas.height) {
-			ball.bottom = ball.canvas.height;
+		if (ball.bottom >= background.ground) {
+			ball.bottom = background.ground;
 			ball.dy = ball.dy * -1;
 
 			//apply friction
@@ -62,11 +63,12 @@ export default class CollisionsManager {
 	 */
 	handleBlobs() {
 		const ball = this.game.ball;
+		const background = this.game.background;
 
 		this.game.blobs.forEach((blob) => {
 			//bottom end of scren
-			if (blob.bottom >= blob.canvas.height) {
-				blob.top = blob.canvas.height - blob.height;
+			if (blob.bottom >= background.ground) {
+				blob.bottom = background.ground;
 				blob.jumping = false;
 			}
 

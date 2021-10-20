@@ -24,7 +24,7 @@ export default class Ball extends Entity {
 		this.frictionX = 0.9;
 		this.frictionY = 0.85;
 
-		this.rotationSpeed = 5;
+		this.rotationSpeed = 1.1;
 		this.angle = 0;
 
 		if (!game.isServer) {
@@ -85,8 +85,7 @@ export default class Ball extends Entity {
 		this.y = this.y + (this.dy * this.dt) + (0.5 * this.gravity * this.dt * this.dt);
 
 		//stop moving the ball once it gets too slow (this might not be needed in the final game)
-		if (Math.abs(this.dx) < 2 && Math.abs(this.dy) < 3) {
-			this.dy = 0;
+		if (Math.abs(this.dx) < 0.5) {
 			this.dx = 0;
 		}
 
@@ -102,8 +101,10 @@ export default class Ball extends Entity {
 			return;
 		}
 
-		const speed = this.dx > 0 ? this.rotationSpeed : this.rotationSpeed * -1;
-		this.angle = this.angle + speed;
+		const speed = Math.abs(this.dx) * this.rotationSpeed;
+		const rotation = this.dx > 0 ? speed : speed * -1;
+
+		this.angle = this.angle + rotation;
 	}
 
 	/**

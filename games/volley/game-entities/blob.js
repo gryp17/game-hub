@@ -14,7 +14,7 @@ export default class Blob extends Entity {
 		this.width = this.canvas.width / 10;
 		this.height = this.canvas.height / 4;
 		this.x = 100;
-		this.y = this.canvas.height - this.height;
+		this.y = this.game.background.ground - this.height;
 		this.dx = 0;
 		this.dy = 0;
 
