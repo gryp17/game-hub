@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import Entity from '../../common/entity';
 
 /**
  * Ball class
  */
-export default class Ball {
+export default class Ball extends Entity {
 	/**
 	 * Creates a ball instance
 	 * @param {Object} game
@@ -14,15 +15,8 @@ export default class Ball {
 	 * @param {Number} rotationAcceleration
 	 */
 	constructor(game, size, initialSpeed, acceleration, initialRotationSpeed, rotationAcceleration) {
-		this.context = game.contexts.ball.context;
-		this.canvas = game.contexts.ball.canvas;
+		super(game, game.contexts.ball, size, size);
 
-		this.width = size;
-		this.height = size;
-		this.x = 0;
-		this.y = 0;
-		this.dx = 0;
-		this.dy = 0;
 		this.initialSpeed = initialSpeed;
 		this.acceleration = acceleration;
 		this.initialRotationSpeed = initialRotationSpeed;
@@ -34,7 +28,7 @@ export default class Ball {
 			this.image = game.images.ball;
 		}
 
-		this.center();
+		this.moveToCenter();
 
 		//give the players some time before shooting the ball
 		setTimeout(() => {
@@ -42,6 +36,34 @@ export default class Ball {
 			this.dx = _.sample([this.initialSpeed, this.initialSpeed * -1]);
 			this.dy = _.sample([this.initialSpeed, this.initialSpeed * -1]);
 		}, 2000);
+	}
+
+	/**
+	 * Returns the ball state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			x: this.x,
+			y: this.y,
+			dx: this.dx,
+			dy: this.dy,
+			rotationSpeed: this.rotationSpeed,
+			angle: this.angle
+		};
+	}
+
+	/**
+	 * Sets the ball state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		this.x = state.x;
+		this.y = state.y;
+		this.dx = state.dx;
+		this.dy = state.dy;
+		this.rotationSpeed = state.rotationSpeed;
+		this.angle = state.angle;
 	}
 
 	/**
@@ -58,7 +80,7 @@ export default class Ball {
 	/**
 	 * Puts the ball in the canvas center
 	 */
-	center() {
+	moveToCenter() {
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = (this.canvas.height / 2) - (this.height / 2);
 	}
@@ -67,7 +89,7 @@ export default class Ball {
 	 * Resets the ball to it's initial (center) position and shoots it after a delay
 	 */
 	reset() {
-		this.center();
+		this.moveToCenter();
 
 		//check the current ball direction
 		const directionMultiplier = this.dx > 0 ? 1 : -1;
@@ -112,9 +134,7 @@ export default class Ball {
 	 * Moves the ball
 	 */
 	move() {
-		this.x = this.x + this.dx;
-		this.y = this.y + this.dy;
-
+		super.move();
 		this.rotate();
 	}
 
@@ -148,54 +168,5 @@ export default class Ball {
 
 		//and restore the co-ords to how they were when we began
 		this.context.restore();
-	}
-
-	/**
-	 * Moves and draws the ball
-	 */
-	moveAndDraw() {
-		this.move();
-		this.draw();
-	}
-
-	/**
-	 * Returns the ball hitbox
-	 * @returns {Object}
-	 */
-	getHitbox() {
-		return {
-			x: this.x,
-			y: this.y,
-			width: this.width,
-			height: this.height
-		};
-	}
-
-	/**
-	 * Returns the ball state
-	 * @returns {Object}
-	 */
-	getState() {
-		return {
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy,
-			rotationSpeed: this.rotationSpeed,
-			angle: this.angle
-		};
-	}
-
-	/**
-	 * Sets the ball state
-	 * @param {Object} state
-	 */
-	setState(state) {
-		this.x = state.x;
-		this.y = state.y;
-		this.dx = state.dx;
-		this.dy = state.dy;
-		this.rotationSpeed = state.rotationSpeed;
-		this.angle = state.angle;
 	}
 }

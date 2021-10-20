@@ -150,12 +150,12 @@ export default class Pong {
 	 */
 	onGameStateUpdate() {
 		const paddlesState = this.paddles.map((paddle) => {
-			return paddle.getState();
+			return paddle.state;
 		});
 
 		this.onUpdate({
 			paddles: paddlesState,
-			ball: this.ball.getState(),
+			ball: this.ball.state,
 			scores: this.scores,
 			gameOver: this.gameOver
 		});

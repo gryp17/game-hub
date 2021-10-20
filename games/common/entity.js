@@ -1,4 +1,4 @@
-import Utils from '../../common/utils';
+import Utils from './utils';
 
 /**
  * An abstract Entity class that contains all the common entity logic

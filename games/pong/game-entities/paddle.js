@@ -1,7 +1,9 @@
+import Entity from '../../common/entity';
+
 /**
  * Paddle class
  */
-export default class Paddle {
+export default class Paddle extends Entity {
 	/**
 	 * Creates a new paddle instance
 	 * @param {Object} game
@@ -13,9 +15,7 @@ export default class Paddle {
 	 * @param {Number} playerId
 	 */
 	constructor(game, size, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
-		this.game = game;
-		this.context = game.contexts.game.context;
-		this.canvas = game.contexts.game.canvas;
+		super(game, game.contexts.game);
 
 		this.acceleration = acceleration;
 		this.maxSpeed = maxSpeed;
@@ -25,10 +25,7 @@ export default class Paddle {
 
 		this.width = this.canvas.width / 46;
 		this.height = this.canvas.height * (size / 100);
-		this.x = 0;
-		this.y = 0;
-		this.dx = 0;
-		this.dy = 0;
+
 		this.color = '#ffffff';
 
 		//the second player's paddle should be on the right side of the screen
@@ -40,6 +37,37 @@ export default class Paddle {
 		if (this.controllable) {
 			this.color = '#b47afd';
 		}
+
+		this.moveToCenter();
+	}
+
+	/**
+	 * Returns the paddle's state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			player: this.player,
+			x: this.x,
+			y: this.y,
+			dx: this.dx,
+			dy: this.dy
+		};
+	}
+
+	/**
+	 * Sets the paddle's state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+	}
+
+	/**
+	 * Moves the paddle to the center of the screen
+	 */
+	moveToCenter() {
+		this.y = (this.canvas.height / 2) - (this.height / 2);
 	}
 
 	/**
@@ -52,8 +80,7 @@ export default class Paddle {
 			this.processInputs(inputs);
 		}
 
-		this.x = this.x + this.dx;
-		this.y = this.y + this.dy;
+		super.move();
 	}
 
 	/**
@@ -62,14 +89,6 @@ export default class Paddle {
 	draw() {
 		this.context.fillStyle = this.color;
 		this.context.fillRect(this.x, this.y, this.width, this.height);
-	}
-
-	/**
-	 * Moves and draws the paddle
-	 */
-	moveAndDraw() {
-		this.move();
-		this.draw();
 	}
 
 	/**
@@ -95,43 +114,5 @@ export default class Paddle {
 				this.dy = this.dy + this.acceleration;
 			}
 		}
-	}
-
-	/**
-	 * Returns the paddle hitbox
-	 * @returns {Object}
-	 */
-	getHitbox() {
-		return {
-			x: this.x,
-			y: this.y,
-			width: this.width,
-			height: this.height
-		};
-	}
-
-	/**
-	 * Returns the paddle's state
-	 * @returns {Object}
-	 */
-	getState() {
-		return {
-			player: this.player,
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy
-		};
-	}
-
-	/**
-	 * Sets the paddle's state
-	 * @param {Object} state
-	 */
-	setState(state) {
-		this.x = state.x;
-		this.y = state.y;
-		this.dx = state.dx;
-		this.dy = state.dy;
 	}
 }

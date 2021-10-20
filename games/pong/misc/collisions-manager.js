@@ -26,10 +26,8 @@ export default class CollisionsManager {
 	handlePaddles() {
 		const paddles = this.game.paddles;
 		const ball = this.game.ball;
-		const ballHitbox = ball.getHitbox();
 
 		paddles.forEach((paddle) => {
-			const paddleHitbox = paddle.getHitbox();
 			const player = paddle.player;
 
 			//top end of screen
@@ -45,7 +43,7 @@ export default class CollisionsManager {
 			}
 
 			//paddle collides with ball
-			if (Utils.collidesWith(paddleHitbox, ballHitbox)) {
+			if (Utils.collidesWith(paddle.hitbox, ball.hitbox)) {
 				if (player === 1) {
 					ball.x = paddle.x + paddle.width;
 				} else {

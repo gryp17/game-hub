@@ -118,10 +118,10 @@ export default class Pong {
 	 */
 	updateData({ paddles, ball, scores, gameOver }) {
 		paddles.forEach((paddle, index) => {
-			this.paddles[index].setState(paddle);
+			this.paddles[index].state = paddle;
 		});
 
-		this.ball.setState(ball);
+		this.ball.state = ball;
 
 		this.scores = scores;
 
