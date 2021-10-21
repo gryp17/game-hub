@@ -78,6 +78,63 @@ export default class Utils {
 	}
 
 	/**
+	 * Checks if there is a collision and where exactly the collision between the two objects occurs
+	 * Note that the order of the rules and the order of the parameters (objectA, objectB) is important
+	 * @param {Object} objectA
+	 * @param {Object} objectB
+	 * @returns {String} (top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight, inner) or null if there is no collision
+	 */
+	static getCollisionPoint(objectA, objectB) {
+		if (this.collidesWith(objectA.hitbox, objectB.hitbox)) {
+			//note that the order of the rules and the order of the parameters (objectA, objectB) is important
+
+			//straight top collision
+			if (objectB.center.y < objectA.top && (objectB.center.x >= objectA.left && objectB.center.x <= objectA.right)) {
+				return 'top';
+			}
+
+			//straight bottom collision
+			if (objectB.center.y > objectA.bottom && (objectB.center.x >= objectA.left && objectB.center.x <= objectA.right)) {
+				return 'bottom';
+			}
+
+			//left top corner collision
+			if (objectB.center.y < objectA.top && objectB.center.x < objectA.left) {
+				return 'topLeft';
+			}
+
+			//right top corner collision
+			if (objectB.center.y < objectA.top && objectB.center.x > objectA.left) {
+				return 'topRight';
+			}
+
+			//left bottom corner collision
+			if (objectB.center.y > objectA.bottom && objectB.center.x < objectA.left) {
+				return 'bottomLeft';
+			}
+
+			//right bottom corner collision
+			if (objectB.center.y > objectA.bottom && objectB.center.x > objectA.left) {
+				return 'bottomRight';
+			}
+
+			//left collision
+			if (objectB.center.x < objectA.left && objectB.center.y > objectA.top) {
+				return 'left';
+			}
+
+			//right collision
+			if (objectB.center.x > objectA.right && objectB.center.y > objectA.top) {
+				return 'right';
+			}
+
+			return 'inner';
+		}
+
+		return null;
+	}
+
+	/**
 	 * Private function that calculates the top, right, bottom and left coordinates of the object
 	 * @param {Object} object
 	 * @returns {Object}

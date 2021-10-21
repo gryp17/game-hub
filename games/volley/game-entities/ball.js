@@ -68,8 +68,10 @@ export default class Ball extends Entity {
 	moveToCenter() {
 		// this.x = (this.canvas.width / 2) - (this.width / 2);
 		// this.y = (this.canvas.height / 2) - (this.height / 2);
-		this.x = 200;
-		this.y = 200;
+
+		this.y = 100;
+		this.x = 500;
+		this.dx = 5;
 	}
 
 	/**

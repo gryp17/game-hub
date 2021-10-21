@@ -18,6 +18,7 @@ export default class CollisionsManager {
 	handleCollisions() {
 		this.handleBall();
 		this.handleBlobs();
+		this.handleNet();
 	}
 
 	/**
@@ -83,12 +84,13 @@ export default class CollisionsManager {
 			}
 
 			//collisions with ball
-			if (Utils.collidesWith(blob.hitbox, ball.hitbox)) {
+			const collisionWithBall = Utils.getCollisionPoint(blob, ball);
+			if (collisionWithBall) {
 				// TODO: don't hardcode this
 				const addedForce = 3;
 
 				//straight top collision
-				if (ball.center.y < blob.top && (ball.center.x >= blob.left && ball.center.x <= blob.right)) {
+				if (collisionWithBall === 'top') {
 					ball.top = blob.top - ball.height - blob.dy;
 
 					if (blob.jumping) {
@@ -96,28 +98,22 @@ export default class CollisionsManager {
 					} else {
 						ball.dy = (Math.abs(ball.dy) * ball.frictionY) * -1;
 					}
-
-					return;
 				}
 
 				//left collision
-				if (ball.center.x < blob.left && ball.center.y > blob.top) {
+				if (collisionWithBall === 'left') {
 					ball.right = blob.left;
 					ball.dx = (Math.abs(ball.dx) + Math.abs(blob.dx) + addedForce) * -1;
-
-					return;
 				}
 
 				//right collision
-				if (ball.center.x > blob.right && ball.center.y > blob.top) {
+				if (collisionWithBall === 'right') {
 					ball.left = blob.right;
 					ball.dx = Math.abs(ball.dx) + Math.abs(blob.dx) + addedForce;
-
-					return;
 				}
 
 				//left corner collision
-				if (ball.center.y < blob.top && ball.center.x < blob.left) {
+				if (collisionWithBall === 'topLeft') {
 					ball.top = blob.top - ball.height - blob.dy;
 
 					ball.dx = (Math.abs(ball.dx) + addedForce) * -1;
@@ -127,12 +123,10 @@ export default class CollisionsManager {
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
 					}
-
-					return;
 				}
 
 				//right corner collision
-				if (ball.center.y < blob.top && ball.center.x > blob.left) {
+				if (collisionWithBall === 'topRight') {
 					ball.top = blob.top - ball.height - blob.dy;
 
 					ball.dx = (Math.abs(ball.dx) + addedForce);
@@ -142,6 +136,73 @@ export default class CollisionsManager {
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
 					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Handles all net collisions
+	 */
+	handleNet() {
+		const ball = this.game.ball;
+		const net = this.game.net;
+
+		//collisions with ball
+		const collisionWithBall = Utils.getCollisionPoint(net, ball);
+		if (collisionWithBall) {
+			//straight top collision
+			if (collisionWithBall === 'top') {
+				ball.bottom = net.top;
+				ball.dy = (ball.dy * ball.frictionY) * -1;
+			}
+
+			//left collision
+			if (collisionWithBall === 'left') {
+				ball.right = net.left;
+				ball.dx = ball.dx * -1;
+			}
+
+			//right collision
+			if (collisionWithBall === 'right') {
+				ball.left = net.right;
+				ball.dx = ball.dx * -1;
+			}
+
+			//left corner collision
+			if (collisionWithBall === 'topLeft') {
+				ball.bottom = net.top;
+
+				if (ball.dx > 0) {
+					ball.dx = ball.dx * -1;
+				}
+
+				ball.dy = Math.abs(ball.dy) * -1;
+			}
+
+			//right corner collision
+			if (collisionWithBall === 'topRight') {
+				ball.bottom = net.top;
+
+				if (ball.dx < 0) {
+					ball.dx = ball.dx * -1;
+				}
+
+				ball.dy = Math.abs(ball.dy) * -1;
+			}
+		}
+
+		//collisions with blobs
+		this.game.blobs.forEach((blob) => {
+			const collisionWithBlob = Utils.getCollisionPoint(net, blob);
+
+			if (collisionWithBlob) {
+				if (collisionWithBlob === 'left') {
+					blob.right = net.left;
+				}
+
+				if (collisionWithBlob === 'right') {
+					blob.left = net.right;
 				}
 			}
 		});

@@ -6,6 +6,7 @@ import Touchscreen from '../inputs/touchscreen';
 import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
 import Blob from '../game-entities/blob';
+import Net from '../game-entities/net';
 import CollisionsManager from '../misc/collisions-manager';
 import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
@@ -34,6 +35,7 @@ export default class Volley {
 		this.background;
 		this.ball;
 		this.blobs = [];
+		this.net;
 
 		//events
 		this.onUpdateInputs = onUpdateInputs;
@@ -78,6 +80,8 @@ export default class Volley {
 		this.background = new Background(this);
 
 		this.ball = new Ball(this);
+
+		this.net = new Net(this);
 
 		this.blobs = [
 			new Blob(this)
@@ -151,6 +155,8 @@ export default class Volley {
 		});
 
 		this.background.draw();
+
+		this.net.draw();
 
 		this.blobs.forEach((blob) => {
 			blob.draw();
