@@ -147,4 +147,27 @@ export default class Utils {
 			bottom: object.y + object.height
 		};
 	}
+
+	/**
+	 * Draws the image mirrored horizontally
+	 * @param {Object} context
+	 * @param {Object} image
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} width
+	 * @param {Number} height
+	 */
+	static drawMirroredImage(context, image, x, y, width, height) {
+		context.save();
+
+		context.setTransform(
+			-1, 0,
+			0, 1,
+			x + width,
+			y
+		);
+
+		context.drawImage(image, 0, 0, width, height);
+		context.restore();
+	}
 }

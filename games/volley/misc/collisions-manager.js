@@ -70,7 +70,7 @@ export default class CollisionsManager {
 			//bottom end of scren
 			if (blob.bottom >= background.ground) {
 				blob.bottom = background.ground;
-				blob.jumping = false;
+				blob.stopJumping();
 			}
 
 			//left end of screen
