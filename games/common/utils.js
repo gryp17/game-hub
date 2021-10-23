@@ -149,6 +149,32 @@ export default class Utils {
 	}
 
 	/**
+	 * Draws the image rotated by the specified angle
+	 * @param {Object} context
+	 * @param {Object} image
+	 * @param {Number} angle
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} width
+	 * @param {Number} height
+	 */
+	static drawRotatedImage(context, image, angle, x, y, width, height) {
+		context.save();
+
+		//move to the middle of where we want to draw our image
+		context.translate(x + width / 2, y + height / 2);
+
+		//rotate around that point, converting our angle from degrees to radians
+		context.rotate((angle * Math.PI) / 180);
+
+		//draw it up and to the left by half the width and height of the image
+		context.drawImage(image, -(width / 2), -(height / 2), width, height);
+
+		//and restore the co-ords to how they were when we began
+		context.restore();
+	}
+
+	/**
 	 * Draws the image mirrored horizontally
 	 * @param {Object} context
 	 * @param {Object} image

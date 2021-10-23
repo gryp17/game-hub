@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Entity from '../../common/entity';
+import Utils from '../../common/utils';
 
 /**
  * Ball class
@@ -155,18 +156,6 @@ export default class Ball extends Entity {
 	 * Draws the ball
 	 */
 	draw() {
-		this.context.save();
-
-		//move to the middle of where we want to draw our image
-		this.context.translate(this.x + this.width / 2, this.y + this.height / 2);
-
-		//rotate around that point, converting our angle from degrees to radians
-		this.context.rotate((this.angle * Math.PI) / 180);
-
-		//draw it up and to the left by half the width and height of the image
-		this.context.drawImage(this.image, -(this.width / 2), -(this.height / 2), this.width, this.height);
-
-		//and restore the co-ords to how they were when we began
-		this.context.restore();
+		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
 	}
 }
