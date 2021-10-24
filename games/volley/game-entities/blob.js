@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';
+import Shadow from './shadow';
 
 /**
  * Blob class
@@ -36,6 +37,8 @@ export default class Blob extends Entity {
 		this.jumpingSprite = new Sprite(this.game.images.blob[this.character].jumping, 0, true);
 
 		this.currentImage = this.idleSprite.move();
+
+		this.shadow = new Shadow(game, this);
 	}
 
 	/**
@@ -52,6 +55,8 @@ export default class Blob extends Entity {
 		}
 
 		super.move();
+
+		this.shadow.move();
 	}
 
 	/**
@@ -68,6 +73,8 @@ export default class Blob extends Entity {
 		} else {
 			this.context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
 		}
+
+		this.shadow.draw();
 	}
 
 	/**

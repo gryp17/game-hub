@@ -1,5 +1,6 @@
 import Entity from '../../common/entity';
 import Utils from '../../common/utils';
+import Shadow from './shadow';
 
 /**
  * Ball class
@@ -33,6 +34,8 @@ export default class Ball extends Entity {
 		}
 
 		this.moveToCenter();
+
+		this.shadow = new Shadow(game, this);
 	}
 
 	/**
@@ -70,9 +73,9 @@ export default class Ball extends Entity {
 		// this.x = (this.canvas.width / 2) - (this.width / 2);
 		// this.y = (this.canvas.height / 2) - (this.height / 2);
 
-		this.y = 100;
+		this.y = 80;
 		this.x = 500;
-		this.dx = 5;
+		// this.dx = 5;
 	}
 
 	/**
@@ -93,6 +96,8 @@ export default class Ball extends Entity {
 		}
 
 		this.rotate();
+
+		this.shadow.move();
 	}
 
 	/**
@@ -115,5 +120,7 @@ export default class Ball extends Entity {
 	 */
 	draw() {
 		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
+
+		this.shadow.draw();
 	}
 }
