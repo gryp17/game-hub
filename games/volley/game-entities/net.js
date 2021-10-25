@@ -16,14 +16,13 @@ export default class Net extends Entity {
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = this.game.background.ground - this.height + 5;
 
-		this.color = '#757575';
+		this.currentImage = this.game.images.net;
 	}
 
 	/**
 	 * Draws the net
 	 */
 	draw() {
-		this.context.fillStyle = this.color;
-		this.context.fillRect(this.x, this.y, this.width, this.height);
+		this.context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
 	}
 }
