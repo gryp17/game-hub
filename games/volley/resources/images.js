@@ -6,7 +6,9 @@ export default {
 	background: {
 		beach: 'game-images/volley/background/beach.jpg',
 		city: 'game-images/volley/background/city.jpg',
-		backyard: 'game-images/volley/background/backyard.jpg'
+		backyard: 'game-images/volley/background/backyard.jpg',
+		desert: 'game-images/volley/background/desert.jpg',
+		garden: 'game-images/volley/background/garden.jpg'
 	},
 	dummy: {
 		green: {
