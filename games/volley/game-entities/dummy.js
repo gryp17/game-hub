@@ -5,11 +5,11 @@ import Utils from '../../common/utils';
 import Shadow from './shadow';
 
 /**
- * Blob class
+ * Dummy class
  */
-export default class Blob extends Entity {
+export default class Dummy extends Entity {
 	/**
-	 * Creates a new blob instance
+	 * Creates a new dummy instance
 	 * @param {Object} game
 	 */
 	constructor(game) {
@@ -32,9 +32,9 @@ export default class Blob extends Entity {
 		this.maxJumpHeight = this.canvas.height - (this.height * 2);
 
 		this.character = _.sample(['green', 'yellow']);
-		this.idleSprite = new Sprite(this.game.images.blob[this.character].idle, 7, true);
-		this.movingSprite = new Sprite(this.game.images.blob[this.character].running, 7, true);
-		this.jumpingSprite = new Sprite(this.game.images.blob[this.character].jumping, 0, true);
+		this.idleSprite = new Sprite(this.game.images.dummy[this.character].idle, 7, true);
+		this.movingSprite = new Sprite(this.game.images.dummy[this.character].running, 7, true);
+		this.jumpingSprite = new Sprite(this.game.images.dummy[this.character].jumping, 0, true);
 
 		this.currentImage = this.idleSprite.move();
 
@@ -42,8 +42,8 @@ export default class Blob extends Entity {
 	}
 
 	/**
-	 * Moves the blob
-	 * If the blob is controllable it processes the current inputs state first
+	 * Moves the dummy
+	 * If the dummy is controllable it processes the current inputs state first
 	 */
 	move() {
 		const inputs = this.game.inputs;
@@ -60,7 +60,7 @@ export default class Blob extends Entity {
 	}
 
 	/**
-	 * Draws the blob
+	 * Draws the dummy
 	 */
 	draw() {
 		//update the "currentImage" with the correct sprite image
@@ -97,7 +97,7 @@ export default class Blob extends Entity {
 	}
 
 	/**
-	 * Makes the blob jump
+	 * Makes the dummy jump
 	 */
 	jump() {
 		this.jumping = true;
@@ -105,7 +105,7 @@ export default class Blob extends Entity {
 	}
 
 	/**
-	 * Called when the blob reaches the ground
+	 * Called when the dummy reaches the ground
 	 */
 	stopJumping() {
 		this.jumping = false;
@@ -113,7 +113,7 @@ export default class Blob extends Entity {
 	}
 
 	/**
-	 * Processes the inputs state and moves the blob
+	 * Processes the inputs state and moves the dummy
 	 * @param {Object} inputs
 	 */
 	processInputs(inputs) {

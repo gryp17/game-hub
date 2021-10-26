@@ -5,7 +5,7 @@ import Keyboard from '../inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
-import Blob from '../game-entities/blob';
+import Dummy from '../game-entities/dummy';
 import Net from '../game-entities/net';
 import CollisionsManager from '../misc/collisions-manager';
 import ImageRepository from '../../common/image-repository';
@@ -34,7 +34,7 @@ export default class Volley {
 		this.scores = {};
 		this.background;
 		this.ball;
-		this.blobs = [];
+		this.dummies = [];
 		this.net;
 
 		//events
@@ -83,8 +83,8 @@ export default class Volley {
 
 		this.net = new Net(this);
 
-		this.blobs = [
-			new Blob(this)
+		this.dummies = [
+			new Dummy(this)
 		];
 
 		//listen for the keyboard and touchscreen events
@@ -135,8 +135,8 @@ export default class Volley {
 	gameLoop() {
 		this.inputs = this.getInputs();
 
-		this.blobs.forEach((blob) => {
-			blob.move();
+		this.dummies.forEach((dummy) => {
+			dummy.move();
 		});
 
 		this.ball.move();
@@ -149,7 +149,7 @@ export default class Volley {
 	 * Draws the game entities
 	 */
 	drawGame() {
-		//clear the whole canvas before drawing anything (this used to be in the blob class)
+		//clear the whole canvas before drawing anything (this used to be in the dummy class)
 		_.forOwn(this.contexts, (value, key) => {
 			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
 		});
@@ -158,8 +158,8 @@ export default class Volley {
 
 		this.net.draw();
 
-		this.blobs.forEach((blob) => {
-			blob.draw();
+		this.dummies.forEach((dummy) => {
+			dummy.draw();
 		});
 
 		this.ball.draw();

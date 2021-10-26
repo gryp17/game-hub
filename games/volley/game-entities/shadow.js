@@ -18,7 +18,7 @@ export default class Shadow extends Entity {
 
 		this.width = this.source.width;
 		this.height = this.defaultHeight;
-		this.x = 0;
+		this.x = this.source.x;
 		this.y = this.game.background.ground - (this.height / 2);
 
 		this.distanceMultiplier = 0.03;

@@ -17,7 +17,7 @@ export default class CollisionsManager {
 	 */
 	handleCollisions() {
 		this.handleBall();
-		this.handleBlobs();
+		this.handleDummies();
 		this.handleNet();
 	}
 
@@ -60,41 +60,41 @@ export default class CollisionsManager {
 	}
 
 	/**
-	 * Handles all blobs collisions
+	 * Handles all dummies collisions
 	 */
-	handleBlobs() {
+	handleDummies() {
 		const ball = this.game.ball;
 		const background = this.game.background;
 
-		this.game.blobs.forEach((blob) => {
+		this.game.dummies.forEach((dummy) => {
 			//bottom end of scren
-			if (blob.bottom >= background.ground) {
-				blob.bottom = background.ground;
-				blob.stopJumping();
+			if (dummy.bottom >= background.ground) {
+				dummy.bottom = background.ground;
+				dummy.stopJumping();
 			}
 
 			//left end of screen
-			if (blob.left < 0) {
-				blob.left = 0;
+			if (dummy.left < 0) {
+				dummy.left = 0;
 			}
 
 			//right end of screen
-			if (blob.right >= blob.canvas.width) {
-				blob.right = blob.canvas.width;
+			if (dummy.right >= dummy.canvas.width) {
+				dummy.right = dummy.canvas.width;
 			}
 
 			//collisions with ball
-			const collisionWithBall = Utils.getCollisionPoint(blob, ball);
+			const collisionWithBall = Utils.getCollisionPoint(dummy, ball);
 			if (collisionWithBall) {
 				// TODO: don't hardcode this
 				const addedForce = 3;
 
 				//straight top collision
 				if (collisionWithBall === 'top') {
-					ball.top = blob.top - ball.height - blob.dy;
+					ball.top = dummy.top - ball.height - dummy.dy;
 
-					if (blob.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(blob.dy) + addedForce) * -1;
+					if (dummy.jumping) {
+						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
 					} else {
 						ball.dy = (Math.abs(ball.dy) * ball.frictionY) * -1;
 					}
@@ -102,24 +102,24 @@ export default class CollisionsManager {
 
 				//left collision
 				if (collisionWithBall === 'left') {
-					ball.right = blob.left;
-					ball.dx = (Math.abs(ball.dx) + Math.abs(blob.dx) + addedForce) * -1;
+					ball.right = dummy.left;
+					ball.dx = (Math.abs(ball.dx) + Math.abs(dummy.dx) + addedForce) * -1;
 				}
 
 				//right collision
 				if (collisionWithBall === 'right') {
-					ball.left = blob.right;
-					ball.dx = Math.abs(ball.dx) + Math.abs(blob.dx) + addedForce;
+					ball.left = dummy.right;
+					ball.dx = Math.abs(ball.dx) + Math.abs(dummy.dx) + addedForce;
 				}
 
 				//left corner collision
 				if (collisionWithBall === 'topLeft') {
-					ball.top = blob.top - ball.height - blob.dy;
+					ball.top = dummy.top - ball.height - dummy.dy;
 
 					ball.dx = (Math.abs(ball.dx) + addedForce) * -1;
 
-					if (blob.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(blob.dy) + addedForce) * -1;
+					if (dummy.jumping) {
+						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
 					}
@@ -127,12 +127,12 @@ export default class CollisionsManager {
 
 				//right corner collision
 				if (collisionWithBall === 'topRight') {
-					ball.top = blob.top - ball.height - blob.dy;
+					ball.top = dummy.top - ball.height - dummy.dy;
 
 					ball.dx = (Math.abs(ball.dx) + addedForce);
 
-					if (blob.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(blob.dy) + addedForce) * -1;
+					if (dummy.jumping) {
+						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
 					}
@@ -192,17 +192,17 @@ export default class CollisionsManager {
 			}
 		}
 
-		//collisions with blobs
-		this.game.blobs.forEach((blob) => {
-			const collisionWithBlob = Utils.getCollisionPoint(net, blob);
+		//collisions with dummies
+		this.game.dummies.forEach((dummy) => {
+			const collisionWithDummy = Utils.getCollisionPoint(net, dummy);
 
-			if (collisionWithBlob) {
-				if (collisionWithBlob === 'left') {
-					blob.right = net.left;
+			if (collisionWithDummy) {
+				if (collisionWithDummy === 'left') {
+					dummy.right = net.left;
 				}
 
-				if (collisionWithBlob === 'right') {
-					blob.left = net.right;
+				if (collisionWithDummy === 'right') {
+					dummy.left = net.right;
 				}
 			}
 		});
