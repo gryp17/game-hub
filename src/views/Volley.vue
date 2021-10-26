@@ -47,6 +47,9 @@
 					width: 1366,
 					height: 768,
 					groundHeight: 15,
+					dummy: {
+						strength: 3
+					},
 					controls: {
 						up: {
 							keys: [38, 87] //arrow up, W

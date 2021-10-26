@@ -86,8 +86,7 @@ export default class CollisionsManager {
 			//collisions with ball
 			const collisionWithBall = Utils.getCollisionPoint(dummy, ball);
 			if (collisionWithBall) {
-				// TODO: don't hardcode this
-				const addedForce = 3;
+				const addedForce = dummy.strength;
 
 				//straight top collision
 				if (collisionWithBall === 'top') {
