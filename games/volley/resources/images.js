@@ -1,9 +1,13 @@
 export default {
 	ballWhite: 'game-images/volley/ball-white.png',
 	ballYellow: 'game-images/volley/ball-yellow.png',
-	background: 'game-images/volley/background.jpg',
 	net: 'game-images/volley/net.png',
 	shadow: 'game-images/volley/shadow.png',
+	background: {
+		beach: 'game-images/volley/background/beach.jpg',
+		city: 'game-images/volley/background/city.jpg',
+		backyard: 'game-images/volley/background/backyard.jpg'
+	},
 	dummy: {
 		green: {
 			running: [
