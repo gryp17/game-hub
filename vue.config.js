@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -23,12 +22,7 @@ module.exports = {
 					to: './game-images/volley'
 				}
 			])
-		],
-		resolve: {
-			alias: {
-				'@pong': path.resolve(__dirname, 'games/pong')
-			}
-		}
+		]
 	},
 	//change the app/html title
 	chainWebpack: (config) => {
