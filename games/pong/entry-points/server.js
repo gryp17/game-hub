@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
-import CollisionsManager from '../misc/collisions-manager';
 
 /**
  * Pong server class
@@ -62,9 +61,6 @@ export default class Pong {
 				}
 			}
 		};
-
-		//initialize the collisions manager
-		this.collisionsManager = new CollisionsManager(this);
 	}
 
 	/**
@@ -184,9 +180,6 @@ export default class Pong {
 				paddle.move();
 			});
 			this.ball.move();
-
-			//handle all game collisions
-			this.collisionsManager.handleCollisions();
 
 			this.onGameStateUpdate();
 		}, 1000 / this.config.fps);

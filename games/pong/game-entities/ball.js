@@ -137,6 +137,7 @@ export default class Ball extends Entity {
 	move() {
 		super.move();
 		this.rotate();
+		this.handleCollisions();
 	}
 
 	/**
@@ -157,5 +158,62 @@ export default class Ball extends Entity {
 	 */
 	draw() {
 		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
+	}
+
+	/**
+	 * Handles all ball collisions
+	 */
+	handleCollisions() {
+		const paddles = this.game.paddles;
+
+		//top end of screen
+		if (this.top < 0) {
+			this.top = 0;
+			this.dy = this.dy * -1;
+		}
+
+		//bottom end of scren
+		if (this.bottom > this.canvas.height) {
+			this.bottom = this.canvas.height;
+			this.dy = this.dy * -1;
+		}
+
+		//left end of screen
+		if (this.left < 0) {
+			this.left = 0;
+			this.dx = this.dx * -1;
+
+			if (this.game.isServer) {
+				this.game.onPlayerScore(2);
+			}
+		}
+
+		//right end of screen
+		if (this.right > this.canvas.width) {
+			this.right = this.canvas.width;
+			this.dx = this.dx * -1;
+
+			if (this.game.isServer) {
+				this.game.onPlayerScore(1);
+			}
+		}
+
+		//ball collides with paddle
+		paddles.forEach((paddle) => {
+			const player = paddle.player;
+
+			if (Utils.collidesWith(paddle.hitbox, this.hitbox)) {
+				if (player === 1) {
+					this.left = paddle.right;
+				} else {
+					this.right = paddle.left;
+				}
+
+				this.dx = this.dx * -1;
+
+				//speed up the ball and use the paddle acceleration to calculate the ball's vertical acceleration
+				this.speedUp(paddle.dy);
+			}
+		});
 	}
 }

@@ -81,6 +81,7 @@ export default class Paddle extends Entity {
 		}
 
 		super.move();
+		this.handleCollisions();
 	}
 
 	/**
@@ -113,6 +114,23 @@ export default class Paddle extends Entity {
 			if (this.dy < this.maxSpeed) {
 				this.dy = this.dy + this.acceleration;
 			}
+		}
+	}
+
+	/**
+	 * Handles all paddle collisions
+	 */
+	handleCollisions() {
+		//top end of screen
+		if (this.top < 0) {
+			this.top = 0;
+			this.dy = 0;
+		}
+
+		//bottom end of screen
+		if (this.bottom > this.canvas.height) {
+			this.bottom = this.canvas.height;
+			this.dy = 0;
 		}
 	}
 }
