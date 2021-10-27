@@ -7,7 +7,6 @@ import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
 import Dummy from '../game-entities/dummy';
 import Net from '../game-entities/net';
-import CollisionsManager from '../misc/collisions-manager';
 import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
 
@@ -53,8 +52,6 @@ export default class Volley {
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
 		this.touchscreen = new Touchscreen(this.gameControls, this.contexts.game.canvas);
-
-		this.collisionsManager = new CollisionsManager(this);
 	}
 
 	/**
@@ -140,9 +137,6 @@ export default class Volley {
 		});
 
 		this.ball.move();
-
-		//handle all game collisions
-		this.collisionsManager.handleCollisions();
 	}
 
 	/**

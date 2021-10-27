@@ -60,6 +60,8 @@ export default class Dummy extends Entity {
 
 		super.move();
 
+		this.handleCollisions();
+
 		this.shadow.move();
 	}
 
@@ -148,6 +150,42 @@ export default class Dummy extends Entity {
 
 			if (this.dx < this.maxSpeed) {
 				this.dx = this.dx + this.acceleration;
+			}
+		}
+	}
+
+	/**
+	 * Handles all dummy collisions
+	 */
+	handleCollisions() {
+		const background = this.game.background;
+		const net = this.game.net;
+
+		//bottom end of scren
+		if (this.bottom >= background.ground) {
+			this.bottom = background.ground;
+			this.stopJumping();
+		}
+
+		//left end of screen
+		if (this.left < 0) {
+			this.left = 0;
+		}
+
+		//right end of screen
+		if (this.right >= this.canvas.width) {
+			this.right = this.canvas.width;
+		}
+
+		//collisions with net
+		const collisionWithNet = Utils.getCollisionPoint(net, this);
+		if (collisionWithNet) {
+			if (collisionWithNet === 'left') {
+				this.right = net.left;
+			}
+
+			if (collisionWithNet === 'right') {
+				this.left = net.right;
 			}
 		}
 	}

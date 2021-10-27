@@ -176,4 +176,11 @@ export default class Entity {
 	processInputs(inputs) {
 		throw new Error('Method "processInputs()" must be implemented.');
 	}
+
+	/**
+	 * Handles the object collisions
+	 */
+	handleCollisions() {
+		throw new Error('Method "handleCollisions()" must be implemented.');
+	}
 }
