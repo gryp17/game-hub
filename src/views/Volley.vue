@@ -1,5 +1,10 @@
 <template>
 	<div class="volley-page">
+		<LoadingIndicator
+			v-if="loading"
+			full-screen
+		/>
+
 		<canvas id="game-canvas" class="canvas" tabindex="1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
@@ -9,9 +14,13 @@
 </template>
 
 <script>
+	import LoadingIndicator from '@/components/LoadingIndicator';
 	import Volley from '../../games/volley/entry-points/client';
 
 	export default {
+		components: {
+			LoadingIndicator
+		},
 		data() {
 			return {
 				socket: null,
@@ -77,6 +86,8 @@
 				this.game = new Volley(canvasIds, gameImages, config, {
 					onUpdateInputs: this.updateInputs
 				});
+
+				this.loading = false;
 				this.game.start();
 			}
 		}
