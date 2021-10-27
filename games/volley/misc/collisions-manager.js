@@ -86,14 +86,16 @@ export default class CollisionsManager {
 			//collisions with ball
 			const collisionWithBall = Utils.getCollisionPoint(dummy, ball);
 			if (collisionWithBall) {
-				const addedForce = dummy.strength;
+				const addedForce = dummy.minForce;
+				const verticalForceWhenJumping = dummy.verticalForce * -1;
+				const horizontalForceWhenJumping = dummy.horizontalForce;
 
 				//straight top collision
 				if (collisionWithBall === 'top') {
 					ball.top = dummy.top - ball.height - dummy.dy;
 
 					if (dummy.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
+						ball.dy = verticalForceWhenJumping;
 					} else {
 						ball.dy = (Math.abs(ball.dy) * ball.frictionY) * -1;
 					}
@@ -115,12 +117,12 @@ export default class CollisionsManager {
 				if (collisionWithBall === 'topLeft') {
 					ball.top = dummy.top - ball.height - dummy.dy;
 
-					ball.dx = (Math.abs(ball.dx) + addedForce) * -1;
-
 					if (dummy.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
+						ball.dy = verticalForceWhenJumping;
+						ball.dx = horizontalForceWhenJumping * -1;
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
+						ball.dx = (Math.abs(ball.dx) + addedForce) * -1;
 					}
 				}
 
@@ -128,12 +130,12 @@ export default class CollisionsManager {
 				if (collisionWithBall === 'topRight') {
 					ball.top = dummy.top - ball.height - dummy.dy;
 
-					ball.dx = (Math.abs(ball.dx) + addedForce);
-
 					if (dummy.jumping) {
-						ball.dy = (Math.abs(ball.dy) + Math.abs(dummy.dy) + addedForce) * -1;
+						ball.dy = verticalForceWhenJumping;
+						ball.dx = horizontalForceWhenJumping;
 					} else {
 						ball.dy = (Math.abs(ball.dy)) * -1;
+						ball.dx = (Math.abs(ball.dx) + addedForce);
 					}
 				}
 			}

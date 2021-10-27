@@ -84,7 +84,7 @@ export default class Volley {
 		this.net = new Net(this);
 
 		this.dummies = [
-			new Dummy(this, this.config.dummy.strength)
+			new Dummy(this, this.config.dummy.minForce, this.config.dummy.verticalForce, this.config.dummy.horizontalForce)
 		];
 
 		//listen for the keyboard and touchscreen events

@@ -13,7 +13,7 @@ export default class Dummy extends Entity {
 	 * @param {Object} game
 	 * @param {Number} strength
 	 */
-	constructor(game, strength) {
+	constructor(game, minForce, verticalForce, horizontalForce) {
 		super(game, game.contexts.game);
 
 		this.width = this.canvas.width / 12;
@@ -23,7 +23,9 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = 0;
 
-		this.strength = strength;
+		this.minForce = minForce;
+		this.verticalForce = verticalForce;
+		this.horizontalForce = horizontalForce;
 		this.maxSpeed = 10;
 		this.acceleration = 2;
 		this.jumpAcceleration = 12;

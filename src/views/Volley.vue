@@ -48,7 +48,9 @@
 					height: 768,
 					groundHeight: 15,
 					dummy: {
-						strength: 3
+						minForce: 3,
+						verticalForce: 150,
+						horizontalForce: 10
 					},
 					controls: {
 						up: {
