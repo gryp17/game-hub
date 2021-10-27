@@ -23,7 +23,7 @@ export default class Shadow extends Entity {
 
 		this.distanceMultiplier = 0.03;
 
-		this.currentImage = this.game.images.shadow;
+		this.image = this.game.images.shadow;
 	}
 
 	/**
@@ -49,6 +49,6 @@ export default class Shadow extends Entity {
 	 * Draws the shadow
 	 */
 	draw() {
-		this.context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+		this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
 	}
 }

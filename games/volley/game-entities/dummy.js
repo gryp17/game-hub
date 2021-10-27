@@ -40,7 +40,7 @@ export default class Dummy extends Entity {
 		this.movingSprite = new Sprite(this.game.images.dummy[this.character].running, 7, true);
 		this.jumpingSprite = new Sprite(this.game.images.dummy[this.character].jumping, 0, true);
 
-		this.currentImage = this.idleSprite.move();
+		this.image = this.idleSprite.move();
 
 		this.shadow = new Shadow(game, this);
 	}
@@ -67,36 +67,36 @@ export default class Dummy extends Entity {
 	 * Draws the dummy
 	 */
 	draw() {
-		//update the "currentImage" with the correct sprite image
+		//update the image with the correct sprite image
 		this.updateSprite();
 
 		//when moving left
 		if (this.facingDirection === 'left') {
 			//flip the image horizontally when walking left
-			Utils.drawMirroredImage(this.context, this.currentImage, this.x, this.y, this.width, this.height);
+			Utils.drawMirroredImage(this.context, this.image, this.x, this.y, this.width, this.height);
 		} else {
-			this.context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+			this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
 		}
 
 		this.shadow.draw();
 	}
 
 	/**
-	 * Updates the "currentImage" with the correct sprite image
+	 * Updates the image property with the correct sprite image
 	 */
 	updateSprite() {
 		if (this.jumping) {
 			if (this.dy < 0) {
 				//jumping up image
-				this.currentImage = this.jumpingSprite.moveTo(0);
+				this.image = this.jumpingSprite.moveTo(0);
 			} else {
 				//falling down image
-				this.currentImage = this.jumpingSprite.moveTo(1);
+				this.image = this.jumpingSprite.moveTo(1);
 			}
 		} else if (this.dx !== 0) {
-			this.currentImage = this.movingSprite.move();
+			this.image = this.movingSprite.move();
 		} else {
-			this.currentImage = this.idleSprite.move();
+			this.image = this.idleSprite.move();
 		}
 	}
 
