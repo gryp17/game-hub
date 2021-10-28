@@ -22,7 +22,7 @@ export default class Pong {
 	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(canvas, images, config, player, { onUpdateInputs }) {
+	constructor(canvas, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.player = player;
@@ -35,6 +35,8 @@ export default class Pong {
 
 		//events
 		this.onUpdateInputs = onUpdateInputs;
+		this.playMusic = playMusic;
+		this.playTrack = playTrack;
 
 		this.gameControls = config.controls;
 
@@ -96,6 +98,8 @@ export default class Pong {
 		window.requestAnimFrame(() => {
 			this.drawGame();
 		});
+
+		this.playMusic();
 	}
 
 	/**

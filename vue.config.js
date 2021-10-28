@@ -21,7 +21,15 @@ module.exports = {
 					from: './games/volley/img',
 					to: './game-images/volley'
 				}
-			])
+			]),
+			//mp3 files loader
+			new webpack.LoaderOptionsPlugin({
+				test: /\.mp3$/,
+				loader: 'file-loader',
+				options: {
+					name: '[path][name].[ext]'
+				}
+			})
 		]
 	},
 	//change the app/html title

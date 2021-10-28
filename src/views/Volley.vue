@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import AudioPlayer from '@/services/audio-player';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import Volley from '../../games/volley/entry-points/client';
 
@@ -44,6 +45,10 @@
 			if (this.game) {
 				this.game.stop();
 			}
+
+			AudioPlayer.stopMusic();
+
+			// TODO: disconnect from sockets
 		},
 		methods: {
 			/**
@@ -84,7 +89,9 @@
 				};
 
 				this.game = new Volley(canvasIds, gameImages, config, {
-					onUpdateInputs: this.updateInputs
+					onUpdateInputs: this.updateInputs,
+					playMusic: AudioPlayer.playMusic,
+					playTrack: AudioPlayer.playTrack
 				});
 
 				this.loading = false;

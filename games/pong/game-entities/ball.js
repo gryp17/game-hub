@@ -161,6 +161,15 @@ export default class Ball extends Entity {
 	}
 
 	/**
+	 * Plays the hit sound effect
+	 */
+	playHitSound() {
+		if (!this.game.isServer) {
+			this.game.playTrack('hit');
+		}
+	}
+
+	/**
 	 * Handles all ball collisions
 	 */
 	handleCollisions() {
@@ -213,6 +222,8 @@ export default class Ball extends Entity {
 
 				//speed up the ball and use the paddle acceleration to calculate the ball's vertical acceleration
 				this.speedUp(paddle.dy);
+
+				this.playHitSound();
 			}
 		});
 	}

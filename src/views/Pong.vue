@@ -34,6 +34,7 @@
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import GameOverModal from '@/components/modals/GameOverModal';
+	import AudioPlayer from '@/services/audio-player';
 
 	import config from '@/config';
 	import { showGameOverModal } from '@/services/modal';
@@ -67,6 +68,9 @@
 			if (this.game) {
 				this.game.stop();
 			}
+
+			AudioPlayer.stopMusic();
+
 			this.disconnectFromSocket();
 		},
 		computed: {
@@ -113,7 +117,9 @@
 					};
 
 					this.game = new Pong(canvasIds, gameImages, config, player, {
-						onUpdateInputs: this.updateInputs
+						onUpdateInputs: this.updateInputs,
+						playMusic: AudioPlayer.playMusic,
+						playTrack: AudioPlayer.playTrack
 					});
 
 					this.loading = false;

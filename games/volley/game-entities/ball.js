@@ -127,6 +127,15 @@ export default class Ball extends Entity {
 	}
 
 	/**
+	 * Plays the hit sound effect
+	 */
+	playHitSound() {
+		if (!this.game.isServer) {
+			this.game.playTrack('hit');
+		}
+	}
+
+	/**
 	 * Handles all ball collisions
 	 */
 	handleCollisions() {
@@ -220,6 +229,8 @@ export default class Ball extends Entity {
 						this.dx = (Math.abs(this.dx) + addedForce);
 					}
 				}
+
+				this.playHitSound();
 			}
 		});
 
@@ -265,6 +276,8 @@ export default class Ball extends Entity {
 
 				this.dy = Math.abs(this.dy) * -1;
 			}
+
+			this.playHitSound();
 		}
 	}
 }

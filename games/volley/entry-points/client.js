@@ -23,7 +23,7 @@ export default class Volley {
 	 * @param {Object} config
 	 * @param {Object} events
 	 */
-	constructor(canvas, images, config, { onUpdateInputs }) {
+	constructor(canvas, images, config, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
 		this.config = config;
 		this.gameLoopInterval;
@@ -38,6 +38,8 @@ export default class Volley {
 
 		//events
 		this.onUpdateInputs = onUpdateInputs;
+		this.playMusic = playMusic;
+		this.playTrack = playTrack;
 
 		this.gameControls = config.controls;
 
@@ -95,6 +97,8 @@ export default class Volley {
 		window.requestAnimFrame(() => {
 			this.drawGame();
 		});
+
+		this.playMusic();
 	}
 
 	/**
