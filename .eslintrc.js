@@ -57,6 +57,7 @@ module.exports = {
 		'no-unused-expressions': 0,
 		'class-methods-use-this': 0,
 		'no-useless-constructor': 0,
+		'no-lonely-if': 0,
 		indent: ['error', 'tab', { SwitchCase: 1 }],
 		'vue/html-indent': ['error', 'tab'],
 		'vue/script-indent': ['error', 'tab', {

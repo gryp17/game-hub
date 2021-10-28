@@ -6,11 +6,11 @@ import InputDevice from './input-device';
 export default class Keyboard extends InputDevice {
 	/**
 	 * Creates a new Keyboard instance
-	 * @param {Object} inputs
+	 * @param {Object} controls
  	 * @param {Object} canvas
 	 */
-	constructor(inputs, canvas) {
-		super(inputs, canvas);
+	constructor(controls, canvas) {
+		super(controls, canvas);
 	}
 
 	/**
@@ -29,9 +29,9 @@ export default class Keyboard extends InputDevice {
 	 * @param {Object} e
 	 */
 	onKeyDown(e) {
-		_.forOwn(this.inputs, (data, key) => {
+		_.forOwn(this.controls, (data, key) => {
 			if (_.includes(data.keys, e.which)) {
-				data.status = true;
+				this.inputs[key] = true;
 			}
 		});
 	}
@@ -41,9 +41,9 @@ export default class Keyboard extends InputDevice {
 	 * @param {Object} e
 	 */
 	onKeyUp(e) {
-		_.forOwn(this.inputs, (data, key) => {
+		_.forOwn(this.controls, (data, key) => {
 			if (_.includes(data.keys, e.which)) {
-				data.status = false;
+				this.inputs[key] = false;
 			}
 		});
 	}

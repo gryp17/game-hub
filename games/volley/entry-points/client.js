@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Utils from '../../common/utils';
 import Context from '../../common/context';
-import Keyboard from '../inputs/keyboard';
+import Keyboard from '../../common/inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
@@ -115,12 +115,16 @@ export default class Volley {
 	getInputs() {
 		const result = {};
 
+		// TODO: implement this
+		const controllableDummy = this.dummies[0];
+
 		//get both types of inputs
 		const keyboardInputs = this.keyboard.getInputs();
+		const touchscreenInputs = this.touchscreen.getInputs(controllableDummy);
 
 		//and merge them
 		_.forOwn(this.gameControls, (data, key) => {
-			result[key] = keyboardInputs[key];
+			result[key] = keyboardInputs[key] || touchscreenInputs[key];
 		});
 
 		return result;

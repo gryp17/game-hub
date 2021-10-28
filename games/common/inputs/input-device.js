@@ -4,15 +4,22 @@
 export default class InputDevice {
 	/**
 	 * Creates a new InputDevice instance
-	 * @param {Object} inputs
+	 * @param {Object} controlls
 	 * @param {Object} canvas
 	 */
-	constructor(inputs, canvas) {
+	constructor(controls, canvas) {
 		if (this.constructor === InputDevice) {
 			throw new Error('Abstract class "InputDevice" can not be instantiated');
 		}
 
-		this.inputs = inputs;
+		this.controls = controls;
+		this.inputs = {};
+
+		//set all inputs to false by default
+		_.forOwn(this.controls, (data, key) => {
+			this.inputs[key] = data.status || false;
+		});
+
 		this.canvas = $(canvas);
 		this.listeners = {};
 	}
@@ -50,13 +57,7 @@ export default class InputDevice {
 	 * @returns {Object}
 	 */
 	getInputs() {
-		const result = {};
-
-		_.forOwn(this.inputs, (data, key) => {
-			result[key] = data.status || false;
-		});
-
-		return result;
+		return this.inputs;
 	}
 
 	/**

@@ -1,138 +1,44 @@
-import InputDevice from './input-device';
+import TouchscreenBase from '../../common/inputs/touchscreen';
 
 /**
  * Touchscreen class that handles all touchscreen inputs
  */
-export default class Touchscreen extends InputDevice {
-	/**
-	 * Creates a new Touchscreen instance
-	 * @param {Object} inputs
-	 * @param {Object} canvas
-	 */
-	constructor(inputs, canvas) {
-		super(inputs, canvas);
-
-		this.mousedown = false;
-		this.touchPosition;
-	}
-
+export default class Touchscreen extends TouchscreenBase {
 	/**
 	 * Returns all input statuses
 	 * @returns {Object}
 	 */
-	getInputs(paddle) {
-		const result = {};
+	getInputs(dummy) {
+		//set all inputs to false by default
+		_.forOwn(this.controls, (data, key) => {
+			this.inputs[key] = false;
+		});
 
 		if (this.touchPosition) {
-			//use the paddle and touch positions to figure out when to stop moving up or down
-			const paddlePosition = (paddle.y + (paddle.height / 2));
-			const difference = Math.abs(this.touchPosition - paddlePosition);
+			//use the dummy and touch positions to figure out when to stop moving
+			const dummyPosition = dummy.center.x;
+			const target = this.touchPosition.x;
+			const horizontalDifference = Math.abs(target - dummyPosition);
+			const isSwipingUp = this.touchPosition.y < (dummy.top - dummy.height);
 
-			//target reached
-			if (difference < 20) {
-				this.inputs.down.status = false;
-				this.inputs.up.status = false;
+			//go up
+			if (isSwipingUp) {
+				this.inputs.up = true;
 				this.touchPosition = null;
-			} else if (this.touchPosition > paddlePosition) {
-				//go down
-				this.inputs.down.status = true;
-				this.inputs.up.status = false;
 			} else {
-				//go up
-				this.inputs.down.status = false;
-				this.inputs.up.status = true;
+				//horizontal movement target reached
+				if (horizontalDifference < 20) {
+					this.touchPosition = null;
+				} else if (target > dummyPosition) {
+					//go right
+					this.inputs.right = true;
+				} else {
+					//go left
+					this.inputs.left = true;
+				}
 			}
 		}
 
-		_.forOwn(this.inputs, (data, key) => {
-			result[key] = data.status || false;
-		});
-
-		return result;
-	}
-
-	/**
-	 *  Registers the touchscreen event listeners
-	 */
-	listen() {
-		//touchstart
-		this.addEventListener('touchstart', this.onTouchStart);
-
-		//touchmove
-		this.addEventListener('touchmove', this.onTouchMove);
-
-		//mousedown
-		this.addEventListener('mousedown', this.onMouseDown);
-
-		//mouseup
-		this.addEventListener('mouseup', this.onMouseUp);
-
-		//mousemove
-		this.addEventListener('mousemove', this.onMouseMove);
-	}
-
-	/**
-	 * Calculates the relative (game) touch position using the absolute (client/screen) one by using the game height and the actual/client canvas height
-	 * This is needed because the game has a fixed width/height (1000/768) while the actual browser page size might be different
-	 * @param {Number} touchY
-	 * @returns {Number}
-	 */
-	calculateTouchPosition(touchY) {
-		const gameHeight = this.canvas.attr('height');
-		const clientHeight = this.canvas.innerHeight();
-
-		//figure out where is the point/percentage where the touch event has occured on the screen and calculate it's game position
-		const percentage = (touchY / clientHeight) * 100;
-		const relativeTouchY = (percentage * gameHeight) / 100;
-
-		return relativeTouchY;
-	}
-
-	/**
-	 * Touchstart event handler
-	 * @param {Object} e
-	 */
-	onTouchStart(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
-	}
-
-	/**
-	 * Touchmove event handler
-	 * @param {Object} e
-	 */
-	onTouchMove(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientY);
-	}
-
-	/**
-	 * Mousedown event handler
-	 * @param {Object} e
-	 */
-	onMouseDown(e) {
-		this.mousedown = true;
-		this.touchPosition = e.clientY;
-	}
-
-	/**
-	 * Mouseup event handler
-	 * @param {Object} e
-	 */
-	onMouseUp(e) {
-		this.mousedown = false;
-		this.touchPosition = e.clientY;
-	}
-
-	/**
-	 * Mousemove event handler
-	 * @param {Object} e
-	 */
-	onMouseMove(e) {
-		if (this.mousedown) {
-			this.touchPosition = e.clientY;
-		}
+		return this.inputs;
 	}
 }
