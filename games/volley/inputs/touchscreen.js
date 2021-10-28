@@ -19,7 +19,7 @@ export default class Touchscreen extends TouchscreenBase {
 			const dummyPosition = dummy.center.x;
 			const target = this.touchPosition.x;
 			const horizontalDifference = Math.abs(target - dummyPosition);
-			const isSwipingUp = this.touchPosition.y < (dummy.top - dummy.height);
+			const isSwipingUp = this.touchPosition.y < (dummy.top - dummy.height / 2);
 
 			//go up
 			if (isSwipingUp) {
