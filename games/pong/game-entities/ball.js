@@ -165,7 +165,7 @@ export default class Ball extends Entity {
 	 */
 	playHitSound() {
 		if (!this.game.isServer) {
-			this.game.playTrack('hit');
+			this.game.playTrack('pongHit');
 		}
 	}
 
