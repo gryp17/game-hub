@@ -87,6 +87,7 @@
 		hideChallengeSettingsModal,
 		hideMatchmakingPendingModal
 	} from '@/services/modal';
+	import AudioPlayer from '@/services/audio-player';
 	import config from '@/config';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import UsersList from '@/components/users-list/UsersList';
@@ -256,6 +257,8 @@
 				});
 
 				this.socket.on(this.socketEvents.lobby.challenge, ({ user, game, settings }) => {
+					AudioPlayer.playTrack('challenge');
+
 					showChallengeModal({
 						user,
 						game,
@@ -272,6 +275,8 @@
 				});
 
 				this.socket.on(this.socketEvents.lobby.foundMatch, (game) => {
+					AudioPlayer.playTrack('challenge');
+
 					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);
 
