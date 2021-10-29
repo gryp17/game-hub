@@ -1,6 +1,7 @@
 import challenge from '@/assets/audio/challenge.mp3';
 import pongHit from '@/assets/audio/pong-hit.mp3';
 import volleyHit from '@/assets/audio/volley-hit.mp3';
+import whistle from '@/assets/audio/whistle.mp3';
 import mop from '@/assets/audio/music/mop.mp3';
 import hysteria from '@/assets/audio/music/hysteria.mp3';
 import bliss from '@/assets/audio/music/bliss.mp3';
@@ -11,7 +12,8 @@ import uprising from '@/assets/audio/music/uprising.mp3';
 const tracks = {
 	challenge,
 	pongHit,
-	volleyHit
+	volleyHit,
+	whistle
 };
 
 //background music tracks
