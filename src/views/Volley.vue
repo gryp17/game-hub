@@ -89,9 +89,9 @@
 				};
 
 				this.game = new Volley(canvasIds, gameImages, config, {
-					onUpdateInputs: this.updateInputs,
+					onUpdateInputs: () => {},
 					playMusic: AudioPlayer.playMusic,
-					playTrack: AudioPlayer.playTrack
+					playTrack: AudioPlayer.throttledPlayTrack
 				});
 
 				this.loading = false;

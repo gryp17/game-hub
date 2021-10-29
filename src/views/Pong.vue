@@ -119,7 +119,7 @@
 					this.game = new Pong(canvasIds, gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: AudioPlayer.playMusic,
-						playTrack: AudioPlayer.playTrack
+						playTrack: AudioPlayer.throttledPlayTrack
 					});
 
 					this.loading = false;

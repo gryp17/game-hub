@@ -36,6 +36,11 @@ function playTrack(track) {
 }
 
 /**
+ * Throttled version of the playTrack method that can only be called once every 100 miliseconds
+ */
+const throttledPlayTrack = _.throttle(playTrack, 100);
+
+/**
  * Plays all the music tracks shuffled and repeating
  * @param {Float} volume
  */
@@ -71,6 +76,7 @@ function stopMusic() {
 
 export default {
 	playTrack,
+	throttledPlayTrack,
 	playMusic,
 	stopMusic
 };

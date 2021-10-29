@@ -24,6 +24,7 @@ export default class Pong {
 	 */
 	constructor(canvas, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
+		this.musicIsPlaying = false;
 		this.config = config;
 		this.player = player;
 		this.gameLoopInterval;
@@ -59,6 +60,25 @@ export default class Pong {
 	 */
 	static preloadGameImages(callback) {
 		new ImageRepository(gameImages, callback);
+	}
+
+	/**
+	 * Tries to play the music track
+	 * This helper function is called after an user input in order to avoid the firefox autoplay limitations
+	 */
+	tryToPlayMusic() {
+		if (this.musicIsPlaying) {
+			return;
+		}
+
+		const anyKeyPressed = Object.values(this.inputs).find((status) => {
+			return status === true;
+		});
+
+		if (anyKeyPressed) {
+			this.musicIsPlaying = true;
+			this.playMusic();
+		}
 	}
 
 	/**
@@ -98,8 +118,6 @@ export default class Pong {
 		window.requestAnimFrame(() => {
 			this.drawGame();
 		});
-
-		this.playMusic();
 	}
 
 	/**
@@ -169,6 +187,10 @@ export default class Pong {
 		if (!_.isEqual(oldInputs, this.inputs)) {
 			this.onUpdateInputs(this.inputs);
 		}
+
+		//when any key has been pressed try to play the music tracks
+		//this is a firefox autoplay hack
+		this.tryToPlayMusic();
 
 		this.paddles.forEach((paddle) => {
 			paddle.move();
