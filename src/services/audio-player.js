@@ -33,7 +33,11 @@ const player = document.getElementById('audio-player');
  */
 function playTrack(track) {
 	if (tracks[track]) {
-		new Audio(tracks[track]).play();
+		const promise = new Audio(tracks[track]).play();
+		//catch autoplay exceptions
+		if (promise !== null) {
+			promise.catch(() => {});
+		}
 	}
 }
 
@@ -52,7 +56,12 @@ function playMusic(volume = 0.5) {
 
 	player.src = audioTracks[currentTrack];
 	player.volume = volume;
-	player.play();
+	const promise = player.play();
+
+	//catch autoplay exceptions
+	if (promise !== null) {
+		promise.catch(() => {});
+	}
 
 	//once the current track is over start playin the next track
 	player.onended = () => {

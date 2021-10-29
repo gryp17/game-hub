@@ -74,7 +74,7 @@ export default class Ball extends Entity {
 		// this.y = (this.canvas.height / 2) - (this.height / 2);
 
 		this.y = 80;
-		this.x = 350;
+		this.x = 300;
 		// this.dx = 5;
 	}
 

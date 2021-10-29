@@ -14,7 +14,7 @@ export default class Net extends Entity {
 		this.width = this.canvas.width / 70;
 		this.height = this.canvas.height / 2;
 		this.x = (this.canvas.width / 2) - (this.width / 2);
-		this.y = this.game.background.ground - this.height + 5;
+		this.y = this.canvas.height - this.height - 2;
 
 		this.image = this.game.images.net;
 	}
