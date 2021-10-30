@@ -15,10 +15,6 @@ export default class Ball extends Entity {
 
 		this.width = 100;
 		this.height = 100;
-		this.x = 0;
-		this.y = 0;
-		this.dx = 0;
-		this.dy = 0;
 
 		//gravity, friction etc.
 		this.gravity = 25;
@@ -90,11 +86,6 @@ export default class Ball extends Entity {
 		//magic gravity formula
 		this.y = this.y + (this.dy * this.dt) + (0.5 * this.gravity * this.dt * this.dt);
 
-		//stop moving the ball once it gets too slow (this might not be needed in the final game)
-		if (Math.abs(this.dx) < 0.5) {
-			this.dx = 0;
-		}
-
 		this.rotate();
 
 		this.handleCollisions();
@@ -146,11 +137,14 @@ export default class Ball extends Entity {
 		//bottom end of scren
 		if (this.bottom >= background.ground) {
 			this.bottom = background.ground;
-			this.dy = this.dy * -1;
 
-			//apply friction
+			//stop moving the ball horizontally if it becomes too slow
+			if (Math.abs(this.dx) <= 1) {
+				this.dx = 0;
+			}
+
+			this.dy = (this.dy * this.frictionY) * -1;
 			this.dx = this.dx * this.frictionX;
-			this.dy = this.dy * this.frictionY;
 		}
 
 		//left end of screen
@@ -183,7 +177,7 @@ export default class Ball extends Entity {
 
 				//straight top collision
 				if (collisionWithDummy === 'top') {
-					this.top = dummy.top - this.height - dummy.dy;
+					this.bottom = dummy.top;
 
 					if (dummy.jumping) {
 						this.dy = verticalForceWhenJumping;

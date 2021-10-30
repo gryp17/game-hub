@@ -20,10 +20,76 @@ export default class Entity {
 
 		this.width = width;
 		this.height = height;
-		this.x = x;
-		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
+
+		//private properties that should only be accessed/modified using the getters
+		this._x = Math.floor(x);
+		this._y = Math.floor(y);
+		this._dx = Math.floor(dx);
+		this._dy = Math.floor(dy);
+	}
+
+	/**
+	 * Sets the x value after rounding it
+	 * @param {Number} value
+	 */
+	set x(value) {
+		this._x = Math.floor(value);
+	}
+
+	/**
+	 * Returns the x value
+	 * @returns {Number}
+	 */
+	get x() {
+		return this._x;
+	}
+
+	/**
+	 * Sets the y value after rounding it
+	 * @param {Number} value
+	 */
+	set y(value) {
+		this._y = Math.floor(value);
+	}
+
+	/**
+	 * Returns the y value
+	 * @returns {Number}
+	 */
+	get y() {
+		return this._y;
+	}
+
+	/**
+	 * Sets the dx value after rounding it
+	 * @param {Number} value
+	 */
+	set dx(value) {
+		this._dx = Math.floor(value);
+	}
+
+	/**
+	 * Returns the dx value
+	 * @returns {Number}
+	 */
+	get dx() {
+		return this._dx;
+	}
+
+	/**
+	 * Sets the dy value after rounding it
+	 * @param {Number} value
+	 */
+	set dy(value) {
+		this._dy = Math.floor(value);
+	}
+
+	/**
+	 * Returns the dy value
+	 * @returns {Number}
+	 */
+	get dy() {
+		return this._dy;
 	}
 
 	/**
