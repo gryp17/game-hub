@@ -5,22 +5,41 @@
 			full-screen
 		/>
 
+		<canvas id="background-canvas" class="canvas"></canvas>
+		<canvas id="ball-canvas" class="canvas"></canvas>
 		<canvas id="game-canvas" class="canvas" tabindex="1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
-		<canvas id="background-canvas" class="canvas"></canvas>
-		<canvas id="ball-canvas" class="canvas"></canvas>
+
+		<GameHUD
+			:sound="true"
+			:music="false"
+			:scores="[
+				{
+					id: 1,
+					username: 'gryp',
+					score: 5
+				},
+				{
+					id: 2,
+					username: 'leank',
+					score: 0
+				}
+			]"
+		/>
 	</div>
 </template>
 
 <script>
 	import AudioPlayer from '@/services/audio-player';
 	import LoadingIndicator from '@/components/LoadingIndicator';
+	import GameHUD from '@/components/GameHUD';
 	import Volley from '../../games/volley/entry-points/client';
 
 	export default {
 		components: {
-			LoadingIndicator
+			LoadingIndicator,
+			GameHUD
 		},
 		data() {
 			return {
@@ -114,10 +133,6 @@
 			display: none;
 			width: 100%;
 			height: 100%;
-
-			&#game-canvas {
-				z-index: 1;
-			}
 		}
 	}
 </style>

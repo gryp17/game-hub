@@ -21,6 +21,8 @@ export default class InputDevice {
 		});
 
 		this.canvas = $(canvas);
+		this.body = $('body');
+
 		this.listeners = {};
 	}
 
@@ -32,24 +34,35 @@ export default class InputDevice {
 	addEventListener(event, listener) {
 		const boundListener = listener.bind(this);
 
-		this.listeners[event] = boundListener;
-		this.canvas.on(event, boundListener);
+		const eventListener = (e) => {
+			//skip any events originating from a button (HUD controls)
+			const target = $(e.target);
+
+			if (target.is('button') || target.closest('button').length > 0) {
+				return;
+			}
+
+			boundListener(e);
+		};
+
+		this.listeners[event] = eventListener;
+		this.body.on(event, eventListener);
 	}
 
 	/**
 	 * Removes an event listener
 	 * @param {String} event
-	 * @param {Function} listener
 	 */
-	removeEventListener(event, listener) {
-		this.canvas.off(event, listener);
+	removeEventListener(event) {
+		const listener = this.listeners[event];
+		this.body.off(event, listener);
 	}
 
 	/**
 	 * Removes all previously registered event listeners from the canvas
 	 */
 	removeAllEventListeners() {
-		this.canvas.off(this.listeners);
+		this.body.off(this.listeners);
 	}
 
 	/**

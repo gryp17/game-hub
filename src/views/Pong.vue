@@ -20,10 +20,10 @@
 			</div>
 		</div>
 
+		<canvas id="ball-canvas" class="canvas"></canvas>
 		<canvas id="game-canvas" class="canvas" tabindex="1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
-		<canvas id="ball-canvas" class="canvas"></canvas>
 
 		<GameOverModal />
 	</div>
@@ -198,10 +198,6 @@
 			width: 100%;
 			height: 100%;
 			border: solid 3px $purple;
-
-			&#game-canvas {
-				z-index: 1;
-			}
 		}
 	}
 </style>

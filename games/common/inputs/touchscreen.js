@@ -59,8 +59,8 @@ export default class Touchscreen extends InputDevice {
 		};
 
 		const clientSize = {
-			width: this.canvas.innerWidth(),
-			height: this.canvas.innerHeight()
+			width: this.body.innerWidth(),
+			height: this.body.innerHeight()
 		};
 
 		//figure out where is the point/percentage where the touch event has occured on the screen and calculate it's game position
