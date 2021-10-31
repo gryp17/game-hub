@@ -142,7 +142,7 @@ export default class Volley {
 
 		//get both types of inputs
 		const keyboardInputs = this.keyboard.getInputs();
-		const touchscreenInputs = this.touchscreen.getInputs(controllableDummy);
+		const touchscreenInputs = this.touchscreen.getInputs(controllableDummy, this.net);
 
 		//and merge them
 		_.forOwn(this.gameControls, (data, key) => {

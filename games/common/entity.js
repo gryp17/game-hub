@@ -18,14 +18,46 @@ export default class Entity {
 		this.context = context.context;
 		this.canvas = context.canvas;
 
-		this.width = width;
-		this.height = height;
-
 		//private properties that should only be accessed/modified using the getters
+		this._width = Math.floor(width);
+		this._height = Math.floor(height);
+
 		this._x = Math.floor(x);
 		this._y = Math.floor(y);
 		this._dx = Math.floor(dx);
 		this._dy = Math.floor(dy);
+	}
+
+	/**
+	 * Sets the width value after rounding it
+	 * @param {Number} value
+	 */
+	set width(value) {
+		this._width = Math.floor(value);
+	}
+
+	/**
+	 * Returns the width value
+	 * @returns {Number}
+	 */
+	get width() {
+		return this._width;
+	}
+
+	/**
+	 * Sets the height value after rounding it
+	 * @param {Number} value
+	 */
+	set height(value) {
+		this._height = Math.floor(value);
+	}
+
+	/**
+	 * Returns the height value
+	 * @returns {Number}
+	 */
+	get height() {
+		return this._height;
 	}
 
 	/**

@@ -6,9 +6,11 @@ import TouchscreenBase from '../../common/inputs/touchscreen';
 export default class Touchscreen extends TouchscreenBase {
 	/**
 	 * Returns all input statuses
+	 * @param {Object} dummy
+	 * @param {Object} net
 	 * @returns {Object}
 	 */
-	getInputs(dummy) {
+	getInputs(dummy, net) {
 		//set all inputs to false by default
 		_.forOwn(this.controls, (data, key) => {
 			this.inputs[key] = false;
@@ -17,8 +19,16 @@ export default class Touchscreen extends TouchscreenBase {
 		if (this.touchPosition) {
 			//use the dummy and touch positions to figure out when to stop moving
 			const dummyPosition = dummy.center.x;
-			const target = this.touchPosition.x;
+			const netPosition = net.center.x;
+			let target = this.touchPosition.x;
+
+			//if the target is beyound the net (unreachable) set it to the net position
+			if ((dummyPosition < netPosition && target > netPosition) || (dummyPosition > netPosition && target < netPosition)) {
+				target = netPosition;
+			}
+
 			const horizontalDifference = Math.abs(target - dummyPosition);
+			const differenceOffset = (dummy.width / 2) + (net.width / 2) + 5;
 			const isSwipingUp = this.touchPosition.y < (dummy.top - dummy.height / 2);
 
 			//go up
@@ -27,7 +37,7 @@ export default class Touchscreen extends TouchscreenBase {
 				this.touchPosition = null;
 			} else {
 				//horizontal movement target reached
-				if (horizontalDifference < 20) {
+				if (horizontalDifference < differenceOffset) {
 					this.touchPosition = null;
 				} else if (target > dummyPosition) {
 					//go right
