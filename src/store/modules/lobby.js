@@ -212,10 +212,6 @@ const actions = {
 	 */
 	updateUser(context, user) {
 		context.commit('UPDATE_USER', user);
-
-		if (user.id === context.rootGetters['auth/userSession'].id) {
-			context.commit('auth/SET_USER_SESSION', user, { root: true });
-		}
 	},
 	/**
 	 * Sends a player challenge

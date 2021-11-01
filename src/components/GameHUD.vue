@@ -19,7 +19,7 @@
 			<FormButton
 				transparent
 				:active="sound"
-				@click="toggleAudio"
+				@click="setSoundPreference('sound', !sound)"
 			>
 				<i class="fas fa-volume-up"></i>
 			</FormButton>
@@ -27,7 +27,7 @@
 			<FormButton
 				transparent
 				:active="music"
-				@click="toggleMusic"
+				@click="setSoundPreference('music', !music)"
 			>
 				<i class="fas fa-music"></i>
 			</FormButton>
@@ -48,18 +48,29 @@
 				default: false
 			}
 		},
+		data() {
+			return {
+				loading: false
+			};
+		},
 		methods: {
-			toggleAudio() {
-				console.log('toggle audio');
+			/**
+			 * Emits the "set-sound" or "set-music" events with the toggled preference value
+			 * @param {String} preference
+			 * @param {Boolean} value
+			 */
+			async setSoundPreference(preference, value) {
+				if (this.loading) {
+					return;
+				}
 
 				//give focus back to the canvas after clicking any of the buttons
 				$('.canvas').focus();
-			},
-			toggleMusic() {
-				console.log('toggle music');
 
-				//give focus back to the canvas after clicking any of the buttons
-				$('.canvas').focus();
+				this.loading = true;
+				const action = `set-${preference}`;
+				await this.$listeners[action](value);
+				this.loading = false;
 			}
 		}
 	};
@@ -107,7 +118,7 @@
 				padding: 10px;
 				border-radius: 100%;
 				border: solid 2px lighten($purple, 10%);
-				background-color: rgba($gray-lightest, 1);
+				background-color: $white;
 				opacity: 0.6;
 
 				+ .form-button {

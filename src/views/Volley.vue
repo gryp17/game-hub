@@ -12,8 +12,8 @@
 		</canvas>
 
 		<GameHUD
-			:sound="true"
-			:music="false"
+			:sound="userSession.sound"
+			:music="userSession.music"
 			:scores="[
 				{
 					id: 1,
@@ -26,11 +26,14 @@
 					score: 0
 				}
 			]"
+			@set-sound="updateUserSoundPreferences({ sound: $event })"
+			@set-music="updateUserSoundPreferences({ music: $event })"
 		/>
 	</div>
 </template>
 
 <script>
+	import { mapGetters, mapActions } from 'vuex';
 	import AudioPlayer from '@/services/audio-player';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import GameHUD from '@/components/GameHUD';
@@ -47,6 +50,11 @@
 				game: null,
 				loading: true
 			};
+		},
+		computed: {
+			...mapGetters('auth', [
+				'userSession'
+			])
 		},
 		/**
 		 * Preloads the game assets before starting the game
@@ -70,6 +78,9 @@
 			// TODO: disconnect from sockets
 		},
 		methods: {
+			...mapActions('auth', [
+				'updateUserSoundPreferences'
+			]),
 			/**
 			 * Connects to the socket.io server and listens for it's events
 			 */
