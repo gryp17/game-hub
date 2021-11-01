@@ -5,36 +5,29 @@
 			full-screen
 		/>
 
-		<div class="hud">
-			<div
-				v-for="item in scores"
-				:key="item.id"
-				class="player-info"
-			>
-				<div class="username">
-					{{ item.username }}
-				</div>
-				<div class="score">
-					{{ item.score }}
-				</div>
-			</div>
-		</div>
-
 		<canvas id="ball-canvas" class="canvas"></canvas>
 		<canvas id="game-canvas" class="canvas" tabindex="1">
 			Your browser does not support HTML5 Canvas.
 		</canvas>
+
+		<GameHUD
+			:sound="userSession.sound"
+			:music="userSession.music"
+			:scores="scores"
+			@set-sound="updateUserSoundPreferences({ sound: $event })"
+			@set-music="onToggleMusic"
+		/>
 
 		<GameOverModal />
 	</div>
 </template>
 
 <script>
-	import { mapState, mapGetters } from 'vuex';
+	import { mapState, mapGetters, mapActions } from 'vuex';
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
+	import GameHUD from '@/components/GameHUD';
 	import GameOverModal from '@/components/modals/GameOverModal';
-	import AudioPlayer from '@/services/audio-player';
 
 	import config from '@/config';
 	import { showGameOverModal } from '@/services/modal';
@@ -43,6 +36,7 @@
 	export default {
 		components: {
 			LoadingIndicator,
+			GameHUD,
 			GameOverModal
 		},
 		data() {
@@ -69,7 +63,7 @@
 				this.game.stop();
 			}
 
-			AudioPlayer.stopMusic();
+			this.stopMusic();
 
 			this.disconnectFromSocket();
 		},
@@ -93,6 +87,14 @@
 			}
 		},
 		methods: {
+			...mapActions('audio', [
+				'playTrack',
+				'playMusic',
+				'stopMusic'
+			]),
+			...mapActions('auth', [
+				'updateUserSoundPreferences'
+			]),
 			/**
 			 * Connects to the socket.io server and listens for it's events
 			 */
@@ -118,8 +120,8 @@
 
 					this.game = new Pong(canvasIds, gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
-						playMusic: AudioPlayer.playMusic,
-						playTrack: AudioPlayer.throttledPlayTrack
+						playMusic: this.playMusic,
+						playTrack: this.playTrack
 					});
 
 					this.loading = false;
@@ -145,6 +147,21 @@
 				});
 			},
 			/**
+			 * Sets the user music value
+			 * @param {Boolean} value
+			 * @returns {Promise}
+			 */
+			async onToggleMusic(value) {
+				await this.updateUserSoundPreferences({ music: value });
+
+				//try to play/stop the music when the value changes
+				if (value) {
+					this.playMusic();
+				} else {
+					this.stopMusic();
+				}
+			},
+			/**
 			 * Emits the update inputs event with the player's inputs data
 			 */
 			updateInputs(inputs) {
@@ -167,28 +184,6 @@
 		display: flex;
 		height: 100%;
 		justify-content: center;
-
-		.hud {
-			position: absolute;
-			display: flex;
-			justify-content: center;
-			width: 100%;
-			height: 100%;
-
-			.player-info {
-				padding: 25px;
-				text-align: center;
-
-				.username {
-					font-size: 32px;
-				}
-
-				.score {
-					margin-top: 5px;
-					font-size: 28px;
-				}
-			}
-		}
 
 		.canvas {
 			position: absolute;

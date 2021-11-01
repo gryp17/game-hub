@@ -27,14 +27,13 @@
 				}
 			]"
 			@set-sound="updateUserSoundPreferences({ sound: $event })"
-			@set-music="updateUserSoundPreferences({ music: $event })"
+			@set-music="onToggleMusic"
 		/>
 	</div>
 </template>
 
 <script>
 	import { mapGetters, mapActions } from 'vuex';
-	import AudioPlayer from '@/services/audio-player';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import GameHUD from '@/components/GameHUD';
 	import Volley from '../../games/volley/entry-points/client';
@@ -73,11 +72,16 @@
 				this.game.stop();
 			}
 
-			AudioPlayer.stopMusic();
+			this.stopMusic();
 
 			// TODO: disconnect from sockets
 		},
 		methods: {
+			...mapActions('audio', [
+				'playTrack',
+				'playMusic',
+				'stopMusic'
+			]),
 			...mapActions('auth', [
 				'updateUserSoundPreferences'
 			]),
@@ -120,12 +124,27 @@
 
 				this.game = new Volley(canvasIds, gameImages, config, {
 					onUpdateInputs: () => {},
-					playMusic: AudioPlayer.playMusic,
-					playTrack: AudioPlayer.throttledPlayTrack
+					playMusic: this.playMusic,
+					playTrack: this.playTrack
 				});
 
 				this.loading = false;
 				this.game.start();
+			},
+			/**
+			 * Sets the user music value
+			 * @param {Boolean} value
+			 * @returns {Promise}
+			 */
+			async onToggleMusic(value) {
+				await this.updateUserSoundPreferences({ music: value });
+
+				//try to play/stop the music when the value changes
+				if (value) {
+					this.playMusic();
+				} else {
+					this.stopMusic();
+				}
 			}
 		}
 	};
