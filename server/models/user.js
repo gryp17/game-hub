@@ -27,6 +27,14 @@ export default (db) => {
 			get() {
 				return `${config.cdn}/avatars/${this.avatar}`;
 			}
+		},
+		sound: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: true
+		},
+		music: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: true
 		}
 	});
 };

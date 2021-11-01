@@ -99,10 +99,12 @@ router.get('/all', isLoggedIn, async (req, res) => {
  * Updates the user data
  */
 router.put('/', isLoggedIn, multipart(), validate(rules.updateUser), async (req, res) => {
-	const { password, bio } = req.body;
+	const { password, bio, sound, music } = req.body;
 
 	const updatedFields = {
-		bio
+		bio,
+		sound,
+		music
 	};
 
 	try {
@@ -130,6 +132,8 @@ router.put('/', isLoggedIn, multipart(), validate(rules.updateUser), async (req,
 				'bio',
 				'avatar',
 				'avatarLink',
+				'sound',
+				'music',
 				'createdAt',
 				'updatedAt'
 			]

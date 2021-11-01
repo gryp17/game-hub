@@ -67,6 +67,14 @@
 					placeholder="Bio"
 				/>
 
+				<FormSwitch v-model="sound">
+					Sound effects
+				</FormSwitch>
+
+				<FormSwitch v-model="music">
+					Background music
+				</FormSwitch>
+
 				<div class="buttons-wrapper">
 					<FormButton
 						:disabled="submitting"
@@ -98,6 +106,8 @@
 				password: '',
 				repeatPassword: '',
 				bio: '',
+				sound: true,
+				music: true,
 				submitting: false
 			};
 		},
@@ -151,8 +161,8 @@
 
 				const formData = new FormData();
 
-				['password', 'repeatPassword', 'avatar', 'bio'].forEach((field) => {
-					if (this[field]) {
+				['password', 'repeatPassword', 'avatar', 'bio', 'sound', 'music'].forEach((field) => {
+					if (this[field] !== null) {
 						formData.append(field, this[field]);
 					}
 				});
@@ -189,6 +199,8 @@
 
 				this.bio = this.userSession.bio;
 				this.avatarPreview = this.userSession.avatarLink;
+				this.sound = this.userSession.sound;
+				this.music = this.userSession.music;
 			}
 		}
 	};
@@ -220,6 +232,10 @@
 					text-align: center;
 					font-style: italic;
 				}
+			}
+
+			.buttons-wrapper {
+				margin-top: 15px;
 			}
 		}
 	}
