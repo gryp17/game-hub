@@ -1,10 +1,10 @@
 import createSocket from 'socket.io';
 import createLobby from './namespaces/lobby';
-import createPong from './namespaces/pong';
+import createGame from './namespaces/game';
 
 let io;
 let lobby;
-let pong;
+let game;
 
 /**
  * Inits the sockets listeners
@@ -17,12 +17,12 @@ function initSockets(server, app) {
 
 	//register all namespaces
 	lobby = createLobby(io, app);
-	pong = createPong(io, app);
+	game = createGame(io, app);
 
 	return {
 		io,
 		lobby,
-		pong
+		game
 	};
 }
 
@@ -42,6 +42,6 @@ lobby.randomFunction();
 export {
 	io,
 	lobby,
-	pong,
+	game,
 	initSockets
 };

@@ -6,17 +6,17 @@ import cache from '../../services/cache';
 import Pong from '../../../games/pong/entry-points/server';
 
 export default function (io, app) {
-	const pong = io.of('/pong');
+	const ns = io.of('/game');
 
-	pong.use(socketIsLoggedIn(app));
+	ns.use(socketIsLoggedIn(app));
 
-	pong.on(socketEvents.connection, async (socket) => {
+	ns.on(socketEvents.connection, async (socket) => {
 		lobby.setUserStatus(socket.user.id, userStatuses.pong);
 
-		let gameInstance = await pong.getPendingGame(socket.user.id);
+		let gameInstance = await ns.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {
-			return pong.to(socket.id).emit(socketEvents.game.exitGame);
+			return ns.to(socket.id).emit(socketEvents.game.exitGame);
 		}
 
 		const gameRoomId = gameInstance.id;
@@ -25,7 +25,7 @@ export default function (io, app) {
 		socket.join(gameRoomId);
 
 		//get the number of connected players in the game room
-		const roomClients = pong.adapter.rooms.get(gameRoomId);
+		const roomClients = ns.adapter.rooms.get(gameRoomId);
 		const playersCount = roomClients ? roomClients.size : 0;
 
 		//once both players have joined the room - mark it as in progress
@@ -35,7 +35,7 @@ export default function (io, app) {
 			});
 
 			const players = [...roomClients].map((socketId) => {
-				return pong.getUserBySocketId(socketId);
+				return ns.getUserBySocketId(socketId);
 			});
 
 			const gameId = gameInstance.id;
@@ -45,7 +45,7 @@ export default function (io, app) {
 
 			const game = new Pong(gameId, gameConfig, customSettings, players, {
 				onUpdate(data) {
-					pong.to(gameRoomId).emit(socketEvents.game.updateData, data);
+					ns.to(gameRoomId).emit(socketEvents.game.updateData, data);
 				},
 				async onGameOver(winner, scores, ragequit) {
 					cache.deleteGameState(gameId);
@@ -57,7 +57,7 @@ export default function (io, app) {
 						result: scores
 					});
 
-					pong.to(gameRoomId).emit(socketEvents.game.gameOver, {
+					ns.to(gameRoomId).emit(socketEvents.game.gameOver, {
 						winner: winner.id,
 						ragequit,
 						score: scores
@@ -74,7 +74,7 @@ export default function (io, app) {
 
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
-				pong.to(player.socketId).emit(socketEvents.game.startGame, {
+				ns.to(player.socketId).emit(socketEvents.game.startGame, {
 					config: game.config,
 					player: index + 1
 				});
@@ -116,10 +116,10 @@ export default function (io, app) {
 	 * Helper function that returns an array of all connected users
 	 * @returns {Array}
 	 */
-	pong.getConnectedUsers = () => {
+	ns.getConnectedUsers = () => {
 		const users = [];
 
-		pong.sockets.forEach((data) => {
+		ns.sockets.forEach((data) => {
 			users.push({
 				...data.user,
 				socketId: data.id
@@ -134,8 +134,8 @@ export default function (io, app) {
 	 * @param {Number} userId
 	 * @returns {Object}
 	 */
-	pong.getUserBySocketId = (socketId) => {
-		const connectedUsers = pong.getConnectedUsers();
+	ns.getUserBySocketId = (socketId) => {
+		const connectedUsers = ns.getConnectedUsers();
 		return connectedUsers.find((user) => {
 			return user.socketId === socketId;
 		});
@@ -146,7 +146,7 @@ export default function (io, app) {
 	 * @param {Number} userId
 	 * @returns {Object}
 	 */
-	pong.getPendingGame = async (userId) => {
+	ns.getPendingGame = async (userId) => {
 		const userInstance = await User.findByPk(userId, {
 			include: {
 				model: Game,
@@ -167,5 +167,5 @@ export default function (io, app) {
 		return pendingGames.pop();
 	};
 
-	return pong;
+	return ns;
 }

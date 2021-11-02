@@ -100,7 +100,7 @@
 			 */
 			initGame(gameImages) {
 				//initialize the socket connection
-				this.socket = SocketIO(`${config.socketUrl}/pong`, {
+				this.socket = SocketIO(`${config.socketUrl}/game`, {
 					transports: ['websocket'],
 					upgrade: false
 				});
