@@ -14,34 +14,30 @@
 		<GameHUD
 			:sound="userSession.sound"
 			:music="userSession.music"
-			:scores="[
-				{
-					id: 1,
-					username: 'gryp',
-					score: 5
-				},
-				{
-					id: 2,
-					username: 'leank',
-					score: 0
-				}
-			]"
+			:scores="scores"
 			@set-sound="updateUserSoundPreferences({ sound: $event })"
 			@set-music="onToggleMusic"
 		/>
+
+		<GameOverModal />
 	</div>
 </template>
 
 <script>
-	import { mapGetters, mapActions } from 'vuex';
+	import { mapState, mapGetters, mapActions } from 'vuex';
+	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
 	import GameHUD from '@/components/GameHUD';
+	import GameOverModal from '@/components/modals/GameOverModal';
+	import config from '@/config';
+	import { showGameOverModal } from '@/services/modal';
 	import Volley from '../../games/volley/entry-points/client';
 
 	export default {
 		components: {
 			LoadingIndicator,
-			GameHUD
+			GameHUD,
+			GameOverModal
 		},
 		data() {
 			return {
@@ -51,9 +47,23 @@
 			};
 		},
 		computed: {
+			...mapState('config', [
+				'socketEvents'
+			]),
 			...mapGetters('auth', [
 				'userSession'
-			])
+			]),
+			/**
+			 * Returns the current game scores
+			 * @returns {Array}
+			 */
+			scores() {
+				if (!this.game) {
+					return [];
+				}
+
+				return Object.values(this.game.scores);
+			}
 		},
 		/**
 		 * Preloads the game assets before starting the game
@@ -74,7 +84,7 @@
 
 			this.stopMusic();
 
-			// TODO: disconnect from sockets
+			this.disconnectFromSocket();
 		},
 		methods: {
 			...mapActions('audio', [
@@ -89,47 +99,53 @@
 			 * Connects to the socket.io server and listens for it's events
 			 */
 			initGame(gameImages) {
-				// TODO: move this config to the backend once it's finalized
-				const config = {
-					fps: 60,
-					width: 1366,
-					height: 768,
-					groundHeight: 15,
-					dummy: {
-						minForce: 3,
-						verticalForce: 150,
-						horizontalForce: 10
-					},
-					controls: {
-						up: {
-							keys: [38, 87] //arrow up, W
-						},
-						down: {
-							keys: [40, 83] //arrow down, S
-						},
-						left: {
-							keys: [37, 65] //left arrow, A
-						},
-						right: {
-							keys: [39, 68] //right arrow, D
-						}
-					}
-				};
-
-				const canvasIds = {
-					game: 'game-canvas',
-					ball: 'ball-canvas',
-					background: 'background-canvas'
-				};
-
-				this.game = new Volley(canvasIds, gameImages, config, {
-					onUpdateInputs: () => {},
-					playMusic: this.playMusic,
-					playTrack: this.playTrack
+				//initialize the socket connection
+				this.socket = SocketIO(config.socketGameNamespace, {
+					transports: ['websocket'],
+					upgrade: false
 				});
 
-				this.loading = false;
-				this.game.start();
+				this.socket.on(this.socketEvents.error, (error) => {
+					this.$toasted.global.apiError({
+						message: this.$options.filters.errorsMap(error)
+					});
+				});
+
+				//start the game
+				this.socket.on(this.socketEvents.game.startGame, ({ config, player }) => {
+					const canvasIds = {
+						game: 'game-canvas',
+						ball: 'ball-canvas',
+						background: 'background-canvas'
+					};
+
+					this.game = new Volley(canvasIds, gameImages, config, player, {
+						onUpdateInputs: this.updateInputs,
+						playMusic: this.playMusic,
+						playTrack: this.playTrack
+					});
+
+					this.loading = false;
+					this.game.start();
+				});
+
+				this.socket.on(this.socketEvents.game.updateData, (data) => {
+					this.game.updateData(data);
+				});
+
+				this.socket.on(this.socketEvents.game.gameOver, ({ winner, ragequit, score }) => {
+					showGameOverModal({
+						winner,
+						ragequit,
+						score
+					});
+				});
+
+				this.socket.on(this.socketEvents.game.exitGame, () => {
+					this.$router.push({
+						name: 'lobby'
+					});
+				});
 			},
 			/**
 			 * Sets the user music value
@@ -144,6 +160,20 @@
 					this.playMusic();
 				} else {
 					this.stopMusic();
+				}
+			},
+			/**
+			 * Emits the update inputs event with the player's inputs data
+			 */
+			updateInputs(inputs) {
+				this.socket.emit(this.socketEvents.game.updateInputs, inputs);
+			},
+			/**
+			 * Disconnects from the socket.io server
+			 */
+			disconnectFromSocket() {
+				if (this.socket) {
+					this.socket.disconnect();
 				}
 			}
 		}

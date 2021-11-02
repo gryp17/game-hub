@@ -23,7 +23,9 @@ export default class Shadow extends Entity {
 
 		this.distanceMultiplier = 0.03;
 
-		this.image = this.game.images.shadow;
+		if (!game.isServer) {
+			this.image = game.images.shadow;
+		}
 	}
 
 	/**

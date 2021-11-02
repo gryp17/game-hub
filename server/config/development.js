@@ -139,6 +139,31 @@ module.exports = {
 					small: 40
 				}
 			}
+		},
+		volley: {
+			code: 'volley',
+			maxPlayers: 2,
+			fps: 60,
+			width: 1366,
+			height: 768,
+			groundHeight: 15,
+			maxScore: 10,
+			dummy: {
+				minForce: 3,
+				verticalForce: 150,
+				horizontalForce: 10
+			},
+			controls: {
+				up: {
+					keys: [38, 87] //arrow up, W
+				},
+				left: {
+					keys: [37, 65] //left arrow, A
+				},
+				right: {
+					keys: [39, 68] //right arrow, D
+				}
+			}
 		}
 	}
 };

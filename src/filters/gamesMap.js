@@ -15,6 +15,11 @@ export default (gameCode) => {
 			value: 'pong',
 			label: 'Pong',
 			icon: 'fas fa-table-tennis'
+		},
+		volley: {
+			value: 'volley',
+			label: 'Volley',
+			icon: 'fas fa-volleyball-ball'
 		}
 	};
 

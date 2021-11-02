@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';
@@ -11,17 +10,37 @@ export default class Dummy extends Entity {
 	/**
 	 * Creates a new dummy instance
 	 * @param {Object} game
-	 * @param {Number} strength
+	 * @param {Number} minForce
+	 * @param {Number} verticalForce
+	 * @param {Number} horizontalForce
+	 * @param {Number} player
+	 * @param {Boolean} controllable
+	 * @param {Number} playerId
 	 */
-	constructor(game, minForce, verticalForce, horizontalForce) {
+	constructor(game, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
+
+		this.player = player;
+		this.controllable = controllable;
+		this.playerId = playerId;
 
 		this.width = this.canvas.width / 12;
 		this.height = this.canvas.height / 4;
-		this.x = 100;
+		this.x = 0;
 		this.y = this.game.background.ground - this.height;
 		this.dx = 0;
 		this.dy = 0;
+
+		//center both players in their fields and make them face each other
+		if (player === 1) {
+			this.x = (this.canvas.width / 4) - (this.width / 2);
+			this.character = 'green';
+			this.facingDirection = 'right';
+		} else {
+			this.x = this.canvas.width - (this.canvas.width / 4) - (this.width / 2);
+			this.character = 'yellow';
+			this.facingDirection = 'left';
+		}
 
 		this.minForce = minForce;
 		this.verticalForce = verticalForce;
@@ -31,18 +50,42 @@ export default class Dummy extends Entity {
 		this.jumpAcceleration = 12;
 
 		this.jumping = false;
-		this.facingDirection = 'right';
 
 		this.maxJumpHeight = this.canvas.height - (this.height * 2);
 
-		this.character = _.sample(['green', 'yellow']);
-		this.idleSprite = new Sprite(this.game.images.dummy[this.character].idle, 7, true);
-		this.movingSprite = new Sprite(this.game.images.dummy[this.character].running, 7, true);
-		this.jumpingSprite = new Sprite(this.game.images.dummy[this.character].jumping, 0, true);
+		if (!game.isServer) {
+			this.idleSprite = new Sprite(this.game.images.dummy[this.character].idle, 7, true);
+			this.movingSprite = new Sprite(this.game.images.dummy[this.character].running, 7, true);
+			this.jumpingSprite = new Sprite(this.game.images.dummy[this.character].jumping, 0, true);
 
-		this.image = this.idleSprite.move();
+			this.image = this.idleSprite.move();
+		}
 
 		this.shadow = new Shadow(game, this);
+	}
+
+	/**
+	 * Returns the dummy state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			x: this.x,
+			y: this.y,
+			dx: this.dx,
+			dy: this.dy,
+			player: this.player,
+			facingDirection: this.facingDirection
+		};
+	}
+
+	/**
+	 * Sets the dummy state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+		this.facingDirection = state.facingDirection;
 	}
 
 	/**
@@ -50,8 +93,10 @@ export default class Dummy extends Entity {
 	 * If the dummy is controllable it processes the current inputs state first
 	 */
 	move() {
-		const inputs = this.game.inputs;
-		this.processInputs(inputs);
+		if (this.controllable) {
+			const inputs = this.playerId ? this.game.inputs[this.playerId] : this.game.inputs;
+			this.processInputs(inputs);
+		}
 
 		//maximum jump height reached
 		if (this.jumping && this.y <= this.maxJumpHeight) {

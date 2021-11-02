@@ -54,10 +54,8 @@ export default class Ball extends Entity {
 	 * @param {Object} state
 	 */
 	set state(state) {
-		this.x = state.x;
-		this.y = state.y;
-		this.dx = state.dx;
-		this.dy = state.dy;
+		super.state = state;
+
 		this.rotationSpeed = state.rotationSpeed;
 		this.angle = state.angle;
 	}

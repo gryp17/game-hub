@@ -4,9 +4,11 @@ import { User, Game } from '../../models';
 import { lobby } from '..';
 import cache from '../../services/cache';
 import Pong from '../../../games/pong/entry-points/server';
+import Volley from '../../../games/volley/entry-points/server';
 
 const gameClasses = {
-	pong: Pong
+	pong: Pong,
+	volley: Volley
 };
 
 export default function (io, app) {

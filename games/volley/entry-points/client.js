@@ -21,12 +21,14 @@ export default class Volley {
 	 * @param {Object} canvas
 	 * @param {Object} images
 	 * @param {Object} config
+	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(canvas, images, config, { onUpdateInputs, playMusic, playTrack }) {
+	constructor(canvas, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
 		this.musicIsPlaying = false;
 		this.config = config;
+		this.player = player;
 		this.gameLoopInterval;
 		this.inputs;
 		this.images = images;
@@ -95,16 +97,22 @@ export default class Volley {
 		this.contexts.game.focus();
 
 		//game objects
-
 		this.background = new Background(this);
-
 		this.ball = new Ball(this);
-
 		this.net = new Net(this);
 
-		this.dummies = [
-			new Dummy(this, this.config.dummy.minForce, this.config.dummy.verticalForce, this.config.dummy.horizontalForce)
-		];
+		this.dummies = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
+			const playerIndex = index + 1;
+			const controllable = this.player === playerIndex;
+			return new Dummy(
+				this,
+				this.config.dummy.minForce,
+				this.config.dummy.verticalForce,
+				this.config.dummy.horizontalForce,
+				playerIndex,
+				controllable
+			);
+		});
 
 		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
@@ -131,14 +139,35 @@ export default class Volley {
 	}
 
 	/**
+	 * Updates the game state with the data received from the server
+	 * @param {Object} data
+	 */
+	updateData({ dummies, ball, net, background, scores, gameOver }) {
+		dummies.forEach((dummy, index) => {
+			this.dummies[index].state = dummy;
+		});
+
+		this.ball.state = ball;
+		this.net.state = net;
+		this.background.state = background;
+
+		this.scores = scores;
+
+		if (gameOver) {
+			this.stop();
+		}
+	}
+
+	/**
 	 * Returns the current inputs state
 	 * @returns {Object}
 	 */
 	getInputs() {
 		const result = {};
 
-		// TODO: implement this
-		const controllableDummy = this.dummies[0];
+		const controllableDummy = this.dummies.find((dummy) => {
+			return dummy.controllable;
+		});
 
 		//get both types of inputs
 		const keyboardInputs = this.keyboard.getInputs();

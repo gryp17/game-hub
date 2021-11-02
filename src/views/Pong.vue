@@ -46,6 +46,25 @@
 				loading: true
 			};
 		},
+		computed: {
+			...mapState('config', [
+				'socketEvents'
+			]),
+			...mapGetters('auth', [
+				'userSession'
+			]),
+			/**
+			 * Returns the current game scores
+			 * @returns {Array}
+			 */
+			scores() {
+				if (!this.game) {
+					return [];
+				}
+
+				return Object.values(this.game.scores);
+			}
+		},
 		/**
 		 * Preloads the game assets before starting the game
 		 */
@@ -67,25 +86,6 @@
 
 			this.disconnectFromSocket();
 		},
-		computed: {
-			...mapState('config', [
-				'socketEvents'
-			]),
-			...mapGetters('auth', [
-				'userSession'
-			]),
-			/**
-			 * Returns the current game scores
-			 * @returns {Array}
-			 */
-			scores() {
-				if (!this.game) {
-					return [];
-				}
-
-				return Object.values(this.game.scores);
-			}
-		},
 		methods: {
 			...mapActions('audio', [
 				'playTrack',
@@ -100,7 +100,7 @@
 			 */
 			initGame(gameImages) {
 				//initialize the socket connection
-				this.socket = SocketIO(`${config.socketUrl}/game`, {
+				this.socket = SocketIO(config.socketGameNamespace, {
 					transports: ['websocket'],
 					upgrade: false
 				});

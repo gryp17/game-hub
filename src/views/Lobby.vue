@@ -235,7 +235,7 @@
 			 */
 			connectToSocket() {
 				//initialize the socket connection
-				this.socket = SocketIO(`${config.socketUrl}/lobby`, {
+				this.socket = SocketIO(config.socketLobbyNamespace, {
 					transports: ['websocket'],
 					upgrade: false
 				});
