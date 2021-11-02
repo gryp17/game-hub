@@ -76,7 +76,9 @@ module.exports = {
 		offline: 'offline',
 		busy: 'busy',
 		matchmaking: 'matchmaking',
-		pong: 'pong'
+		//ingame user statuses
+		pong: 'pong',
+		volley: 'volley'
 	},
 	gameStatuses: {
 		pending: 'pending',

@@ -5,21 +5,30 @@ import { lobby } from '..';
 import cache from '../../services/cache';
 import Pong from '../../../games/pong/entry-points/server';
 
+const gameClasses = {
+	pong: Pong
+};
+
 export default function (io, app) {
 	const ns = io.of('/game');
+	let gameType;
 
 	ns.use(socketIsLoggedIn(app));
 
 	ns.on(socketEvents.connection, async (socket) => {
-		lobby.setUserStatus(socket.user.id, userStatuses.pong);
-
 		let gameInstance = await ns.getPendingGame(socket.user.id);
 
 		if (!gameInstance) {
 			return ns.to(socket.id).emit(socketEvents.game.exitGame);
 		}
 
+		gameType = gameInstance.type;
+
+		lobby.setUserStatus(socket.user.id, userStatuses[gameType]);
+
 		const gameRoomId = gameInstance.id;
+		const gameConfig = games[gameType];
+		const GameClass = gameClasses[gameType];
 
 		//join the game room
 		socket.join(gameRoomId);
@@ -29,7 +38,7 @@ export default function (io, app) {
 		const playersCount = roomClients ? roomClients.size : 0;
 
 		//once both players have joined the room - mark it as in progress
-		if (playersCount === games.pong.maxPlayers) {
+		if (playersCount === gameConfig.maxPlayers) {
 			gameInstance.update({
 				status: gameStatuses.inProgress
 			});
@@ -40,10 +49,9 @@ export default function (io, app) {
 
 			const gameId = gameInstance.id;
 
-			const gameConfig = games.pong;
 			const customSettings = gameInstance.settings;
 
-			const game = new Pong(gameId, gameConfig, customSettings, players, {
+			const game = new GameClass(gameId, gameConfig, customSettings, players, {
 				onUpdate(data) {
 					ns.to(gameRoomId).emit(socketEvents.game.updateData, data);
 				},
@@ -152,7 +160,6 @@ export default function (io, app) {
 				model: Game,
 				required: false,
 				where: {
-					type: games.pong.code,
 					status: gameStatuses.pending
 				}
 			}
