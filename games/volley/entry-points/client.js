@@ -18,14 +18,15 @@ window.requestAnimFrame = Utils.getRequestAnimationFrame();
 export default class Volley {
 	/**
 	 * Creates a new volley client instance
-	 * @param {Object} canvas
+	 * @param {String} canvasWrapper
 	 * @param {Object} images
 	 * @param {Object} config
 	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(canvas, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
+	constructor(canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
+		this.canvasWrapper = canvasWrapper;
 		this.musicIsPlaying = false;
 		this.config = config;
 		this.player = player;
@@ -46,12 +47,17 @@ export default class Volley {
 
 		this.gameControls = config.controls;
 
-		//initialize the canvas/context objects
+		//initialize the canvas/context objects and generate the canvas HTML elements
+		this.canvasIds = {
+			background: 'background-canvas',
+			ball: 'ball-canvas',
+			game: 'game-canvas'
+		};
+
 		this.contexts = {};
 
-		_.forOwn(canvas, (canvasId, name) => {
-			this.contexts[name] = new Context(canvasId);
-			this.contexts[name].setSize(this.config.width, this.config.height);
+		_.forOwn(this.canvasIds, (canvasId, name) => {
+			this.contexts[name] = new Context(canvasId, this.canvasWrapper, this.config.width, this.config.height);
 		});
 
 		//initialize the keyboard and touchscreen controls

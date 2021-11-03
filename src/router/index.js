@@ -67,15 +67,9 @@ const routes = [
 		beforeEnter: mustBeLoggedIn
 	},
 	{
-		path: '/pong',
-		name: 'pong',
-		component: () => import(/* webpackChunkName: "pong" */ '@/views/Pong.vue'),
-		beforeEnter: mustBeLoggedIn
-	},
-	{
-		path: '/volley',
-		name: 'volley',
-		component: () => import(/* webpackChunkName: "volley" */ '@/views/Volley.vue'),
+		path: '/play/:game',
+		name: 'play',
+		component: () => import(/* webpackChunkName: "play" */ '@/views/Play.vue'),
 		beforeEnter: mustBeLoggedIn
 	}
 ];

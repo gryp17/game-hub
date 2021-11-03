@@ -1,14 +1,12 @@
 <template>
-	<div class="pong-page">
+	<div :class="['play-page', gameType]">
 		<LoadingIndicator
 			v-if="loading"
 			full-screen
 		/>
 
-		<canvas id="ball-canvas" class="canvas"></canvas>
-		<canvas id="game-canvas" class="canvas" tabindex="1">
-			Your browser does not support HTML5 Canvas.
-		</canvas>
+		<!-- game canvases are generated here automatically by each game -->
+		<div class="canvas-wrapper"></div>
 
 		<GameHUD
 			:sound="userSession.sound"
@@ -32,6 +30,12 @@
 	import config from '@/config';
 	import { showGameOverModal } from '@/services/modal';
 	import Pong from '../../games/pong/entry-points/client';
+	import Volley from '../../games/volley/entry-points/client';
+
+	const gameClasses = {
+		pong: Pong,
+		volley: Volley
+	};
 
 	export default {
 		components: {
@@ -42,6 +46,8 @@
 		data() {
 			return {
 				socket: null,
+				gameType: null,
+				gameClass: null,
 				game: null,
 				loading: true
 			};
@@ -66,11 +72,25 @@
 			}
 		},
 		/**
+		 * Sets the game type and game class as soon as the component is created
+		 */
+		created() {
+			this.gameType = this.$route.params.game;
+			this.GameClass = gameClasses[this.gameType];
+		},
+		/**
 		 * Preloads the game assets before starting the game
 		 */
 		mounted() {
+			//if the game class is invalid redirect to the lobby
+			if (!this.GameClass) {
+				return this.$router.push({
+					name: 'lobby'
+				});
+			}
+
 			//preload the game images before connecting to the socket and starting the game
-			Pong.preloadGameImages((gameImages) => {
+			this.GameClass.preloadGameImages((gameImages) => {
 				this.initGame(gameImages);
 			});
 		},
@@ -113,12 +133,7 @@
 
 				//start the game
 				this.socket.on(this.socketEvents.game.startGame, ({ config, player }) => {
-					const canvasIds = {
-						game: 'game-canvas',
-						ball: 'ball-canvas'
-					};
-
-					this.game = new Pong(canvasIds, gameImages, config, player, {
+					this.game = new this.GameClass('.canvas-wrapper', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: this.playMusic,
 						playTrack: this.playTrack
@@ -180,19 +195,31 @@
 </script>
 
 <style lang="scss">
-	.pong-page {
+	.play-page {
 		display: flex;
 		height: 100%;
-		justify-content: center;
 
-		.canvas {
-			position: absolute;
-			top: 0;
-			left: 0;
-			display: none;
+		.canvas-wrapper {
+			position: relative;
 			width: 100%;
 			height: 100%;
-			border: solid 3px $purple;
+
+			.canvas {
+				position: absolute;
+				top: 0;
+				left: 0;
+				display: none;
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		&.pong {
+			.canvas-wrapper {
+				.canvas {
+					border: solid 3px $purple;
+				}
+			}
 		}
 	}
 </style>

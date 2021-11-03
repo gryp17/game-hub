@@ -293,7 +293,10 @@
 
 				this.socket.on(this.socketEvents.lobby.goToGame, (game) => {
 					this.$router.push({
-						name: game
+						name: 'play',
+						params: {
+							game
+						}
 					});
 				});
 
