@@ -16,14 +16,16 @@ window.requestAnimFrame = Utils.getRequestAnimationFrame();
 export default class Pong {
 	/**
 	 * Creates a new pong client instance
+	 * @param {Object} canvasIds
 	 * @param {String} canvasWrapper
 	 * @param {Object} images
 	 * @param {Object} config
 	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
+	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
+		this.canvasIds = canvasIds;
 		this.canvasWrapper = canvasWrapper;
 		this.musicIsPlaying = false;
 		this.config = config;
@@ -43,11 +45,6 @@ export default class Pong {
 		this.gameControls = config.controls;
 
 		//initialize the canvas/context objects and generate the canvas HTML elements
-		this.canvasIds = {
-			game: 'game-canvas',
-			ball: 'ball-canvas'
-		};
-
 		this.contexts = {};
 
 		_.forOwn(this.canvasIds, (canvasId, name) => {

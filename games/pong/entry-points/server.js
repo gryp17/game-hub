@@ -44,23 +44,23 @@ export default class Pong {
 
 		this.ball;
 
-		//mocked contexts/canvas objects (not really needed on the server)
-		this.contexts = {
-			game: {
-				context: {},
-				canvas: {
-					width: this.config.width,
-					height: this.config.height
-				}
-			},
-			ball: {
-				context: {},
-				canvas: {
-					width: this.config.width,
-					height: this.config.height
-				}
-			}
+		//mocked contexts/canvas objects (not really used on the server apart from the canvas size)
+		this.canvasIds = {
+			game: 'game-canvas',
+			ball: 'ball-canvas'
 		};
+
+		this.contexts = {};
+
+		_.forOwn(this.canvasIds, (canvasId, name) => {
+			this.contexts[name] = {
+				context: {},
+				canvas: {
+					width: this.config.width,
+					height: this.config.height
+				}
+			};
+		});
 	}
 
 	/**

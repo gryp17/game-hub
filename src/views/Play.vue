@@ -132,8 +132,8 @@
 				});
 
 				//start the game
-				this.socket.on(this.socketEvents.game.startGame, ({ config, player }) => {
-					this.game = new this.GameClass('.canvas-wrapper', gameImages, config, player, {
+				this.socket.on(this.socketEvents.game.startGame, ({ canvasIds, config, player }) => {
+					this.game = new this.GameClass(canvasIds, '.canvas-wrapper', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: this.playMusic,
 						playTrack: this.playTrack

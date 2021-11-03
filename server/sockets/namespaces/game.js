@@ -85,6 +85,7 @@ export default function (io, app) {
 			//start the game sending a separate event to each player
 			players.forEach((player, index) => {
 				ns.to(player.socketId).emit(socketEvents.game.startGame, {
+					canvasIds: game.canvasIds,
 					config: game.config,
 					player: index + 1
 				});
