@@ -72,16 +72,13 @@
 			}
 		},
 		/**
-		 * Sets the game type and game class as soon as the component is created
-		 */
-		created() {
-			this.gameType = this.$route.params.game;
-			this.GameClass = gameClasses[this.gameType];
-		},
-		/**
-		 * Preloads the game assets before starting the game
+		 * Sets the game type and class and preloads the game assets before starting the game
 		 */
 		mounted() {
+			//sets the game type and game class
+			this.gameType = this.$route.params.game;
+			this.GameClass = gameClasses[this.gameType];
+
 			//if the game class is invalid redirect to the lobby
 			if (!this.GameClass) {
 				return this.$router.push({
@@ -90,9 +87,7 @@
 			}
 
 			//preload the game images before connecting to the socket and starting the game
-			this.GameClass.preloadGameImages((gameImages) => {
-				this.initGame(gameImages);
-			});
+			this.GameClass.preloadGameImages(this.initGame);
 		},
 		/**
 		 * Stops the game if it's still running and disconnects from the socket
