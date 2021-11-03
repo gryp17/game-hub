@@ -20,6 +20,10 @@ export default class Ball extends Entity {
 		this.serveTimeout = 6000;
 		this.serveTimeoutId;
 
+		this.lastHitBy;
+		this.hitCount = 0;
+		this.maxHitCount = 5;
+
 		//gravity, friction etc.
 		this.gravity = 25;
 		this.dt = 0.17;
@@ -50,7 +54,9 @@ export default class Ball extends Entity {
 			dy: this.dy,
 			rotationSpeed: this.rotationSpeed,
 			angle: this.angle,
-			serving: this.serving
+			serving: this.serving,
+			hitCount: this.hitCount,
+			lastHitBy: this.lastHitBy
 		};
 	}
 
@@ -64,6 +70,18 @@ export default class Ball extends Entity {
 		this.rotationSpeed = state.rotationSpeed;
 		this.angle = state.angle;
 		this.serving = state.serving;
+		this.hitCount = state.hitCount;
+		this.lastHitBy = state.lastHitBy;
+	}
+
+	/**
+	 * Calls the onPlayerScore game method if the code is running on the server
+	 * @param {Number} player
+	 */
+	onPlayerScore(player) {
+		if (this.game.isServer) {
+			this.game.onPlayerScore(player);
+		}
 	}
 
 	/**
@@ -80,6 +98,7 @@ export default class Ball extends Entity {
 		this.y = this.canvas.height / 2;
 
 		this.serving = true;
+		this.hitCount = 0;
 
 		//start the serve timeout that gives the player X seconds to interact with the ball before it falls
 		this.startServeTimeout();
@@ -176,12 +195,10 @@ export default class Ball extends Entity {
 			this.bottom = background.ground;
 
 			//player scores
-			if (this.game.isServer) {
-				if (this.center.x < this.canvas.width / 2) {
-					this.game.onPlayerScore(2);
-				} else {
-					this.game.onPlayerScore(1);
-				}
+			if (this.center.x < this.canvas.width / 2) {
+				this.onPlayerScore(2);
+			} else {
+				this.onPlayerScore(1);
 			}
 		}
 
@@ -264,6 +281,19 @@ export default class Ball extends Entity {
 						this.dy = (Math.abs(this.dy)) * -1;
 						this.dx = (Math.abs(this.dx) + addedForce);
 					}
+				}
+
+				//reset the hit count if the lastHitBy player changed
+				if (this.lastHitBy !== dummy.player) {
+					this.hitCount = 0;
+				}
+
+				this.lastHitBy = dummy.player;
+				this.hitCount++;
+
+				//wait for the collision to happen before triggering the player score
+				if (this.hitCount > this.maxHitCount) {
+					this.onPlayerScore(dummy.player === 1 ? 2 : 1);
 				}
 
 				this.playHitSound();
