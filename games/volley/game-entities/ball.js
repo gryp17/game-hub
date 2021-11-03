@@ -16,6 +16,10 @@ export default class Ball extends Entity {
 		this.width = 100;
 		this.height = 100;
 
+		this.serving = false;
+		this.serveTimeout = 6000;
+		this.serveTimeoutId;
+
 		//gravity, friction etc.
 		this.gravity = 25;
 		this.dt = 0.17;
@@ -29,7 +33,7 @@ export default class Ball extends Entity {
 			this.image = game.images.ballYellow;
 		}
 
-		this.moveToCenter();
+		this.reset(1);
 
 		this.shadow = new Shadow(game, this);
 	}
@@ -45,7 +49,8 @@ export default class Ball extends Entity {
 			dx: this.dx,
 			dy: this.dy,
 			rotationSpeed: this.rotationSpeed,
-			angle: this.angle
+			angle: this.angle,
+			serving: this.serving
 		};
 	}
 
@@ -58,33 +63,67 @@ export default class Ball extends Entity {
 
 		this.rotationSpeed = state.rotationSpeed;
 		this.angle = state.angle;
+		this.serving = state.serving;
 	}
 
 	/**
-	 * Puts the ball in the canvas center
+	 * Resets the ball to it's initial position depending on the player that serves
+	 * @param {Number} player
 	 */
-	moveToCenter() {
-		// this.x = (this.canvas.width / 2) - (this.width / 2);
-		// this.y = (this.canvas.height / 2) - (this.height / 2);
+	reset(player) {
+		if (player === 1) {
+			this.x = (this.canvas.width / 4) - (this.width / 2);
+		} else {
+			this.x = this.canvas.width - (this.canvas.width / 4) - (this.width / 2);
+		}
 
-		this.y = 80;
-		this.x = 300;
-		// this.dx = 5;
+		this.y = this.canvas.height / 2;
+
+		this.serving = true;
+
+		//start the serve timeout that gives the player X seconds to interact with the ball before it falls
+		this.startServeTimeout();
+	}
+
+	/**
+	 * Clears the serve timeout
+	 */
+	clearServeTimeout() {
+		if (this.serveTimeoutId) {
+			clearTimeout(this.serveTimeoutId);
+		}
+	}
+
+	/**
+	 * Starts the serve timeout that waits X seconds before letting the ball fall
+	 */
+	startServeTimeout() {
+		this.clearServeTimeout();
+
+		this.serveTimeoutId = setTimeout(() => {
+			this.serving = false;
+		}, this.serveTimeout);
 	}
 
 	/**
 	 * Moves the ball
 	 */
 	move() {
-		//apply gravity
-		this.dy = this.dy + (this.gravity * this.dt);
+		//make the ball stand still in the air while the serving flag is raised
+		if (this.serving) {
+			this.dx = 0;
+			this.dy = 0;
+		} else {
+			//apply gravity
+			this.dy = this.dy + (this.gravity * this.dt);
 
-		this.x = this.x + this.dx;
+			this.x = this.x + this.dx;
 
-		//magic gravity formula
-		this.y = this.y + (this.dy * this.dt) + (0.5 * this.gravity * this.dt * this.dt);
+			//magic gravity formula
+			this.y = this.y + (this.dy * this.dt) + (0.5 * this.gravity * this.dt * this.dt);
 
-		this.rotate();
+			this.rotate();
+		}
 
 		this.handleCollisions();
 
@@ -136,13 +175,14 @@ export default class Ball extends Entity {
 		if (this.bottom >= background.ground) {
 			this.bottom = background.ground;
 
-			//stop moving the ball horizontally if it becomes too slow
-			if (Math.abs(this.dx) <= 1) {
-				this.dx = 0;
+			//player scores
+			if (this.game.isServer) {
+				if (this.center.x < this.canvas.width / 2) {
+					this.game.onPlayerScore(2);
+				} else {
+					this.game.onPlayerScore(1);
+				}
 			}
-
-			this.dy = (this.dy * this.frictionY) * -1;
-			this.dx = this.dx * this.frictionX;
 		}
 
 		//left end of screen
@@ -172,6 +212,10 @@ export default class Ball extends Entity {
 				const addedForce = dummy.minForce;
 				const verticalForceWhenJumping = dummy.verticalForce * -1;
 				const horizontalForceWhenJumping = dummy.horizontalForce;
+
+				//clear the serve timeout and reset the serving value so the ball can be launched again
+				this.clearServeTimeout();
+				this.serving = false;
 
 				//straight top collision
 				if (collisionWithDummy === 'top') {

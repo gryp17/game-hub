@@ -109,8 +109,8 @@ export default class Volley {
 		if (this.scores[player].score === this.config.maxScore) {
 			this.gameIsOver(this.players[player - 1]);
 		} else {
-			//otherwise reset the ball position and after some timeout shoot it again in some random direction
-			this.ball.reset();
+			//otherwise reset the ball position
+			this.ball.reset(player);
 		}
 	}
 
