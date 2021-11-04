@@ -19,7 +19,7 @@ export default class Volley {
 	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
 		this.isServer = typeof window === 'undefined';
 		this.id = id;
-		this.config = config;
+		this.config = this.applySettings(config, customSettings);
 		this.players = players;
 		this.onUpdate = onUpdate;
 		this.onGameOver = onGameOver;
@@ -68,6 +68,30 @@ export default class Volley {
 				}
 			};
 		});
+	}
+
+	/**
+	 * Merges the defaultConfig and the customSettings
+	 * @param {Object} defaultConfig
+	 * @param {Object} customSettings
+	 * @returns {Object}
+	 */
+	applySettings(defaultConfig, customSettings) {
+		const config = {
+			...defaultConfig
+		};
+
+		//TODO: refactor this logic when the custom settings get implemented
+		//pick a random background
+		config.background.selectedBackground = _.sample(config.background.availableBackgrounds);
+
+		if (!customSettings) {
+			return config;
+		}
+
+		//TODO: implement the rest of the logic
+
+		return config;
 	}
 
 	/**
@@ -136,7 +160,7 @@ export default class Volley {
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		this.background = new Background(this);
+		this.background = new Background(this, this.config.background.selectedBackground);
 		this.net = new Net(this);
 		this.ball = new Ball(
 			this,

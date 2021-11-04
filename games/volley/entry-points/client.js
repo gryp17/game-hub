@@ -99,7 +99,7 @@ export default class Volley {
 		this.contexts.game.focus();
 
 		//game objects
-		this.background = new Background(this);
+		this.background = new Background(this, this.config.background.selectedBackground);
 
 		this.ball = new Ball(
 			this,

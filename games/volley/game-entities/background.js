@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Entity from '../../common/entity';
 
 /**
@@ -8,16 +7,16 @@ export default class Background extends Entity {
 	/**
 	 * Creates a background instance
 	 * @param {Object} game
+	 * @param {String} selectedBackground
 	 */
-	constructor(game) {
+	constructor(game, selectedBackground) {
 		super(game, game.contexts.background);
 
+		this.selectedBackground = selectedBackground;
 		this.ground = this.canvas.height - this.game.groundHeight;
 
 		if (!game.isServer) {
-			//pick a random background
-			const randomBackground = _.sample(Object.keys(game.images.background));
-			this.image = game.images.background[randomBackground];
+			this.image = game.images.background[selectedBackground];
 		}
 	}
 

@@ -167,6 +167,16 @@ module.exports = {
 				verticalForce: 150,
 				horizontalForce: 10
 			},
+			background: {
+				availableBackgrounds: [
+					'beach',
+					'city',
+					'backyard',
+					'desert',
+					'garden'
+				],
+				selectedBackground: 'beach' //this value is actually randomized by the server
+			},
 			controls: {
 				up: {
 					keys: [38, 87] //arrow up, W
