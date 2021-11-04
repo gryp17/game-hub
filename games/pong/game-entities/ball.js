@@ -77,6 +77,18 @@ export default class Ball extends Entity {
 	}
 
 	/**
+	 * Calls the onPlayerScore game method if the code is running on the server
+	 * @param {Number} player
+	 */
+	onPlayerScore(player) {
+		if (this.game.isServer) {
+			this.game.onPlayerScore(player);
+		} else {
+			this.playScoreSound();
+		}
+	}
+
+	/**
 	 * Puts the ball in the canvas center
 	 */
 	moveToCenter() {
@@ -168,6 +180,15 @@ export default class Ball extends Entity {
 	}
 
 	/**
+	 * Plays score sound effect
+	 */
+	playScoreSound() {
+		if (!this.game.isServer) {
+			this.game.playTrack('whistle', 0.2);
+		}
+	}
+
+	/**
 	 * Handles all ball collisions
 	 */
 	handleCollisions() {
@@ -190,9 +211,7 @@ export default class Ball extends Entity {
 			this.left = 0;
 			this.dx = this.dx * -1;
 
-			if (this.game.isServer) {
-				this.game.onPlayerScore(2);
-			}
+			this.onPlayerScore(2);
 		}
 
 		//right end of screen
@@ -200,9 +219,7 @@ export default class Ball extends Entity {
 			this.right = this.canvas.width;
 			this.dx = this.dx * -1;
 
-			if (this.game.isServer) {
-				this.game.onPlayerScore(1);
-			}
+			this.onPlayerScore(1);
 		}
 
 		//ball collides with paddle

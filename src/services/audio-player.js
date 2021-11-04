@@ -30,10 +30,14 @@ const player = document.getElementById('audio-player');
 /**
  * Plays an audio track once
  * @param {String} track
+ * @param {Float} volume
  */
-function playTrack(track) {
+function playTrack(track, volume = 1) {
 	if (tracks[track]) {
-		const promise = new Audio(tracks[track]).play();
+		const audio = new Audio(tracks[track]);
+		audio.volume = volume;
+		const promise = audio.play();
+
 		//catch autoplay exceptions
 		if (promise !== null) {
 			promise.catch(() => {});

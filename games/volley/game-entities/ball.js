@@ -89,6 +89,8 @@ export default class Ball extends Entity {
 	onPlayerScore(player) {
 		if (this.game.isServer) {
 			this.game.onPlayerScore(player);
+		} else {
+			this.playScoreSound();
 		}
 	}
 
@@ -187,6 +189,15 @@ export default class Ball extends Entity {
 	playHitSound() {
 		if (!this.game.isServer) {
 			this.game.playTrack('volleyHit');
+		}
+	}
+
+	/**
+	 * Plays score sound effect
+	 */
+	playScoreSound() {
+		if (!this.game.isServer) {
+			this.game.playTrack('whistle', 0.2);
 		}
 	}
 

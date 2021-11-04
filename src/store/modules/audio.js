@@ -4,13 +4,13 @@ const actions = {
 	/**
 	 * Plays an audio track once
 	 * @param {Object} context
-	 * @param {String} track
+	 * @param {Object} data
 	 */
-	playTrack(context, track) {
+	playTrack(context, { track, volume }) {
 		const soundEnabled = context.rootGetters['auth/userSession'].sound;
 
 		if (soundEnabled) {
-			AudioPlayer.throttledPlayTrack(track);
+			AudioPlayer.throttledPlayTrack(track, volume);
 		}
 	},
 	/**

@@ -259,7 +259,7 @@
 				});
 
 				this.socket.on(this.socketEvents.lobby.challenge, ({ user, game, settings }) => {
-					this.playTrack('challenge');
+					this.playTrack({ track: 'challenge' });
 
 					showChallengeModal({
 						user,
@@ -277,7 +277,7 @@
 				});
 
 				this.socket.on(this.socketEvents.lobby.foundMatch, (game) => {
-					this.playTrack('challenge');
+					this.playTrack({ track: 'challenge' });
 
 					// automatically stop the matchmaking when a new match arrives
 					this.setMatchmakingEnabled(false);

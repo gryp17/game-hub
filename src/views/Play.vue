@@ -131,7 +131,12 @@
 					this.game = new this.GameClass(canvasIds, '.canvas-wrapper', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: this.playMusic,
-						playTrack: this.playTrack
+						playTrack: (track, volume) => {
+							this.playTrack({
+								track,
+								volume
+							});
+						}
 					});
 
 					this.loading = false;
