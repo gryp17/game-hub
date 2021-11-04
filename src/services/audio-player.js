@@ -7,6 +7,8 @@ import hysteria from '@/assets/audio/music/hysteria.mp3';
 import bliss from '@/assets/audio/music/bliss.mp3';
 import time from '@/assets/audio/music/time.mp3';
 import uprising from '@/assets/audio/music/uprising.mp3';
+import contagion from '@/assets/audio/music/contagion.mp3';
+import popcorn from '@/assets/audio/music/popcorn.mp3';
 
 //sound effects
 const tracks = {
@@ -22,7 +24,9 @@ const musicTracks = {
 	hysteria,
 	bliss,
 	time,
-	uprising
+	uprising,
+	contagion,
+	popcorn
 };
 
 const player = document.getElementById('audio-player');
