@@ -34,16 +34,8 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = 0;
 
-		//center both players in their fields and make them face each other
-		if (player === 1) {
-			this.x = (this.canvas.width / 4) - (this.width / 2);
-			this.character = 'green';
-			this.facingDirection = 'right';
-		} else {
-			this.x = this.canvas.width - (this.canvas.width / 4) - (this.width / 2);
-			this.character = 'yellow';
-			this.facingDirection = 'left';
-		}
+		//the player's own character always uses the green skin
+		this.skin = this.controllable ? 'green' : 'yellow';
 
 		this.maxSpeed = maxSpeed;
 		this.acceleration = acceleration;
@@ -57,12 +49,14 @@ export default class Dummy extends Entity {
 		this.maxJumpHeight = this.canvas.height - (this.height * 2);
 
 		if (!game.isServer) {
-			this.idleSprite = new Sprite(this.game.images.dummy[this.character].idle, 7, true);
-			this.movingSprite = new Sprite(this.game.images.dummy[this.character].running, 7, true);
-			this.jumpingSprite = new Sprite(this.game.images.dummy[this.character].jumping, 0, true);
+			this.idleSprite = new Sprite(this.game.images.dummy[this.skin].idle, 7, true);
+			this.movingSprite = new Sprite(this.game.images.dummy[this.skin].running, 7, true);
+			this.jumpingSprite = new Sprite(this.game.images.dummy[this.skin].jumping, 0, true);
 
 			this.image = this.idleSprite.move();
 		}
+
+		this.moveToCenter();
 
 		this.shadow = new Shadow(game, this);
 	}
@@ -89,6 +83,19 @@ export default class Dummy extends Entity {
 	set state(state) {
 		super.state = state;
 		this.facingDirection = state.facingDirection;
+	}
+
+	/**
+	 * Moves the dummy to the center of the screen and makes it face the correct direction
+	 */
+	moveToCenter() {
+		if (this.player === 1) {
+			this.x = (this.canvas.width / 4) - (this.width / 2);
+			this.facingDirection = 'right';
+		} else {
+			this.x = this.canvas.width - (this.canvas.width / 4) - (this.width / 2);
+			this.facingDirection = 'left';
+		}
 	}
 
 	/**
