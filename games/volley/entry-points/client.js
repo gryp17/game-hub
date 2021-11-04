@@ -119,6 +119,9 @@ export default class Volley {
 			const controllable = this.player === playerIndex;
 			return new Dummy(
 				this,
+				this.config.dummy.maxSpeed,
+				this.config.dummy.acceleration,
+				this.config.dummy.jumpAcceleration,
 				this.config.dummy.minForce,
 				this.config.dummy.verticalForce,
 				this.config.dummy.horizontalForce,

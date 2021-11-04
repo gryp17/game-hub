@@ -10,6 +10,9 @@ export default class Dummy extends Entity {
 	/**
 	 * Creates a new dummy instance
 	 * @param {Object} game
+	 * @param {Number} maxSpeed
+	 * @param {Number} acceleration
+	 * @param {Number} jumpAcceleration
 	 * @param {Number} minForce
 	 * @param {Number} verticalForce
 	 * @param {Number} horizontalForce
@@ -17,7 +20,7 @@ export default class Dummy extends Entity {
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
+	constructor(game, maxSpeed, acceleration, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
 
 		this.player = player;
@@ -42,12 +45,12 @@ export default class Dummy extends Entity {
 			this.facingDirection = 'left';
 		}
 
+		this.maxSpeed = maxSpeed;
+		this.acceleration = acceleration;
+		this.jumpAcceleration = jumpAcceleration;
 		this.minForce = minForce;
 		this.verticalForce = verticalForce;
 		this.horizontalForce = horizontalForce;
-		this.maxSpeed = 10;
-		this.acceleration = 2;
-		this.jumpAcceleration = 12;
 
 		this.jumping = false;
 
