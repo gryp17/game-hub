@@ -100,7 +100,18 @@ export default class Volley {
 
 		//game objects
 		this.background = new Background(this);
-		this.ball = new Ball(this);
+
+		this.ball = new Ball(
+			this,
+			this.config.ball.size,
+			this.config.ball.initialRotationSpeed,
+			this.config.ball.gravity,
+			this.config.ball.dt,
+			this.config.ball.horizontalFriction,
+			this.config.ball.verticalFriction,
+			this.config.ball.maxHits,
+			this.config.ball.serveTimeout
+		);
 		this.net = new Net(this);
 
 		this.dummies = [...Array(this.config.maxPlayers).keys()].map((value, index) => {

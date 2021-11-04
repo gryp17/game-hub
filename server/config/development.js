@@ -148,6 +148,17 @@ module.exports = {
 			height: 768,
 			groundHeight: 15,
 			maxScore: 10,
+			ball: {
+				size: 100,
+				initialRotationSpeed: 1.1,
+				maxHits: 5,
+				serveTimeout: 6000,
+				//gravity related properties
+				gravity: 25,
+				dt: 0.17,
+				horizontalFriction: 0.9,
+				verticalFriction: 0.85
+			},
 			dummy: {
 				minForce: 3,
 				verticalForce: 150,

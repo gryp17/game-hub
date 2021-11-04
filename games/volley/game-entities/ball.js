@@ -9,28 +9,36 @@ export default class Ball extends Entity {
 	/**
 	 * Creates a ball instance
 	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} initialRotationSpeed
+	 * @param {Number} gravity
+	 * @param {Number} dt
+	 * @param {Number} horizontalFriction
+	 * @param {Number} verticalFriction
+	 * @param {Number} maxHits
+	 * @param {Number} serveTimeout
 	 */
-	constructor(game) {
+	constructor(game, size, initialRotationSpeed, gravity, dt, horizontalFriction, verticalFriction, maxHits, serveTimeout) {
 		super(game, game.contexts.ball);
 
-		this.width = 100;
-		this.height = 100;
+		this.width = size;
+		this.height = size;
 
 		this.serving = false;
-		this.serveTimeout = 6000;
+		this.serveTimeout = serveTimeout;
 		this.serveTimeoutId;
 
 		this.lastHitBy;
 		this.hitCount = 0;
-		this.maxHitCount = 5;
+		this.maxHitCount = maxHits;
 
 		//gravity, friction etc.
-		this.gravity = 25;
-		this.dt = 0.17;
-		this.frictionX = 0.9;
-		this.frictionY = 0.85;
+		this.gravity = gravity;
+		this.dt = dt;
+		this.frictionX = horizontalFriction;
+		this.frictionY = verticalFriction;
 
-		this.rotationSpeed = 1.1;
+		this.rotationSpeed = initialRotationSpeed;
 		this.angle = 0;
 
 		if (!game.isServer) {

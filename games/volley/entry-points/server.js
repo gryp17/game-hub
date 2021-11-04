@@ -138,7 +138,17 @@ export default class Volley {
 	start() {
 		this.background = new Background(this);
 		this.net = new Net(this);
-		this.ball = new Ball(this);
+		this.ball = new Ball(
+			this,
+			this.config.ball.size,
+			this.config.ball.initialRotationSpeed,
+			this.config.ball.gravity,
+			this.config.ball.dt,
+			this.config.ball.horizontalFriction,
+			this.config.ball.verticalFriction,
+			this.config.ball.maxHits,
+			this.config.ball.serveTimeout
+		);
 
 		this.dummies = this.players.map((player, index) => {
 			const playerIndex = index + 1;
