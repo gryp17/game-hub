@@ -31,7 +31,7 @@ const musicTracks = {
 	paranoid
 };
 
-const player = document.getElementById('audio-player');
+const player = new Audio();
 
 /**
  * Plays an audio track once
