@@ -9,6 +9,7 @@ import time from '@/assets/audio/music/time.mp3';
 import uprising from '@/assets/audio/music/uprising.mp3';
 import contagion from '@/assets/audio/music/contagion.mp3';
 import popcorn from '@/assets/audio/music/popcorn.mp3';
+import paranoid from '@/assets/audio/music/paranoid.mp3';
 
 //sound effects
 const tracks = {
@@ -26,7 +27,8 @@ const musicTracks = {
 	time,
 	uprising,
 	contagion,
-	popcorn
+	popcorn,
+	paranoid
 };
 
 const player = document.getElementById('audio-player');
