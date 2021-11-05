@@ -120,23 +120,23 @@ module.exports = {
 			configurableSettings: {
 				gameLength: {
 					short: 5,
-					normal: 10,
+					default: 10,
 					long: 20
-				},
-				paddleSize: {
-					big: 40,
-					normal: 30,
-					small: 20
 				},
 				ballSpeed: {
 					slow: 6,
-					normal: 9,
+					default: 9,
 					fast: 11
 				},
 				ballSize: {
 					big: 90,
-					normal: 60,
+					default: 60,
 					small: 40
+				},
+				paddleSize: {
+					big: 40,
+					default: 30,
+					small: 20
 				}
 			}
 		},
@@ -186,6 +186,31 @@ module.exports = {
 				},
 				right: {
 					keys: [39, 68] //right arrow, D
+				}
+			},
+			configurableSettings: {
+				gameLength: {
+					short: 5,
+					default: 10,
+					long: 15
+				},
+				background: {
+					default: 'default',
+					beach: 'beach',
+					city: 'city',
+					backyard: 'backyard',
+					desert: 'desert',
+					garden: 'garden'
+				},
+				netHeight: {
+					low: 35,
+					default: 50, //percentage
+					high: 60
+				},
+				hitLimit: {
+					high: 7,
+					default: 5,
+					low: 3
 				}
 			}
 		}

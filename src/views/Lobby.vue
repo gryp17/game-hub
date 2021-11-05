@@ -95,7 +95,7 @@
 	import UserMenu from '@/components/UserMenu';
 	import ToggleChatButton from '@/components/ToggleChatButton';
 	import ChallengeModal from '@/components/modals/ChallengeModal';
-	import ChallengeSettingsModal from '@/components/modals/ChallengeSettingsModal';
+	import ChallengeSettingsModal from '@/components/modals/challenge-settings/ChallengeSettingsModal';
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 	import UserProfileModal from '@/components/modals/user-profile/UserProfileModal';
 	import EditProfileModal from '@/components/modals/EditProfileModal';

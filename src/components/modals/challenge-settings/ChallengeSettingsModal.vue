@@ -26,31 +26,7 @@
 						Challenge <span class="bold">{{ user.username }}</span> in a game of <span class="bold">{{ game.label }}</span> with the following rules:
 					</div>
 
-					<div class="game-settings">
-						<FormSelect
-							v-model="gameLength"
-							label="Game length"
-							:options="gameLengthOptions"
-						/>
-
-						<FormSelect
-							v-model="paddleSize"
-							label="Paddle size"
-							:options="paddleSizeOptions"
-						/>
-
-						<FormSelect
-							v-model="ballSpeed"
-							label="Ball speed"
-							:options="ballSpeedOptions"
-						/>
-
-						<FormSelect
-							v-model="ballSize"
-							label="Ball size"
-							:options="ballSizeOptions"
-						/>
-					</div>
+					<GameSettings v-model="settings" :game="game.value" />
 
 					<div class="buttons-wrapper">
 						<FormButton
@@ -96,11 +72,13 @@
 	import { mapState, mapGetters } from 'vuex';
 	import { hideChallengeSettingsModal } from '@/services/modal';
 	import TimeoutCountdown from '@/components/TimeoutCountdown';
+	import GameSettings from '@/components/modals/challenge-settings/GameSettings';
 	import GameSettingsSummary from '@/components/GameSettingsSummary';
 
 	export default {
 		components: {
 			TimeoutCountdown,
+			GameSettings,
 			GameSettingsSummary
 		},
 		data() {
@@ -109,31 +87,7 @@
 				game: {},
 				settings: null,
 				loading: false,
-				challengeSent: false,
-				gameLength: 'normal',
-				gameLengthOptions: [
-					'long',
-					'normal',
-					'short'
-				],
-				ballSpeed: 'normal',
-				ballSpeedOptions: [
-					'slow',
-					'normal',
-					'fast'
-				],
-				ballSize: 'normal',
-				ballSizeOptions: [
-					'big',
-					'normal',
-					'small'
-				],
-				paddleSize: 'normal',
-				paddleSizeOptions: [
-					'big',
-					'normal',
-					'small'
-				]
+				challengeSent: false
 			};
 		},
 		computed: {
@@ -193,13 +147,6 @@
 				}
 
 				this.loading = true;
-
-				this.settings = {
-					gameLength: this.gameLength,
-					ballSpeed: this.ballSpeed,
-					ballSize: this.ballSize,
-					paddleSize: this.paddleSize
-				};
 
 				//use $listeners instead of $emit in order to be able to await the response
 				const success = await this.$listeners.challenge({
@@ -273,21 +220,6 @@
 
 			.challenge-message-sent {
 				padding-top: 10px;
-			}
-
-			.game-settings {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-between;
-				margin-bottom: 10px;
-				padding: 15px;
-				background-color: $gray-almost-white;
-				border-radius: 5px;
-
-				.form-select {
-					width: 48%;
-					margin-bottom: 15px;
-				}
 			}
 		}
 	}

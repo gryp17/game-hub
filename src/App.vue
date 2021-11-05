@@ -11,6 +11,7 @@
 	import errorsMap from '@/filters/errorsMap';
 	import gamesMap from '@/filters/gamesMap';
 	import experienceMap from '@/filters/experienceMap';
+	import settingsLabelsMap from '@/filters/settingsLabelsMap';
 	import FormInput from '@/components/forms/FormInput';
 	import FormFileInput from '@/components/forms/FormFileInput';
 	import FormButton from '@/components/forms/FormButton';
@@ -21,6 +22,7 @@
 	Vue.filter('errorsMap', errorsMap);
 	Vue.filter('gamesMap', gamesMap);
 	Vue.filter('experienceMap', experienceMap);
+	Vue.filter('settingsLabelsMap', settingsLabelsMap);
 
 	//global components
 	Vue.component('FormInput', FormInput);

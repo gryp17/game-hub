@@ -45,7 +45,7 @@ function validateGameSettings(game, settings) {
 
 			//if the value is not set or is not valid fallback to the default/normal value
 			if (!value || !validKeys.includes(value)) {
-				value = validValuesMap.normal;
+				value = validValuesMap.default;
 			}
 
 			validSettings[settingType] = value;

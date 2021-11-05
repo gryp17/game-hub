@@ -1,16 +1,13 @@
 <template>
 	<div class="game-settings-summary">
-		<!-- pong settings -->
-		<template v-if="game === 'pong'">
-			<div v-for="setting in pongSettings" :key="setting.label" class="game-settings-item">
-				<div class="label">
-					{{ setting.label }}:
-				</div>
-				<div :class="['value', { default: setting.value === 'normal'}]">
-					{{ setting.value }}
-				</div>
+		<div v-for="(value, label) in settings" :key="label" class="game-settings-item">
+			<div class="label">
+				{{ label | settingsLabelsMap(game) }}:
 			</div>
-		</template>
+			<div :class="['value', { default: value === 'default'}]">
+				{{ value }}
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -24,32 +21,6 @@
 			settings: {
 				type: Object,
 				required: true
-			}
-		},
-		computed: {
-			/**
-			 * Returns the list of available pong settings with their labels
-			 * @returns {Array}
-			 */
-			pongSettings() {
-				return [
-					{
-						label: 'Game length',
-						value: this.settings.gameLength
-					},
-					{
-						label: 'Paddle size',
-						value: this.settings.paddleSize
-					},
-					{
-						label: 'Ball speed',
-						value: this.settings.ballSpeed
-					},
-					{
-						label: 'Ball size',
-						value: this.settings.ballSize
-					}
-				];
 			}
 		}
 	};
