@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import GameServer from '../../common/game-server';
 import Dummy from '../game-entities/dummy';
 import Ball from '../game-entities/ball';
 import Net from '../game-entities/net';
@@ -7,7 +8,7 @@ import Background from '../game-entities/background';
 /**
  * Volley server class
  */
-export default class Volley {
+export default class Volley extends GameServer {
 	/**
 	 * Creates a new volley server instance
 	 * @param {Number} id
@@ -17,57 +18,19 @@ export default class Volley {
 	 * @param {Object} events
 	 */
 	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
-		this.isServer = typeof window === 'undefined';
-		this.id = id;
-		this.config = this.applySettings(config, customSettings);
-		this.players = players;
-		this.onUpdate = onUpdate;
-		this.onGameOver = onGameOver;
-		this.gameLoopInterval;
-		this.groundHeight = config.groundHeight;
-		this.dummies = [];
-		this.scores = {};
-		this.gameOver = false;
-
-		this.inputs = {};
-
-		players.forEach((player, index) => {
-			this.inputs[player.socketId] = {
-				UP: false,
-				LEFT: false,
-				RIGHT: false
-			};
-
-			//generate the player 1 and player 2 scores
-			this.scores[index + 1] = {
-				id: player.id,
-				username: player.username,
-				score: 0
-			};
-		});
-
-		this.ball;
-		this.background;
-		this.net;
-
-		//mocked contexts/canvas objects (not really used on the server apart from the canvas size)
-		this.canvasIds = {
+		const canvasIds = {
 			background: 'background-canvas',
 			ball: 'ball-canvas',
 			game: 'game-canvas'
 		};
 
-		this.contexts = {};
+		super(id, config, customSettings, players, { onUpdate, onGameOver }, canvasIds);
 
-		_.forOwn(this.canvasIds, (canvasId, name) => {
-			this.contexts[name] = {
-				context: {},
-				canvas: {
-					width: this.config.width,
-					height: this.config.height
-				}
-			};
-		});
+		this.groundHeight = config.groundHeight;
+		this.dummies = [];
+		this.ball;
+		this.background;
+		this.net;
 	}
 
 	/**
@@ -77,10 +40,6 @@ export default class Volley {
 	 * @returns {Object}
 	 */
 	applySettings(defaultConfig, customSettings) {
-		const config = {
-			...defaultConfig
-		};
-
 		//map each setting type to the path in the config that it corresponds to
 		const settingsPathMap = {
 			gameLength: 'maxScore',
@@ -89,13 +48,7 @@ export default class Volley {
 			hitLimit: 'ball.maxHits'
 		};
 
-		_.forOwn(defaultConfig.configurableSettings, (predefinedValues, settingType) => {
-			if (customSettings && customSettings[settingType]) {
-				const path = settingsPathMap[settingType];
-				const value = predefinedValues[customSettings[settingType]];
-				_.set(config, path, value);
-			}
-		});
+		const config = super.applySettings(defaultConfig, customSettings, settingsPathMap);
 
 		//pick a random background if the default option was selected
 		if (!customSettings || customSettings.background === 'default') {
@@ -106,44 +59,13 @@ export default class Volley {
 	}
 
 	/**
-	 * Updates the inputs belonging to the provided socketId/player
-	 * @param {Object} data
-	 */
-	updateInputs({ socketId, inputs }) {
-		this.inputs[socketId] = inputs;
-	}
-
-	/**
-	 * Ends the game
-	 * @param {Object} winner
-	 * @param {Boolean} ragequit
-	 */
-	gameIsOver(winner, ragequit = false) {
-		const scores = {};
-
-		//format the scores object
-		Object.keys(this.scores).forEach((key) => {
-			const user = this.scores[key];
-			scores[user.id] = user.score;
-		});
-
-		//stop the game loop, mark the game as game over and update the game state one last time
-		this.stop();
-		this.gameOver = true;
-		this.onGameStateUpdate();
-		this.onGameOver(winner, scores, ragequit);
-	}
-
-	/**
 	 * Called when one of the players scores
 	 * @param {Number} player
 	 */
 	onPlayerScore(player) {
-		this.scores[player].score = this.scores[player].score + 1;
+		super.onPlayerScore(player);
 
-		if (this.scores[player].score === this.config.maxScore) {
-			this.gameIsOver(this.players[player - 1]);
-		} else {
+		if (this.scores[player].score < this.config.maxScore) {
 			//otherwise reset the ball position
 			this.ball.reset(player);
 		}
@@ -157,7 +79,7 @@ export default class Volley {
 			return dummy.state;
 		});
 
-		this.onUpdate({
+		super.onGameStateUpdate({
 			dummies: dummiesState,
 			ball: this.ball.state,
 			net: this.net.state,
@@ -201,20 +123,13 @@ export default class Volley {
 			);
 		});
 
-		this.gameLoopInterval = setInterval(() => {
+		const gameLoop = () => {
 			this.dummies.forEach((dummy) => {
 				dummy.move();
 			});
 			this.ball.move();
+		};
 
-			this.onGameStateUpdate();
-		}, 1000 / this.config.fps);
-	}
-
-	/**
-	 * Stops the game
-	 */
-	stop() {
-		clearInterval(this.gameLoopInterval);
+		super.start(gameLoop);
 	}
 }
