@@ -112,7 +112,7 @@ export default class Volley {
 			this.config.ball.maxHits,
 			this.config.ball.serveTimeout
 		);
-		this.net = new Net(this);
+		this.net = new Net(this, this.config.net.height);
 
 		this.dummies = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
 			const playerIndex = index + 1;

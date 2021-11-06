@@ -81,15 +81,26 @@ export default class Volley {
 			...defaultConfig
 		};
 
-		//TODO: refactor this logic when the custom settings get implemented
-		//pick a random background
-		config.background.selectedBackground = _.sample(config.background.availableBackgrounds);
+		//map each setting type to the path in the config that it corresponds to
+		const settingsPathMap = {
+			gameLength: 'maxScore',
+			background: 'background.selectedBackground',
+			netHeight: 'net.height',
+			hitLimit: 'ball.maxHits'
+		};
 
-		if (!customSettings) {
-			return config;
+		_.forOwn(defaultConfig.configurableSettings, (predefinedValues, settingType) => {
+			if (customSettings && customSettings[settingType]) {
+				const path = settingsPathMap[settingType];
+				const value = predefinedValues[customSettings[settingType]];
+				_.set(config, path, value);
+			}
+		});
+
+		//pick a random background if the default option was selected
+		if (!customSettings || customSettings.background === 'default') {
+			config.background.selectedBackground = _.sample(config.background.availableBackgrounds);
 		}
-
-		//TODO: implement the rest of the logic
 
 		return config;
 	}
@@ -161,7 +172,7 @@ export default class Volley {
 	 */
 	start() {
 		this.background = new Background(this, this.config.background.selectedBackground);
-		this.net = new Net(this);
+		this.net = new Net(this, this.config.net.height);
 		this.ball = new Ball(
 			this,
 			this.config.ball.size,

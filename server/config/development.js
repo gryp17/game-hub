@@ -167,6 +167,9 @@ module.exports = {
 				verticalForce: 150,
 				horizontalForce: 10
 			},
+			net: {
+				height: 50 //percentage
+			},
 			background: {
 				availableBackgrounds: [
 					'beach',
@@ -203,7 +206,7 @@ module.exports = {
 					garden: 'garden'
 				},
 				netHeight: {
-					low: 35,
+					low: 40,
 					default: 50, //percentage
 					high: 60
 				},
