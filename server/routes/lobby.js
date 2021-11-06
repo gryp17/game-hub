@@ -34,29 +34,28 @@ const rules = {
  * @returns {Object}
  */
 function validateGameSettings(game, settings) {
-	if (game === games.pong.code) {
-		const validSettings = {};
-
-		//check if every setting key is set and it's value is valid
-		Object.keys(games.pong.configurableSettings).forEach((settingType) => {
-			let value = settings ? settings[settingType] : null;
-			const validValuesMap = games.pong.configurableSettings[settingType];
-			const validKeys = Object.keys(validValuesMap);
-
-			//if the value is not set or is not valid fallback to the default/normal value
-			if (!value || !validKeys.includes(value)) {
-				value = 'default';
-			}
-
-			validSettings[settingType] = value;
-		});
-
-		return validSettings;
+	if (!games[game] || !games[game].configurableSettings) {
+		return {};
 	}
 
-	//TODO: add more game types if necessary
+	const validSettings = {};
+	const configurableSettings = games[game].configurableSettings;
 
-	return {};
+	//check if every setting key is set and it's value is valid
+	Object.keys(configurableSettings).forEach((settingType) => {
+		let value = settings ? settings[settingType] : null;
+		const validValuesMap = configurableSettings[settingType];
+		const validKeys = Object.keys(validValuesMap);
+
+		//if the value is not set or is not valid fallback to the default/normal value
+		if (!value || !validKeys.includes(value)) {
+			value = 'default';
+		}
+
+		validSettings[settingType] = value;
+	});
+
+	return validSettings;
 }
 
 /**
