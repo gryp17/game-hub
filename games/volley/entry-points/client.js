@@ -1,21 +1,17 @@
 import _ from 'lodash';
-import Utils from '../../common/utils';
-import Context from '../../common/context';
+import GameClient from '../../common/game-client';
 import Keyboard from '../../common/inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Background from '../game-entities/background';
 import Ball from '../game-entities/ball';
 import Dummy from '../game-entities/dummy';
 import Net from '../game-entities/net';
-import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
-
-window.requestAnimFrame = Utils.getRequestAnimationFrame();
 
 /**
  * Volley client class
  */
-export default class Volley {
+export default class Volley extends GameClient {
 	/**
 	 * Creates a new volley client instance
 	 * @param {Object} canvasIds
@@ -26,35 +22,14 @@ export default class Volley {
 	 * @param {Object} events
 	 */
 	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
-		this.isServer = typeof window === 'undefined';
-		this.canvasIds = canvasIds;
-		this.canvasWrapper = canvasWrapper;
-		this.musicIsPlaying = false;
-		this.config = config;
-		this.player = player;
-		this.gameLoopInterval;
-		this.inputs;
-		this.images = images;
+		super(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack });
+
 		this.groundHeight = config.groundHeight;
-		this.scores = {};
+
 		this.background;
 		this.ball;
 		this.dummies = [];
 		this.net;
-
-		//events
-		this.onUpdateInputs = onUpdateInputs;
-		this.playMusic = playMusic;
-		this.playTrack = playTrack;
-
-		this.gameControls = config.controls;
-
-		//initialize the canvas/context objects and generate the canvas HTML elements
-		this.contexts = {};
-
-		_.forOwn(this.canvasIds, (canvasId, name) => {
-			this.contexts[name] = new Context(canvasId, this.canvasWrapper, this.config.width, this.config.height);
-		});
 
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
@@ -66,38 +41,13 @@ export default class Volley {
 	 * @param {Function} callback
 	 */
 	static preloadGameImages(callback) {
-		new ImageRepository(gameImages, callback);
-	}
-
-	/**
-	 * Tries to play the music track
-	 * This helper function is called after an user input in order to avoid the firefox autoplay limitations
-	 */
-	tryToPlayMusic() {
-		if (this.musicIsPlaying) {
-			return;
-		}
-
-		const anyKeyPressed = Object.values(this.inputs).find((status) => {
-			return status === true;
-		});
-
-		if (anyKeyPressed) {
-			this.musicIsPlaying = true;
-			this.playMusic();
-		}
+		super.preloadGameImages(gameImages, callback);
 	}
 
 	/**
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		//show all contexts and focus the game context where the inputs are handled
-		_.forOwn(this.contexts, (context) => {
-			context.show();
-		});
-		this.contexts.game.focus();
-
 		//game objects
 		this.background = new Background(this, this.config.background.selectedBackground);
 
@@ -134,13 +84,7 @@ export default class Volley {
 		this.keyboard.listen();
 		this.touchscreen.listen();
 
-		this.gameLoopInterval = setInterval(() => {
-			this.gameLoop();
-		}, 1000 / this.config.fps);
-
-		window.requestAnimFrame(() => {
-			this.drawGame();
-		});
+		super.start();
 	}
 
 	/**
@@ -151,7 +95,7 @@ export default class Volley {
 		this.keyboard.removeAllEventListeners();
 		this.touchscreen.removeAllEventListeners();
 
-		clearInterval(this.gameLoopInterval);
+		super.stop();
 	}
 
 	/**
@@ -167,11 +111,7 @@ export default class Volley {
 		this.net.state = net;
 		this.background.state = background;
 
-		this.scores = scores;
-
-		if (gameOver) {
-			this.stop();
-		}
+		super.updateData({ scores, gameOver });
 	}
 
 	/**
@@ -201,21 +141,7 @@ export default class Volley {
 	 * The game logic that runs every game tick
 	 */
 	gameLoop() {
-		//get the current inputs status
-		const oldInputs = {
-			...this.inputs
-		};
-
-		this.inputs = this.getInputs();
-
-		//emit the updateInputs only if the inputs have changed
-		if (!_.isEqual(oldInputs, this.inputs)) {
-			this.onUpdateInputs(this.inputs);
-		}
-
-		//when any key has been pressed try to play the music tracks
-		//this is a firefox autoplay hack
-		this.tryToPlayMusic();
+		super.gameLoop();
 
 		this.dummies.forEach((dummy) => {
 			dummy.move();
@@ -228,23 +154,18 @@ export default class Volley {
 	 * Draws the game entities
 	 */
 	drawGame() {
-		//clear the whole canvas before drawing anything (this used to be in the dummy class)
-		_.forOwn(this.contexts, (value, key) => {
-			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
-		});
+		const drawEntities = () => {
+			this.background.draw();
 
-		this.background.draw();
+			this.net.draw();
 
-		this.net.draw();
+			this.dummies.forEach((dummy) => {
+				dummy.draw();
+			});
 
-		this.dummies.forEach((dummy) => {
-			dummy.draw();
-		});
+			this.ball.draw();
+		};
 
-		this.ball.draw();
-
-		window.requestAnimFrame(() => {
-			this.drawGame();
-		});
+		super.drawGame(drawEntities);
 	}
 }
