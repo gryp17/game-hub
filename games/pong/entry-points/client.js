@@ -1,11 +1,10 @@
 import _ from 'lodash';
+import GameClient from '../../common/game-client';
 import Utils from '../../common/utils';
-import Context from '../../common/context';
 import Keyboard from '../../common/inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
-import ImageRepository from '../../common/image-repository';
 import gameImages from '../resources/images';
 
 window.requestAnimFrame = Utils.getRequestAnimationFrame();
@@ -13,7 +12,7 @@ window.requestAnimFrame = Utils.getRequestAnimationFrame();
 /**
  * Pong client class
  */
-export default class Pong {
+export default class Pong extends GameClient {
 	/**
 	 * Creates a new pong client instance
 	 * @param {Object} canvasIds
@@ -24,32 +23,10 @@ export default class Pong {
 	 * @param {Object} events
 	 */
 	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
-		this.isServer = typeof window === 'undefined';
-		this.canvasIds = canvasIds;
-		this.canvasWrapper = canvasWrapper;
-		this.musicIsPlaying = false;
-		this.config = config;
-		this.player = player;
-		this.gameLoopInterval;
-		this.inputs;
-		this.images = images;
+		super(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack });
+
 		this.paddles = [];
-		this.scores = {};
 		this.ball;
-
-		//events
-		this.onUpdateInputs = onUpdateInputs;
-		this.playMusic = playMusic;
-		this.playTrack = playTrack;
-
-		this.gameControls = config.controls;
-
-		//initialize the canvas/context objects and generate the canvas HTML elements
-		this.contexts = {};
-
-		_.forOwn(this.canvasIds, (canvasId, name) => {
-			this.contexts[name] = new Context(canvasId, this.canvasWrapper, this.config.width, this.config.height);
-		});
 
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
@@ -61,38 +38,13 @@ export default class Pong {
 	 * @param {Function} callback
 	 */
 	static preloadGameImages(callback) {
-		new ImageRepository(gameImages, callback);
-	}
-
-	/**
-	 * Tries to play the music track
-	 * This helper function is called after an user input in order to avoid the firefox autoplay limitations
-	 */
-	tryToPlayMusic() {
-		if (this.musicIsPlaying) {
-			return;
-		}
-
-		const anyKeyPressed = Object.values(this.inputs).find((status) => {
-			return status === true;
-		});
-
-		if (anyKeyPressed) {
-			this.musicIsPlaying = true;
-			this.playMusic();
-		}
+		super.preloadGameImages(gameImages, callback);
 	}
 
 	/**
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		//show all contexts and focus the game context where the inputs are handled
-		_.forOwn(this.contexts, (context) => {
-			context.show();
-		});
-		this.contexts.game.focus();
-
 		//game objects
 		this.paddles = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
 			const playerIndex = index + 1;
@@ -113,13 +65,7 @@ export default class Pong {
 		this.keyboard.listen();
 		this.touchscreen.listen();
 
-		this.gameLoopInterval = setInterval(() => {
-			this.gameLoop();
-		}, 1000 / this.config.fps);
-
-		window.requestAnimFrame(() => {
-			this.drawGame();
-		});
+		super.start();
 	}
 
 	/**
