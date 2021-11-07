@@ -89,8 +89,16 @@ export default class Ball extends Entity {
 	onPlayerScore(player) {
 		if (this.game.isServer) {
 			this.game.onPlayerScore(player);
-		} else {
-			this.playScoreSound();
+			this.game.triggerEvent('score');
+		}
+	}
+
+	/**
+	 * Triggers the ballHit event
+	 */
+	onBallHit() {
+		if (this.game.isServer) {
+			this.game.triggerEvent('ballHit');
 		}
 	}
 
@@ -181,24 +189,6 @@ export default class Ball extends Entity {
 		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
 
 		this.shadow.draw();
-	}
-
-	/**
-	 * Plays the hit sound effect
-	 */
-	playHitSound() {
-		if (!this.game.isServer) {
-			this.game.playTrack('volleyHit');
-		}
-	}
-
-	/**
-	 * Plays score sound effect
-	 */
-	playScoreSound() {
-		if (!this.game.isServer) {
-			this.game.playTrack('whistle', 0.1);
-		}
 	}
 
 	/**
@@ -315,7 +305,7 @@ export default class Ball extends Entity {
 					this.onPlayerScore(dummy.player === 1 ? 2 : 1);
 				}
 
-				this.playHitSound();
+				this.onBallHit();
 			}
 		});
 
@@ -362,7 +352,7 @@ export default class Ball extends Entity {
 				this.dy = Math.abs(this.dy) * -1;
 			}
 
-			this.playHitSound();
+			this.onBallHit();
 		}
 	}
 }

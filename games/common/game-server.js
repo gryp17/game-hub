@@ -30,6 +30,7 @@ export default class GameServer {
 
 		this.inputs = {};
 		this.scores = {};
+		this.events = {};
 
 		this.canvasIds = canvasIds;
 		this.contexts = {};
@@ -127,11 +128,26 @@ export default class GameServer {
 	}
 
 	/**
+	 * Registers an event in the events list that is sent to the clients
+	 * @param {String} event
+	 * @param {Any} data
+	 */
+	triggerEvent(event, data = true) {
+		this.events[event] = data;
+	}
+
+	/**
 	 * Sends an update to the clients with the current game state
 	 * @param {Object} state
 	 */
 	onGameStateUpdate(state) {
-		this.onUpdate(state);
+		this.onUpdate({
+			...state,
+			events: this.events
+		});
+
+		//reset the events object after sending it to the clients
+		this.events = {};
 	}
 
 	/**

@@ -83,8 +83,16 @@ export default class Ball extends Entity {
 	onPlayerScore(player) {
 		if (this.game.isServer) {
 			this.game.onPlayerScore(player);
-		} else {
-			this.playScoreSound();
+			this.game.triggerEvent('score');
+		}
+	}
+
+	/**
+	 * Triggers the ballHit event
+	 */
+	onBallHit() {
+		if (this.game.isServer) {
+			this.game.triggerEvent('ballHit');
 		}
 	}
 
@@ -171,24 +179,6 @@ export default class Ball extends Entity {
 	}
 
 	/**
-	 * Plays the hit sound effect
-	 */
-	playHitSound() {
-		if (!this.game.isServer) {
-			this.game.playTrack('pongHit');
-		}
-	}
-
-	/**
-	 * Plays score sound effect
-	 */
-	playScoreSound() {
-		if (!this.game.isServer) {
-			this.game.playTrack('whistle', 0.1);
-		}
-	}
-
-	/**
 	 * Handles all ball collisions
 	 */
 	handleCollisions() {
@@ -238,7 +228,7 @@ export default class Ball extends Entity {
 				//speed up the ball and use the paddle acceleration to calculate the ball's vertical acceleration
 				this.speedUp(paddle.dy);
 
-				this.playHitSound();
+				this.onBallHit();
 			}
 		});
 	}

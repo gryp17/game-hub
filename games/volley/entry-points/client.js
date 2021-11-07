@@ -102,7 +102,7 @@ export default class Volley extends GameClient {
 	 * Updates the game state with the data received from the server
 	 * @param {Object} data
 	 */
-	updateData({ dummies, ball, net, background, scores, gameOver }) {
+	updateData({ events, dummies, ball, net, background, scores, gameOver }) {
 		dummies.forEach((dummy, index) => {
 			this.dummies[index].state = dummy;
 		});
@@ -111,7 +111,35 @@ export default class Volley extends GameClient {
 		this.net.state = net;
 		this.background.state = background;
 
-		super.updateData({ scores, gameOver });
+		super.updateData({ events, scores, gameOver });
+	}
+
+	/**
+	 * Handles the server events
+	 * @param {Object} events
+	 */
+	handleServerEvents(events) {
+		if (events.ballHit) {
+			this.playHitSound();
+		}
+
+		if (events.score) {
+			this.playScoreSound();
+		}
+	}
+
+	/**
+	 * Plays the score sound effect
+	 */
+	playScoreSound() {
+		this.playTrack('whistle', 0.2);
+	}
+
+	/**
+	 * Plays the hit sound effect
+	 */
+	playHitSound() {
+		this.playTrack('volleyHit');
 	}
 
 	/**

@@ -80,14 +80,42 @@ export default class Pong extends GameClient {
 	 * Updates the game state with the data received from the server
 	 * @param {Object} data
 	 */
-	updateData({ paddles, ball, scores, gameOver }) {
+	updateData({ events, paddles, ball, scores, gameOver }) {
 		paddles.forEach((paddle, index) => {
 			this.paddles[index].state = paddle;
 		});
 
 		this.ball.state = ball;
 
-		super.updateData({ scores, gameOver });
+		super.updateData({ events, scores, gameOver });
+	}
+
+	/**
+	 * Handles the server events
+	 * @param {Object} events
+	 */
+	handleServerEvents(events) {
+		if (events.ballHit) {
+			this.playHitSound();
+		}
+
+		if (events.score) {
+			this.playScoreSound();
+		}
+	}
+
+	/**
+	 * Plays the score sound effect
+	 */
+	playScoreSound() {
+		this.playTrack('whistle', 0.2);
+	}
+
+	/**
+	 * Plays the hit sound effect
+	 */
+	playHitSound() {
+		this.playTrack('pongHit');
 	}
 
 	/**

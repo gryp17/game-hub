@@ -102,12 +102,22 @@ export default class GameClient {
 	 * Updates the game state with the data received from the server
 	 * @param {Object} data
 	 */
-	updateData({ scores, gameOver }) {
+	updateData({ events, scores, gameOver }) {
 		this.scores = scores;
+
+		this.handleServerEvents(events);
 
 		if (gameOver) {
 			this.stop();
 		}
+	}
+
+	/**
+	 * Handles the server events
+	 * @param {Object} events
+	 */
+	handleServerEvents(events) {
+		throw new Error('Method "handleServerEvents()" must be implemented.');
 	}
 
 	/**
