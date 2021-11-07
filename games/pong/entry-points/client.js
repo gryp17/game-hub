@@ -1,13 +1,10 @@
 import _ from 'lodash';
 import GameClient from '../../common/game-client';
-import Utils from '../../common/utils';
 import Keyboard from '../../common/inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
 import gameImages from '../resources/images';
-
-window.requestAnimFrame = Utils.getRequestAnimationFrame();
 
 /**
  * Pong client class
@@ -76,7 +73,7 @@ export default class Pong extends GameClient {
 		this.keyboard.removeAllEventListeners();
 		this.touchscreen.removeAllEventListeners();
 
-		clearInterval(this.gameLoopInterval);
+		super.stop();
 	}
 
 	/**
@@ -90,11 +87,7 @@ export default class Pong extends GameClient {
 
 		this.ball.state = ball;
 
-		this.scores = scores;
-
-		if (gameOver) {
-			this.stop();
-		}
+		super.updateData({ scores, gameOver });
 	}
 
 	/**
@@ -124,21 +117,7 @@ export default class Pong extends GameClient {
 	 * The game logic that runs every game tick
 	 */
 	gameLoop() {
-		//get the current inputs status
-		const oldInputs = {
-			...this.inputs
-		};
-
-		this.inputs = this.getInputs();
-
-		//emit the updateInputs only if the inputs have changed
-		if (!_.isEqual(oldInputs, this.inputs)) {
-			this.onUpdateInputs(this.inputs);
-		}
-
-		//when any key has been pressed try to play the music tracks
-		//this is a firefox autoplay hack
-		this.tryToPlayMusic();
+		super.gameLoop();
 
 		this.paddles.forEach((paddle) => {
 			paddle.move();
@@ -150,18 +129,14 @@ export default class Pong extends GameClient {
 	 * Draws the game entities
 	 */
 	drawGame() {
-		//clear the whole canvas before drawing anything (this used to be in the paddle class)
-		_.forOwn(this.contexts, (value, key) => {
-			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
-		});
+		const drawEntities = () => {
+			this.paddles.forEach((paddle) => {
+				paddle.draw();
+			});
 
-		this.paddles.forEach((paddle) => {
-			paddle.draw();
-		});
-		this.ball.draw();
+			this.ball.draw();
+		};
 
-		window.requestAnimFrame(() => {
-			this.drawGame();
-		});
+		super.drawGame(drawEntities);
 	}
 }

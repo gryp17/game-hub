@@ -1,11 +1,23 @@
 import _ from 'lodash';
+import Utils from './utils';
 import Context from './context';
 import ImageRepository from './image-repository';
+
+window.requestAnimFrame = Utils.getRequestAnimationFrame();
 
 /**
  * An abstract GameClient class that contains the base client logic
  */
 export default class GameClient {
+	/**
+	 * Creates a new GameClient instance
+	 * @param {Object} canvasIds
+	 * @param {String} canvasWrapper
+	 * @param {Object} images
+	 * @param {Object} config
+	 * @param {Number} player
+	 * @param {Object} events
+	 */
 	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
 		this.canvasIds = canvasIds;
@@ -69,12 +81,75 @@ export default class GameClient {
 		_.forOwn(this.contexts, (context) => {
 			context.show();
 		});
-		// TODO: check if this is necessary
-		// this.contexts.game.focus();
 
 		this.gameLoopInterval = setInterval(() => {
 			this.gameLoop();
 		}, 1000 / this.config.fps);
+
+		window.requestAnimFrame(() => {
+			this.drawGame();
+		});
+	}
+
+	/**
+	 * Stops the game
+	 */
+	stop() {
+		clearInterval(this.gameLoopInterval);
+	}
+
+	/**
+	 * Updates the game state with the data received from the server
+	 * @param {Object} data
+	 */
+	updateData({ scores, gameOver }) {
+		this.scores = scores;
+
+		if (gameOver) {
+			this.stop();
+		}
+	}
+
+	/**
+	 * Returns the current inputs state
+	 * @returns {Object}
+	 */
+	getInputs() {
+		throw new Error('Method "getInputs()" must be implemented.');
+	}
+
+	/**
+	 * The game logic that runs every game tick
+	 */
+	gameLoop() {
+		//get the current inputs status
+		const oldInputs = {
+			...this.inputs
+		};
+
+		this.inputs = this.getInputs();
+
+		//emit the updateInputs only if the inputs have changed
+		if (!_.isEqual(oldInputs, this.inputs)) {
+			this.onUpdateInputs(this.inputs);
+		}
+
+		//when any key has been pressed try to play the music tracks
+		//this is a firefox autoplay hack
+		this.tryToPlayMusic();
+	}
+
+	/**
+	 * Draws the game entities
+	 * @param {Function} drawEntities
+	 */
+	drawGame(drawEntities) {
+		//clear the whole canvas before drawing anything
+		_.forOwn(this.contexts, (value, key) => {
+			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
+		});
+
+		drawEntities();
 
 		window.requestAnimFrame(() => {
 			this.drawGame();
