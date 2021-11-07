@@ -197,7 +197,7 @@ export default class Ball extends Entity {
 	 */
 	playScoreSound() {
 		if (!this.game.isServer) {
-			this.game.playTrack('whistle', 0.2);
+			this.game.playTrack('whistle', 0.1);
 		}
 	}
 

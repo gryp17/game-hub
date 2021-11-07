@@ -1,3 +1,5 @@
+import { Howl } from 'howler';
+
 import challenge from '@/assets/audio/challenge.mp3';
 import pongHit from '@/assets/audio/pong-hit.mp3';
 import volleyHit from '@/assets/audio/volley-hit.mp3';
@@ -31,6 +33,17 @@ const musicTracks = {
 	paranoid
 };
 
+const howlerTracks = {};
+
+//preload the tracks so they can be used in howler
+Object.keys(tracks).forEach((key) => {
+	const track = tracks[key];
+	howlerTracks[key] = new Howl({
+		src: [track],
+		autoplay: false
+	});
+});
+
 const player = new Audio();
 
 /**
@@ -39,15 +52,10 @@ const player = new Audio();
  * @param {Float} volume
  */
 function playTrack(track, volume = 1) {
-	if (tracks[track]) {
-		const audio = new Audio(tracks[track]);
-		audio.volume = volume;
-		const promise = audio.play();
-
-		//catch autoplay exceptions
-		if (promise !== null) {
-			promise.catch(() => {});
-		}
+	if (howlerTracks[track]) {
+		const sound = howlerTracks[track];
+		sound.volume(volume);
+		sound.play();
 	}
 }
 
