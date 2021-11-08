@@ -71,6 +71,12 @@ const routes = [
 		name: 'play',
 		component: () => import(/* webpackChunkName: "play" */ '@/views/Play.vue'),
 		beforeEnter: mustBeLoggedIn
+	},
+	{
+		path: '/prototype',
+		name: 'prototype',
+		component: () => import(/* webpackChunkName: "prototype" */ '@/views/Prototype.vue'),
+		beforeEnter: mustBeLoggedIn
 	}
 ];
 

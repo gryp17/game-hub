@@ -20,6 +20,10 @@ module.exports = {
 				{
 					from: './games/volley/img',
 					to: './game-images/volley'
+				},
+				{
+					from: './games/jumper/img',
+					to: './game-images/jumper'
 				}
 			]),
 			//mp3 files loader
