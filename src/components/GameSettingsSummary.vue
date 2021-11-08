@@ -47,7 +47,9 @@
 			}
 
 			.value {
+				margin-top: 5px;
 				color: $red;
+				text-transform: capitalize;
 
 				&.default {
 					color: $text-color-dark;

@@ -6,6 +6,7 @@
 			v-model="settings[game][property]"
 			:label="$options.filters.settingsLabelsMap(property, game)"
 			:options="options"
+			capitalize
 		/>
 	</div>
 </template>

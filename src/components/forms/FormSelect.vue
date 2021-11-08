@@ -1,5 +1,5 @@
 <template>
-	<div class="form-select">
+	<div :class="['form-select', { capitalize }]">
 		<div v-if="label" class="form-select-label">
 			{{ label }}
 		</div>
@@ -40,7 +40,11 @@
 				type: [String, Number],
 				required: true
 			},
-			label: String
+			label: String,
+			capitalize: {
+				type: Boolean,
+				default: false
+			}
 		},
 		computed: {
 			/**
@@ -57,6 +61,13 @@
 						value: item,
 						label: item
 					};
+				}).map((option) => {
+					//need to use javascript to capitalize the select options on firefox
+					if (this.capitalize) {
+						option.label = _.capitalize(option.label);
+					}
+
+					return option;
 				});
 			}
 		}
@@ -83,6 +94,12 @@
 			&:focus {
 				box-shadow: none;
 				border-color: $purple;
+			}
+		}
+
+		&.capitalize {
+			select {
+				text-transform: capitalize;
 			}
 		}
 	}
