@@ -12,8 +12,7 @@ export default class Background extends Entity {
 	constructor(game, selectedBackground) {
 		super(game, game.contexts.background);
 
-		// this.dx = -0.2;
-		this.dx = -2;
+		this.dx = -0.5;
 
 		this.selectedBackground = selectedBackground;
 		this.ground = this.canvas.height - this.game.groundHeight;
@@ -21,11 +20,6 @@ export default class Background extends Entity {
 		if (!game.isServer) {
 			this.image = game.images.background[selectedBackground];
 		}
-
-		//TODO: trigger this when the background reaches it's end
-		setInterval(() => {
-			this.dx = this.dx - 0.1;
-		}, 3000);
 	}
 
 	/**

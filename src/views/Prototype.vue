@@ -97,7 +97,8 @@
 			initGame(gameImages) {
 				const canvasIds = {
 					background: 'background-canvas',
-					game: 'game-canvas'
+					game: 'game-canvas',
+					enemies: 'enemies-canvas'
 				};
 
 				const serverConfig = {

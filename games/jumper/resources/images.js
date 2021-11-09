@@ -13,6 +13,17 @@ export default {
 		medium: '/game-images/jumper/platform/medium.png',
 		small: '/game-images/jumper/platform/small.png'
 	},
+	bat: {
+		flying: [
+			'/game-images/jumper/bat/flying/1.png',
+			'/game-images/jumper/bat/flying/2.png',
+			'/game-images/jumper/bat/flying/3.png',
+			'/game-images/jumper/bat/flying/4.png',
+			'/game-images/jumper/bat/flying/5.png',
+			'/game-images/jumper/bat/flying/6.png'
+		],
+		dead: '/game-images/jumper/bat/dead.png'
+	},
 	dummy: {
 		green: {
 			running: [

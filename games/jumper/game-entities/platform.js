@@ -28,7 +28,9 @@ export default class Platform extends Entity {
 			}
 		};
 
-		super(game, game.contexts.game, sizeMap[type].width, sizeMap[type].height, x, y);
+		super(game, game.contexts.background, sizeMap[type].width, sizeMap[type].height, x, y);
+
+		this.dx = -0.6;
 
 		this.type = type;
 
@@ -40,6 +42,10 @@ export default class Platform extends Entity {
 				this.image = game.images.platform[type];
 			}
 		}
+
+		setInterval(() => {
+			this.dx = this.dx - 0.1;
+		}, 3000);
 	}
 
 	/**
@@ -98,9 +104,6 @@ export default class Platform extends Entity {
 	 * Moves the platform
 	 */
 	move() {
-		//move slightly faster than the background speed
-		this.dx = this.game.background.dx * 1.5;
-
 		//reset the position once the platform is outside of the viewpoer
 		if (this.right < 0) {
 			this.reset();
