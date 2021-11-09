@@ -45,10 +45,14 @@ export default class Jumper extends GameClient {
 		//game objects
 		this.background = new Background(this, this.config.background.selectedBackground);
 		this.platforms = [
-			new Platform(this, 'large', 600, 500),
-			new Platform(this, 'medium', 900, 450),
-			new Platform(this, 'large', 1060, 490),
-			new Platform(this, 'small', 1320, 510)
+			new Platform(this, 'large', 600, 530),
+			new Platform(this, 'medium', 900, 500),
+			new Platform(this, 'large', 1060, 520),
+			new Platform(this, 'small', 1320, 540),
+			new Platform(this, 'medium', 1460, 560),
+			new Platform(this, 'large', 1650, 570),
+			new Platform(this, 'small', 1920, 500),
+			new Platform(this, 'small', 2030, 540)
 		];
 
 		//listen for the keyboard and touchscreen events

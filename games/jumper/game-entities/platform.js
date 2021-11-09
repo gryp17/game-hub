@@ -74,9 +74,37 @@ export default class Platform extends Entity {
 		return this._dx;
 	}
 
+	/**
+	 * Resets the platform poisiton by using the last platform as a reference
+	 */
+	reset() {
+		//TODO: move this to a config or something
+		const minHorizontalDifference = 25;
+		const maxHorizontalDifference = 200;
+		const minY = 500;
+		const maxY = 650;
+
+		const sortedPlatforms = [...this.game.platforms].sort((a, b) => {
+			return a.right - b.right;
+		});
+
+		const lastPlatform = _.last(sortedPlatforms);
+
+		this.x = lastPlatform.right + _.random(minHorizontalDifference, maxHorizontalDifference);
+		this.y = _.random(minY, maxY);
+	}
+
+	/**
+	 * Moves the platform
+	 */
 	move() {
 		//move slightly faster than the background speed
 		this.dx = this.game.background.dx * 1.5;
+
+		//reset the position once the platform is outside of the viewpoer
+		if (this.right < 0) {
+			this.reset();
+		}
 
 		super.move();
 	}

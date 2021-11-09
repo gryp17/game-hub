@@ -12,7 +12,8 @@ export default class Background extends Entity {
 	constructor(game, selectedBackground) {
 		super(game, game.contexts.background);
 
-		this.dx = -0.2;
+		// this.dx = -0.2;
+		this.dx = -2;
 
 		this.selectedBackground = selectedBackground;
 		this.ground = this.canvas.height - this.game.groundHeight;
