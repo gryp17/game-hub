@@ -115,9 +115,12 @@
 					},
 					background: {
 						availableBackgrounds: [
-							'desert'
+							'forest',
+							'factory',
+							'graveyard',
+							'house'
 						],
-						selectedBackground: 'desert' //this value is actually randomized by the server
+						selectedBackground: 'factory' //this value is actually randomized by the server
 					},
 					controls: {
 						up: {
@@ -132,6 +135,9 @@
 					},
 					configurableSettings: {}
 				};
+
+				//pick a random background
+				serverConfig.background.selectedBackground = _.sample(serverConfig.background.availableBackgrounds);
 
 				const player = 1;
 

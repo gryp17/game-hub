@@ -2,6 +2,7 @@ import _ from 'lodash';
 import GameClient from '../../common/game-client';
 import Keyboard from '../../common/inputs/keyboard';
 import Background from '../game-entities/background';
+import Platform from '../game-entities/platform';
 import gameImages from '../resources/images';
 
 /**
@@ -23,6 +24,7 @@ export default class Jumper extends GameClient {
 		this.groundHeight = config.groundHeight;
 
 		this.background;
+		this.platforms = [];
 
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
@@ -42,6 +44,12 @@ export default class Jumper extends GameClient {
 	start() {
 		//game objects
 		this.background = new Background(this, this.config.background.selectedBackground);
+		this.platforms = [
+			new Platform(this, 'large', 600, 500),
+			new Platform(this, 'medium', 900, 450),
+			new Platform(this, 'large', 1060, 490),
+			new Platform(this, 'small', 1320, 510)
+		];
 
 		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
@@ -102,6 +110,9 @@ export default class Jumper extends GameClient {
 		super.gameLoop();
 
 		this.background.move();
+		this.platforms.forEach((platform) => {
+			platform.move();
+		});
 	}
 
 	/**
@@ -110,6 +121,10 @@ export default class Jumper extends GameClient {
 	drawGame() {
 		const drawEntities = () => {
 			this.background.draw();
+
+			this.platforms.forEach((platform) => {
+				platform.draw();
+			});
 		};
 
 		super.drawGame(drawEntities);

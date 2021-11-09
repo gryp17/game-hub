@@ -1,6 +1,17 @@
 export default {
 	background: {
-		desert: '/game-images/jumper/background/desert.jpg'
+		forest: '/game-images/jumper/background/forest.jpg',
+		graveyard: '/game-images/jumper/background/graveyard.jpg',
+		house: '/game-images/jumper/background/house.jpg',
+		factory: '/game-images/jumper/background/factory.jpg'
+	},
+	platform: {
+		large: [
+			'/game-images/jumper/platform/large-1.png',
+			'/game-images/jumper/platform/large-2.png'
+		],
+		medium: '/game-images/jumper/platform/medium.png',
+		small: '/game-images/jumper/platform/small.png'
 	},
 	dummy: {
 		green: {
