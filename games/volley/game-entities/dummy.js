@@ -34,8 +34,6 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = 0;
 
-		this.oldInputs = {};
-
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
 
@@ -198,14 +196,6 @@ export default class Dummy extends Entity {
 	 * @param {Object} inputs
 	 */
 	processInputs(inputs) {
-		//don't do anything if the inputs haven't changed
-		if (_.isEqual(this.oldInputs, inputs)) {
-			return;
-		}
-
-		//save the inputs state
-		this.oldInputs = inputs;
-
 		//stop moving
 		if (!inputs.left && !inputs.right) {
 			this.dx = 0;
