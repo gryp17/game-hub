@@ -3,32 +3,35 @@ import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';
 
 /**
- * Bat class
+ * Ghost class
  */
-export default class Bat extends Entity {
+export default class Ghost extends Entity {
 	/**
-	 * Creates a new bat instance
+	 * Creates a new ghost instance
 	 * @param {Object} game
 	 */
 	constructor(game, size, x, y) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
 		//TODO: move this to config
-		this.speed = -5;
-		this.deadSpeed = -3;
-		this.fallingSpeed = 6;
-		this.deadRotationSpeed = 2;
+		this.defaultSize = size;
+		this.speed = -3;
+		this.deadSpeed = -1;
+		this.fallingSpeed = -3;
+		this.deadRotationSpeed = 15;
+		this.deadAlphaSpeed = 0.01;
+		this.deadShrinkSpeed = 0.01;
+		this.minSize = this.defaultSize / 5;
 
 		this.dx = this.speed;
 		this.dy = 0;
 
 		this.dead = false;
+		this.alpha = 1;
 		this.angle = 0;
 
 		if (!game.isServer) {
-			this.deadImage = this.game.images.bat.dead;
-			this.flyingSprite = new Sprite(this.game.images.bat.flying, 1, true);
-
+			this.flyingSprite = new Sprite(this.game.images.ghost.flying, 2, true);
 			this.image = this.flyingSprite.move();
 		}
 
@@ -43,7 +46,7 @@ export default class Bat extends Entity {
 			this.dy = this.fallingSpeed;
 		}
 
-		if (this.right < 0) {
+		if (this.right < 0 || this.top < 0) {
 			this.reset();
 		}
 
@@ -52,9 +55,12 @@ export default class Bat extends Entity {
 
 	reset() {
 		this.dead = false;
+		this.width = this.defaultSize;
+		this.height = this.defaultSize;
 		this.angle = 0;
+		this.alpha = 1;
 		this.x = this.canvas.width + _.random(50, 200);
-		this.y = 200;
+		this.y = 320;
 		this.dy = 0;
 		this.dx = this.speed;
 	}
@@ -66,18 +72,32 @@ export default class Bat extends Entity {
 		//update the image with the correct sprite image
 		this.updateSprite();
 
+		this.context.save();
+		this.context.globalAlpha = this.alpha;
 		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
+		this.context.restore();
 	}
 
 	/**
 	 * Updates the image property with the correct sprite image
 	 */
 	updateSprite() {
+		this.image = this.flyingSprite.move();
+
+		//apply the dead effects
 		if (this.dead) {
-			this.image = this.deadImage;
+			this.fade();
 			this.rotate();
-		} else {
-			this.image = this.flyingSprite.move();
+			this.shrink();
+		}
+	}
+
+	/**
+	 * Slowly reduces the image alpha
+	 */
+	fade() {
+		if (this.alpha > 0) {
+			this.alpha = (this.alpha - this.deadAlphaSpeed).toFixed(2);
 		}
 	}
 
@@ -86,5 +106,15 @@ export default class Bat extends Entity {
 	 */
 	rotate() {
 		this.angle = this.angle - this.deadRotationSpeed;
+	}
+
+	/**
+	 * Shrinks the image size
+	 */
+	shrink() {
+		if (this.width > this.minSize) {
+			this.width = this.width - this.deadShrinkSpeed;
+			this.height = this.height - this.deadShrinkSpeed;
+		}
 	}
 }

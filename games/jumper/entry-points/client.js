@@ -4,6 +4,7 @@ import Keyboard from '../../common/inputs/keyboard';
 import Background from '../game-entities/background';
 import Platform from '../game-entities/platform';
 import Bat from '../game-entities/bat';
+import Ghost from '../game-entities/ghost';
 import gameImages from '../resources/images';
 
 /**
@@ -58,7 +59,8 @@ export default class Jumper extends GameClient {
 		];
 
 		this.enemies = [
-			new Bat(this, 1100, 200)
+			new Bat(this, 100, 1100, 200),
+			new Ghost(this, 100, 1290, 300)
 		];
 
 		//listen for the keyboard and touchscreen events

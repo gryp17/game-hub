@@ -29,6 +29,21 @@ export default {
 		],
 		dead: '/game-images/jumper/bat/dead.png'
 	},
+	ghost: {
+		flying: [
+			'/game-images/jumper/ghost/flying/1.png',
+			'/game-images/jumper/ghost/flying/2.png',
+			'/game-images/jumper/ghost/flying/3.png',
+			'/game-images/jumper/ghost/flying/4.png',
+			'/game-images/jumper/ghost/flying/5.png',
+			'/game-images/jumper/ghost/flying/6.png',
+			'/game-images/jumper/ghost/flying/7.png',
+			'/game-images/jumper/ghost/flying/8.png',
+			'/game-images/jumper/ghost/flying/9.png',
+			'/game-images/jumper/ghost/flying/10.png',
+			'/game-images/jumper/ghost/flying/11.png'
+		]
+	},
 	dummy: {
 		green: {
 			running: [
