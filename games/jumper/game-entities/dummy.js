@@ -178,6 +178,8 @@ export default class Dummy extends Entity {
 		this.jumping = false;
 		this.dy = this.jumpDeceleration;
 
+		this.stopFlipping();
+
 		this.jump();
 	}
 
@@ -189,14 +191,22 @@ export default class Dummy extends Entity {
 	}
 
 	/**
+	 * Stops flipping
+	 */
+	stopFlipping() {
+		this.flipping = false;
+		this.angle = 0;
+	}
+
+	/**
 	 * Changes the image rotation angle
 	 */
 	rotate() {
-		this.angle = this.angle + 30;
+		const rotationSpeed = this.facingDirection === 'left' ? -30 : 30;
+		this.angle = this.angle + rotationSpeed;
 
-		if (this.angle >= 720) {
-			this.angle = 0;
-			this.flipping = false;
+		if (Math.abs(this.angle) >= 720) {
+			this.stopFlipping();
 		}
 	}
 
