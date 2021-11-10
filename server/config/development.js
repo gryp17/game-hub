@@ -161,7 +161,6 @@ module.exports = {
 			},
 			dummy: {
 				maxSpeed: 10,
-				acceleration: 2,
 				jumpAcceleration: 12,
 				minForce: 3,
 				verticalForce: 150,

@@ -111,7 +111,6 @@
 					maxScore: 1,
 					dummy: {
 						maxSpeed: 10,
-						acceleration: 2,
 						jumpAcceleration: 12,
 						maxJumpHeight: 240
 					},

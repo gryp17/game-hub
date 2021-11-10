@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';
@@ -11,7 +12,6 @@ export default class Dummy extends Entity {
 	 * Creates a new dummy instance
 	 * @param {Object} game
 	 * @param {Number} maxSpeed
-	 * @param {Number} acceleration
 	 * @param {Number} jumpAcceleration
 	 * @param {Number} minForce
 	 * @param {Number} verticalForce
@@ -20,7 +20,7 @@ export default class Dummy extends Entity {
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, maxSpeed, acceleration, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
+	constructor(game, maxSpeed, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
 
 		this.player = player;
@@ -34,11 +34,12 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = 0;
 
+		this.oldInputs = {};
+
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
 
 		this.maxSpeed = maxSpeed;
-		this.acceleration = acceleration;
 		this.jumpAcceleration = jumpAcceleration;
 		this.minForce = minForce;
 		this.verticalForce = verticalForce;
@@ -197,6 +198,14 @@ export default class Dummy extends Entity {
 	 * @param {Object} inputs
 	 */
 	processInputs(inputs) {
+		//don't do anything if the inputs haven't changed
+		if (_.isEqual(this.oldInputs, inputs)) {
+			return;
+		}
+
+		//save the inputs state
+		this.oldInputs = inputs;
+
 		//stop moving
 		if (!inputs.left && !inputs.right) {
 			this.dx = 0;
@@ -212,19 +221,13 @@ export default class Dummy extends Entity {
 		//left
 		if (inputs.left) {
 			this.facingDirection = 'left';
-
-			if (this.dx > (this.maxSpeed * -1)) {
-				this.dx = this.dx - this.acceleration;
-			}
+			this.dx = this.maxSpeed * -1;
 		}
 
 		//right
 		if (inputs.right) {
 			this.facingDirection = 'right';
-
-			if (this.dx < this.maxSpeed) {
-				this.dx = this.dx + this.acceleration;
-			}
+			this.dx = this.maxSpeed;
 		}
 	}
 
