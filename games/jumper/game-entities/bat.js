@@ -10,7 +10,7 @@ export default class Bat extends Entity {
 	 * @param {Object} game
 	 */
 	constructor(game, x, y) {
-		super(game, game.contexts.enemies, 100, 105, x, y);
+		super(game, game.contexts.enemies, 100, 100, x, y);
 
 		//TODO: move this to config
 		this.speed = -5;
@@ -20,22 +20,22 @@ export default class Bat extends Entity {
 		this.dx = this.speed;
 		this.dy = 0;
 
-		this.isDead = false;
+		this.dead = false;
 
 		if (!game.isServer) {
 			this.deadImage = this.game.images.bat.dead;
-			this.flyingSprite = new Sprite(this.game.images.bat.flying, 6, true);
+			this.flyingSprite = new Sprite(this.game.images.bat.flying, 1, true);
 
 			this.image = this.flyingSprite.move();
 		}
 
 		setTimeout(() => {
-			this.isDead = true;
+			this.dead = true;
 		}, 2600);
 	}
 
 	move() {
-		if (this.isDead) {
+		if (this.dead) {
 			this.dx = this.deadSpeed;
 			this.dy = this.fallingSpeed;
 		}
@@ -48,7 +48,7 @@ export default class Bat extends Entity {
 	}
 
 	reset() {
-		this.isDead = false;
+		this.dead = false;
 		this.x = this.canvas.width + _.random(50, 200);
 		this.y = 200;
 		this.dy = 0;
@@ -69,7 +69,7 @@ export default class Bat extends Entity {
 	 * Updates the image property with the correct sprite image
 	 */
 	updateSprite() {
-		if (this.isDead) {
+		if (this.dead) {
 			this.image = this.deadImage;
 		} else {
 			this.image = this.flyingSprite.move();

@@ -20,7 +20,12 @@ export default {
 			'/game-images/jumper/bat/flying/3.png',
 			'/game-images/jumper/bat/flying/4.png',
 			'/game-images/jumper/bat/flying/5.png',
-			'/game-images/jumper/bat/flying/6.png'
+			'/game-images/jumper/bat/flying/6.png',
+			'/game-images/jumper/bat/flying/7.png',
+			'/game-images/jumper/bat/flying/8.png',
+			'/game-images/jumper/bat/flying/9.png',
+			'/game-images/jumper/bat/flying/10.png',
+			'/game-images/jumper/bat/flying/11.png'
 		],
 		dead: '/game-images/jumper/bat/dead.png'
 	},
