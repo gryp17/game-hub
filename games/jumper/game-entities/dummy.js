@@ -1,7 +1,6 @@
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';
-import Shadow from './shadow';
 
 /**
  * Dummy class
@@ -13,14 +12,12 @@ export default class Dummy extends Entity {
 	 * @param {Number} maxSpeed
 	 * @param {Number} acceleration
 	 * @param {Number} jumpAcceleration
-	 * @param {Number} minForce
-	 * @param {Number} verticalForce
-	 * @param {Number} horizontalForce
+	 * @param {Number} maxJumpHeight
 	 * @param {Number} player
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, maxSpeed, acceleration, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
+	constructor(game, maxSpeed, acceleration, jumpAcceleration, maxJumpHeight, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
 
 		this.player = player;
@@ -30,25 +27,25 @@ export default class Dummy extends Entity {
 		this.width = this.canvas.width / 12;
 		this.height = this.canvas.height / 4;
 		this.x = 0;
-		this.y = this.game.background.ground - this.height;
+		this.y = this.canvas.height - this.height;
 		this.dx = 0;
-		this.dy = 0;
+		this.dy = jumpAcceleration;
 
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
+		this.facingDirection = 'right';
 
 		this.maxSpeed = maxSpeed;
 		this.acceleration = acceleration;
-		this.jumpAcceleration = jumpAcceleration;
-		this.minForce = minForce;
-		this.verticalForce = verticalForce;
-		this.horizontalForce = horizontalForce;
+		this.jumpAcceleration = -jumpAcceleration;
+		this.jumpDeceleration = jumpAcceleration;
+		this.maxJumpHeight = maxJumpHeight;
 
 		this.jumping = false;
+		this.jumpingStartingPoint;
 
-		this.maxJumpHeight = this.canvas.height - (this.height * 2);
-
-		this.moveToCenter();
+		this.flipping = false;
+		this.angle = 0;
 
 		if (!game.isServer) {
 			this.availableSprites = {
@@ -68,8 +65,6 @@ export default class Dummy extends Entity {
 
 			this.image = this.sprites.idle.move();
 		}
-
-		this.shadow = new Shadow(game, this);
 	}
 
 	/**
@@ -111,19 +106,6 @@ export default class Dummy extends Entity {
 	}
 
 	/**
-	 * Moves the dummy to the center of the screen and makes it face the correct direction
-	 */
-	moveToCenter() {
-		if (this.player === 1) {
-			this.x = (this.canvas.width / 4) - (this.width / 2);
-			this.facingDirection = 'right';
-		} else {
-			this.x = this.canvas.width - (this.canvas.width / 4) - (this.width / 2);
-			this.facingDirection = 'left';
-		}
-	}
-
-	/**
 	 * Moves the dummy
 	 * If the dummy is controllable it processes the current inputs state first
 	 */
@@ -134,15 +116,21 @@ export default class Dummy extends Entity {
 		}
 
 		//maximum jump height reached
-		if (this.jumping && this.y <= this.maxJumpHeight) {
-			this.dy = this.dy * -1;
+		if (this.jumping) {
+			const distance = Math.abs(this.y - this.jumpingStartingPoint);
+
+			if (distance >= this.maxJumpHeight) {
+				this.dy = this.jumpDeceleration;
+			}
+		}
+
+		if (this.flipping) {
+			this.rotate();
 		}
 
 		super.move();
 
 		this.handleCollisions();
-
-		this.shadow.move();
 	}
 
 	/**
@@ -152,9 +140,7 @@ export default class Dummy extends Entity {
 		//update the image with the correct sprite image
 		this.updateSprite();
 
-		this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
-
-		this.shadow.draw();
+		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
 	}
 
 	/**
@@ -181,15 +167,37 @@ export default class Dummy extends Entity {
 	 */
 	jump() {
 		this.jumping = true;
-		this.dy = this.dy - this.jumpAcceleration;
+		this.jumpingStartingPoint = this.y;
+		this.dy = this.jumpAcceleration;
 	}
 
 	/**
 	 * Called when the dummy reaches the ground
 	 */
-	stopJumping() {
+	touchedGround() {
 		this.jumping = false;
-		this.dy = 0;
+		this.dy = this.jumpDeceleration;
+
+		this.jump();
+	}
+
+	/**
+	 * Raises the flipping flag
+	 */
+	flip() {
+		this.flipping = true;
+	}
+
+	/**
+	 * Changes the image rotation angle
+	 */
+	rotate() {
+		this.angle = this.angle + 30;
+
+		if (this.angle >= 720) {
+			this.angle = 0;
+			this.flipping = false;
+		}
 	}
 
 	/**
@@ -206,6 +214,10 @@ export default class Dummy extends Entity {
 		if (inputs.up) {
 			if (!this.jumping) {
 				this.jump();
+			} else {
+				if (!this.flipping) {
+					this.flip();
+				}
 			}
 		}
 
@@ -232,13 +244,10 @@ export default class Dummy extends Entity {
 	 * Handles all dummy collisions
 	 */
 	handleCollisions() {
-		const background = this.game.background;
-		const net = this.game.net;
-
 		//bottom end of scren
-		if (this.bottom >= background.ground) {
-			this.bottom = background.ground;
-			this.stopJumping();
+		if (this.bottom >= this.canvas.height) {
+			this.bottom = this.canvas.height;
+			this.touchedGround();
 		}
 
 		//left end of screen
@@ -249,18 +258,6 @@ export default class Dummy extends Entity {
 		//right end of screen
 		if (this.right >= this.canvas.width) {
 			this.right = this.canvas.width;
-		}
-
-		//collisions with net
-		const collisionWithNet = Utils.getCollisionPoint(net, this);
-		if (collisionWithNet) {
-			if (collisionWithNet === 'left') {
-				this.right = net.left;
-			}
-
-			if (collisionWithNet === 'right') {
-				this.left = net.right;
-			}
 		}
 	}
 }

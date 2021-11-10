@@ -5,6 +5,7 @@ import Background from '../game-entities/background';
 import Platform from '../game-entities/platform';
 import Bat from '../game-entities/bat';
 import Ghost from '../game-entities/ghost';
+import Dummy from '../game-entities/dummy';
 import gameImages from '../resources/images';
 
 /**
@@ -28,6 +29,7 @@ export default class Jumper extends GameClient {
 		this.background;
 		this.platforms = [];
 		this.enemies = [];
+		this.dummies = [];
 
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
@@ -61,6 +63,18 @@ export default class Jumper extends GameClient {
 		this.enemies = [
 			new Bat(this, 100, 1100, 200),
 			new Ghost(this, 100, 1290, 300)
+		];
+
+		this.dummies = [
+			new Dummy(
+				this,
+				this.config.dummy.maxSpeed,
+				this.config.dummy.acceleration,
+				this.config.dummy.jumpAcceleration,
+				this.config.dummy.maxJumpHeight,
+				1,
+				true
+			)
 		];
 
 		//listen for the keyboard and touchscreen events
@@ -129,6 +143,10 @@ export default class Jumper extends GameClient {
 		this.enemies.forEach((enemy) => {
 			enemy.move();
 		});
+
+		this.dummies.forEach((dummy) => {
+			dummy.move();
+		});
 	}
 
 	/**
@@ -144,6 +162,10 @@ export default class Jumper extends GameClient {
 
 			this.enemies.forEach((enemy) => {
 				enemy.draw();
+			});
+
+			this.dummies.forEach((dummy) => {
+				dummy.draw();
 			});
 		};
 
