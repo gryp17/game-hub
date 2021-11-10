@@ -8,7 +8,7 @@ export default class Platform extends Entity {
 	/**
 	 * Creates a platform instance
 	 * @param {Object} game
-	 * @param {String} type,
+	 * @param {String} type
 	 * @param {Number} x
 	 * @param {Number} y
 	 */
@@ -31,8 +31,12 @@ export default class Platform extends Entity {
 		super(game, game.contexts.background, sizeMap[type].width, sizeMap[type].height, x, y);
 
 		this.dx = -0.6;
+		this.dy = 0;
 
 		this.type = type;
+
+		this.floating = false;
+		this.startingPosition = this.center.y;
 
 		if (!game.isServer) {
 			if (type === 'large') {
@@ -43,6 +47,7 @@ export default class Platform extends Entity {
 			}
 		}
 
+		// TODO: move this to the game object or something
 		setInterval(() => {
 			this.dx = this.dx - 0.1;
 		}, 3000);
@@ -65,6 +70,22 @@ export default class Platform extends Entity {
 	}
 
 	/**
+	 * Sets the y value
+	 * @param {Number} value
+	 */
+	set y(value) {
+		this._y = value;
+	}
+
+	/**
+	 * Returns the y value
+	 * @returns {Number}
+	 */
+	get y() {
+		return this._y;
+	}
+
+	/**
 	 * Sets the dx value
 	 * @param {Number} value
 	 */
@@ -78,6 +99,22 @@ export default class Platform extends Entity {
 	 */
 	get dx() {
 		return this._dx;
+	}
+
+	/**
+	 * Sets the dy value
+	 * @param {Number} value
+	 */
+	set dy(value) {
+		this._dy = value;
+	}
+
+	/**
+	 * Returns the dy value
+	 * @returns {Number}
+	 */
+	get dy() {
+		return this._dy;
 	}
 
 	/**
@@ -98,6 +135,22 @@ export default class Platform extends Entity {
 
 		this.x = lastPlatform.right + _.random(minHorizontalDifference, maxHorizontalDifference);
 		this.y = _.random(minY, maxY);
+		this.startingPosition = this.center.y;
+
+		this.randomizeFloatParameters();
+	}
+
+	/**
+	 * Resets and randomizes the float parameters
+	 */
+	randomizeFloatParameters() {
+		this.dy = 0;
+		this.floating = _.sample([true, false]);
+
+		if (this.floating) {
+			this.dy = _.random(-1, 1, true);
+			this.floatDistance = _.random(30, 80);
+		}
 	}
 
 	/**
@@ -109,7 +162,23 @@ export default class Platform extends Entity {
 			this.reset();
 		}
 
+		if (this.floating) {
+			this.float();
+		}
+
 		super.move();
+	}
+
+	/**
+	 * Makes the platform move up or down
+	 */
+	float() {
+		const difference = Math.abs(this.center.y - this.startingPosition);
+
+		//reverse the direction once the platform has moved enough distance
+		if (difference >= this.floatDistance) {
+			this.dy = this.dy * -1;
+		}
 	}
 
 	/**
