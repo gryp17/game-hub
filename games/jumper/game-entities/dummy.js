@@ -27,7 +27,8 @@ export default class Dummy extends Entity {
 		this.width = this.canvas.width / 12;
 		this.height = this.canvas.height / 4;
 		this.x = 0;
-		this.y = this.canvas.height - this.height;
+		this.y = 0;
+
 		this.dx = 0;
 		this.dy = jumpAcceleration;
 
@@ -40,8 +41,9 @@ export default class Dummy extends Entity {
 		this.jumpDeceleration = jumpAcceleration;
 		this.maxJumpHeight = maxJumpHeight;
 
-		this.oldInputs = {};
+		this.previousUpState = false;
 
+		this.idle = true;
 		this.jumping = false;
 		this.jumpingStartingPoint;
 
@@ -66,6 +68,40 @@ export default class Dummy extends Entity {
 
 			this.image = this.sprites.idle.move();
 		}
+
+		this.reset();
+	}
+
+	/**
+	 * Sets the x value
+	 * @param {Number} value
+	 */
+	set x(value) {
+		this._x = value;
+	}
+
+	/**
+	 * Returns the x value
+	 * @returns {Number}
+	 */
+	get x() {
+		return this._x;
+	}
+
+	/**
+	 * Sets the dx value
+	 * @param {Number} value
+	 */
+	set dx(value) {
+		this._dx = value;
+	}
+
+	/**
+	 * Returns the dx value
+	 * @returns {Number}
+	 */
+	get dx() {
+		return this._dx;
 	}
 
 	/**
@@ -104,6 +140,15 @@ export default class Dummy extends Entity {
 	set state(state) {
 		super.state = state;
 		this.facingDirection = state.facingDirection;
+	}
+
+	/**
+	 * Resets the dummy position
+	 */
+	reset() {
+		this.x = (this.canvas.width / 2) - (this.width / 2);
+		this.y = 0;
+		this.dx = 0;
 	}
 
 	/**
@@ -156,10 +201,10 @@ export default class Dummy extends Entity {
 				//falling down image
 				this.image = this.sprites.jumping.moveTo(1);
 			}
-		} else if (this.dx !== 0) {
-			this.image = this.sprites.moving.move();
-		} else {
+		} else if (this.idle) {
 			this.image = this.sprites.idle.move();
+		} else {
+			this.image = this.sprites.moving.move();
 		}
 	}
 
@@ -173,9 +218,9 @@ export default class Dummy extends Entity {
 	}
 
 	/**
-	 * Called when the dummy reaches the ground
+	 * Called when the dummy touches a platform
 	 */
-	touchedGround() {
+	touchedPlatform() {
 		this.jumping = false;
 		this.dy = this.jumpDeceleration;
 
@@ -214,25 +259,24 @@ export default class Dummy extends Entity {
 	 * @param {Object} inputs
 	 */
 	processInputs(inputs) {
-		//don't do anything if the inputs haven't changed
-		if (_.isEqual(this.oldInputs, inputs)) {
-			return;
-		}
-
-		//save the inputs state
-		this.oldInputs = inputs;
-
-		//stop moving
+		//update the idle status
 		if (!inputs.left && !inputs.right) {
-			this.dx = 0;
+			this.idle = true;
+		} else {
+			this.idle = false;
 		}
 
 		//up
-		if (inputs.up) {
-			if (!this.jumping) {
-				this.jump();
-			} else if (!this.flipping) {
-				this.flip();
+		//run this logic only if the up input state has changed - this is a fix for the double jump/flip
+		if (this.previousUpState !== inputs.up) {
+			this.previousUpState = inputs.up;
+
+			if (inputs.up) {
+				if (!this.jumping) {
+					this.jump();
+				} else if (!this.flipping) {
+					this.flip();
+				}
 			}
 		}
 
@@ -253,10 +297,12 @@ export default class Dummy extends Entity {
 	 * Handles all dummy collisions
 	 */
 	handleCollisions() {
+		const platforms = this.game.platforms;
+
 		//bottom end of scren
-		if (this.bottom >= this.canvas.height) {
-			this.bottom = this.canvas.height;
-			this.touchedGround();
+		if (this.top >= this.canvas.height) {
+			//TODO: game over
+			this.reset();
 		}
 
 		//left end of screen
@@ -268,5 +314,35 @@ export default class Dummy extends Entity {
 		if (this.right >= this.canvas.width) {
 			this.right = this.canvas.width;
 		}
+
+		//platforms
+		platforms.forEach((platform) => {
+			const collisionWithPlatform = Utils.getCollisionPoint(platform, this);
+			if (collisionWithPlatform) {
+				if (['top', 'topLeft', 'topRight'].includes(collisionWithPlatform)) {
+					this.bottom = platform.top;
+
+					//move the dummy together with the platform if it's idle
+					if (this.idle) {
+						this.dx = platform.dx;
+					}
+
+					this.touchedPlatform();
+				}
+
+				if (['bottom', 'bottomLeft', 'bottomRight'].includes(collisionWithPlatform)) {
+					this.top = platform.bottom;
+					this.touchedPlatform();
+				}
+
+				if (collisionWithPlatform === 'left') {
+					this.right = platform.left;
+				}
+
+				if (collisionWithPlatform === 'right') {
+					this.left = platform.right;
+				}
+			}
+		});
 	}
 }
