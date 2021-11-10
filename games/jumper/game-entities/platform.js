@@ -145,7 +145,7 @@ export default class Platform extends Entity {
 	 */
 	randomizeFloatParameters() {
 		this.dy = 0;
-		this.floating = _.sample([true, false]);
+		this.floating = _.sample([true, false, false]); // 33% chance?
 
 		if (this.floating) {
 			this.dy = _.random(-1, 1, true);
