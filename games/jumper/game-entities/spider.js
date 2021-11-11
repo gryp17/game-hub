@@ -1,5 +1,6 @@
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
+import SpiderNet from './spider-net';
 
 /**
  * Spider class
@@ -12,12 +13,13 @@ export default class Spider extends Entity {
 	constructor(game, size, x, y) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
-		this.dx = this.game.background.dx;
-		this.dy = 1;
-
 		//TODO: move this to config
+		this.speed = 1;
 		this.fallingSpeed = 8;
 		this.maxY = 300;
+
+		this.dx = this.game.background.dx;
+		this.dy = this.speed;
 
 		this.idle = false;
 		this.dead = false;
@@ -30,6 +32,8 @@ export default class Spider extends Entity {
 
 			this.image = this.idleImage;
 		}
+
+		this.spiderNet = new SpiderNet(game, this);
 
 		setTimeout(() => {
 			this.die();
@@ -91,6 +95,8 @@ export default class Spider extends Entity {
 		}
 
 		super.move();
+
+		this.spiderNet.move();
 	}
 
 	/**
@@ -101,7 +107,7 @@ export default class Spider extends Entity {
 		this.x = this.canvas.width + _.random(50, 200);
 		this.y = 0;
 		this.dx = this.game.background.dx;
-		this.dy = 1;
+		this.dy = this.speed;
 	}
 
 	/**
@@ -110,6 +116,10 @@ export default class Spider extends Entity {
 	draw() {
 		//update the image with the correct sprite image
 		this.updateSprite();
+
+		if (!this.dead) {
+			this.spiderNet.draw();
+		}
 
 		this.context.drawImage(this.image, this.x, this.y, this.width, this.height);
 	}
