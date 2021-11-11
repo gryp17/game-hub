@@ -68,6 +68,7 @@ export default class Jumper extends GameClient {
 		this.dummies = [
 			new Dummy(
 				this,
+				this.config.dummy.acceleration,
 				this.config.dummy.maxSpeed,
 				this.config.dummy.jumpAcceleration,
 				this.config.dummy.maxJumpHeight,

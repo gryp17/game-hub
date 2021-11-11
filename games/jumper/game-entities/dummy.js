@@ -10,6 +10,7 @@ export default class Dummy extends Entity {
 	/**
 	 * Creates a new dummy instance
 	 * @param {Object} game
+	 * @param {Number} acceleration
 	 * @param {Number} maxSpeed
 	 * @param {Number} jumpAcceleration
 	 * @param {Number} maxJumpHeight
@@ -17,15 +18,15 @@ export default class Dummy extends Entity {
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, maxSpeed, jumpAcceleration, maxJumpHeight, player = 1, controllable = false, playerId = null) {
+	constructor(game, acceleration, maxSpeed, jumpAcceleration, maxJumpHeight, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
 
 		this.player = player;
 		this.controllable = controllable;
 		this.playerId = playerId;
 
-		this.width = this.canvas.width / 12;
-		this.height = this.canvas.height / 4;
+		this.width = 90;
+		this.height = 150;
 		this.x = 0;
 		this.y = 0;
 
@@ -36,6 +37,7 @@ export default class Dummy extends Entity {
 		this.skin = this.controllable ? 'green' : 'yellow';
 		this.facingDirection = 'right';
 
+		this.acceleration = acceleration;
 		this.maxSpeed = maxSpeed;
 		this.jumpAcceleration = -jumpAcceleration;
 		this.jumpDeceleration = jumpAcceleration;
@@ -283,13 +285,19 @@ export default class Dummy extends Entity {
 		//left
 		if (inputs.left) {
 			this.facingDirection = 'left';
-			this.dx = this.maxSpeed * -1;
+
+			if (this.dx > (this.maxSpeed * -1)) {
+				this.dx = this.dx - this.acceleration;
+			}
 		}
 
 		//right
 		if (inputs.right) {
 			this.facingDirection = 'right';
-			this.dx = this.maxSpeed;
+
+			if (this.dx < this.maxSpeed) {
+				this.dx = this.dx + this.acceleration;
+			}
 		}
 	}
 

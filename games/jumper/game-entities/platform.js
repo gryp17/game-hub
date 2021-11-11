@@ -122,8 +122,8 @@ export default class Platform extends Entity {
 	 */
 	reset() {
 		//TODO: move this to a config or something
-		const minHorizontalDifference = 25;
-		const maxHorizontalDifference = 200;
+		const minHorizontalDifference = 40;
+		const maxHorizontalDifference = 250;
 		const minY = 500;
 		const maxY = 650;
 

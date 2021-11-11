@@ -111,6 +111,7 @@ export default class Volley extends GameServer {
 			const playerIndex = index + 1;
 			return new Dummy(
 				this,
+				this.config.dummy.acceleration,
 				this.config.dummy.maxSpeed,
 				this.config.dummy.jumpAcceleration,
 				this.config.dummy.minForce,

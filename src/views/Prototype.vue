@@ -110,6 +110,7 @@
 					groundHeight: 15,
 					maxScore: 1,
 					dummy: {
+						acceleration: 1,
 						maxSpeed: 10,
 						jumpAcceleration: 12,
 						maxJumpHeight: 240

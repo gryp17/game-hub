@@ -69,6 +69,7 @@ export default class Volley extends GameClient {
 			const controllable = this.player === playerIndex;
 			return new Dummy(
 				this,
+				this.config.dummy.acceleration,
 				this.config.dummy.maxSpeed,
 				this.config.dummy.jumpAcceleration,
 				this.config.dummy.minForce,

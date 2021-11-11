@@ -11,6 +11,7 @@ export default class Dummy extends Entity {
 	/**
 	 * Creates a new dummy instance
 	 * @param {Object} game
+	 * @param {Number} acceleration
 	 * @param {Number} maxSpeed
 	 * @param {Number} jumpAcceleration
 	 * @param {Number} minForce
@@ -20,7 +21,7 @@ export default class Dummy extends Entity {
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, maxSpeed, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
+	constructor(game, acceleration, maxSpeed, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
 		super(game, game.contexts.game);
 
 		this.player = player;
@@ -37,6 +38,7 @@ export default class Dummy extends Entity {
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
 
+		this.acceleration = acceleration;
 		this.maxSpeed = maxSpeed;
 		this.jumpAcceleration = jumpAcceleration;
 		this.minForce = minForce;
@@ -211,13 +213,19 @@ export default class Dummy extends Entity {
 		//left
 		if (inputs.left) {
 			this.facingDirection = 'left';
-			this.dx = this.maxSpeed * -1;
+
+			if (this.dx > (this.maxSpeed * -1)) {
+				this.dx = this.dx - this.acceleration;
+			}
 		}
 
 		//right
 		if (inputs.right) {
 			this.facingDirection = 'right';
-			this.dx = this.maxSpeed;
+
+			if (this.dx < this.maxSpeed) {
+				this.dx = this.dx + this.acceleration;
+			}
 		}
 	}
 
