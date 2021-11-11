@@ -108,6 +108,9 @@
 					width: 1366,
 					height: 768,
 					maxScore: 1,
+					initialSpeed: 0.6,
+					speedIncrease: 0.1,
+					speedUpInterval: 3000, //miliseconds
 					dummy: {
 						acceleration: 1,
 						maxSpeed: 10,
@@ -138,8 +141,6 @@
 								height: 53
 							}
 						},
-						initialSpeed: 0.6,
-						speedIncrease: 0.1,
 						minDistance: 40,
 						maxDistance: 250,
 						minHeight: 500,

@@ -11,14 +11,21 @@ export default class Platform extends Entity {
 	 * @param {String} type
 	 * @param {Number} x
 	 * @param {Number} y
+	 * @param {Object} sizes
+	 * @param {Number} minDistance
+	 * @param {Number} maxDistance
+	 * @param {Number} minHeight
+	 * @param {Number} maxHeight
+	 * @param {Number} chanceToFloat
+	 * @param {Number} floatSpeed
+	 * @param {Number} minFloatDistance
+	 * @param {Number} maxFloatDistance
 	 */
-	constructor(game, type, x, y, sizes, initialSpeed, speedIncrease, minDistance, maxDistance, minHeight, maxHeight, chanceToFloat, floatSpeed, minFloatDistance, maxFloatDistance) {
+	constructor(game, type, x, y, sizes, minDistance, maxDistance, minHeight, maxHeight, chanceToFloat, floatSpeed, minFloatDistance, maxFloatDistance) {
 		super(game, game.contexts.background, sizes[type].width, sizes[type].height, x, y);
 
 		this.type = type;
 
-		this.initialSpeed = initialSpeed;
-		this.speedIncrease = speedIncrease;
 		this.minDistance = minDistance;
 		this.maxDistance = maxDistance;
 		this.minHeight = minHeight;
@@ -32,7 +39,7 @@ export default class Platform extends Entity {
 		this.minFloatDistance = minFloatDistance;
 		this.maxFloatDistance = maxFloatDistance;
 
-		this.dx = this.initialSpeed * -1;
+		this.dx = this.game.gameSpeed * -1;
 		this.dy = 0;
 
 		if (!game.isServer) {
@@ -43,12 +50,6 @@ export default class Platform extends Entity {
 				this.image = game.images.platform[type];
 			}
 		}
-
-		// TODO: move this to the game object or something
-		// add a property to the config indicating how often to increase the platform speed
-		setInterval(() => {
-			this.dx = this.dx - this.speedIncrease;
-		}, 3000);
 	}
 
 	/**
@@ -149,6 +150,9 @@ export default class Platform extends Entity {
 	 * Moves the platform
 	 */
 	move() {
+		//sync the platform speed with the updated game speed (maybe this should be done using the set state logic once the server is implemented)
+		this.dx = this.game.gameSpeed * -1;
+
 		//reset the position once the platform is outside of the viewpoer
 		if (this.right < 0) {
 			this.reset();

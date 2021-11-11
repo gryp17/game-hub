@@ -29,6 +29,11 @@ export default class Jumper extends GameClient {
 		this.enemies = [];
 		this.dummies = [];
 
+		// TODO: update this value with the data received from the server
+		this.gameSpeed = this.config.initialSpeed;
+		this.speedIncrease = this.config.speedIncrease;
+		this.speedUpInterval = this.config.speedUpInterval;
+
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
 	}
@@ -42,6 +47,13 @@ export default class Jumper extends GameClient {
 	}
 
 	/**
+	 * Speeds up the game
+	 */
+	speedUp() {
+		this.gameSpeed = parseFloat((this.gameSpeed + this.speedIncrease).toFixed(1));
+	}
+
+	/**
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
@@ -50,8 +62,6 @@ export default class Jumper extends GameClient {
 
 		const commonPlatformParams = [
 			this.config.platform.sizes,
-			this.config.platform.initialSpeed,
-			this.config.platform.speedIncrease,
 			this.config.platform.minDistance,
 			this.config.platform.maxDistance,
 			this.config.platform.minHeight,
@@ -92,6 +102,11 @@ export default class Jumper extends GameClient {
 
 		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
+
+		//TODO: move this logic to the server and send the updated value to the clients
+		setInterval(() => {
+			this.speedUp();
+		}, this.speedUpInterval);
 
 		super.start();
 	}
