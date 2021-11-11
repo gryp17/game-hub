@@ -44,6 +44,14 @@ export default {
 			'/game-images/jumper/ghost/flying/11.png'
 		]
 	},
+	spider: {
+		moving: [
+			'/game-images/jumper/spider/moving/1.png',
+			'/game-images/jumper/spider/moving/2.png'
+		],
+		idle: '/game-images/jumper/spider/idle.png',
+		dead: '/game-images/jumper/spider/dead.png'
+	},
 	dummy: {
 		green: {
 			left: {

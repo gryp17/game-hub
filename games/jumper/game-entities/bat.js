@@ -37,6 +37,9 @@ export default class Bat extends Entity {
 		}, 2600);
 	}
 
+	/**
+	 * Moves the bat
+	 */
 	move() {
 		if (this.dead) {
 			this.dx = this.deadSpeed;
@@ -50,6 +53,9 @@ export default class Bat extends Entity {
 		super.move();
 	}
 
+	/**
+	 * Resets the bat
+	 */
 	reset() {
 		this.dead = false;
 		this.angle = 0;
@@ -60,7 +66,7 @@ export default class Bat extends Entity {
 	}
 
 	/**
-	 * Draws the dummy
+	 * Draws the bat
 	 */
 	draw() {
 		//update the image with the correct sprite image

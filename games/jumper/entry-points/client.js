@@ -5,6 +5,7 @@ import Background from '../game-entities/background';
 import Platform from '../game-entities/platform';
 import Bat from '../game-entities/bat';
 import Ghost from '../game-entities/ghost';
+import Spider from '../game-entities/spider';
 import Dummy from '../game-entities/dummy';
 import gameImages from '../resources/images';
 
@@ -84,8 +85,9 @@ export default class Jumper extends GameClient {
 		];
 
 		this.enemies = [
-			new Bat(this, 100, 1100, 200),
-			new Ghost(this, 100, 1290, 300)
+			new Spider(this, 80, 1200, 0),
+			new Ghost(this, 100, 1290, 300),
+			new Bat(this, 100, 1100, 200)
 		];
 
 		this.dummies = [

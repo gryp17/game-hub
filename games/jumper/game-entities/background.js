@@ -12,6 +12,7 @@ export default class Background extends Entity {
 	constructor(game, selectedBackground) {
 		super(game, game.contexts.background);
 
+		//TODO: move this to the config
 		this.dx = -0.5;
 
 		this.selectedBackground = selectedBackground;
