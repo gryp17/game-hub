@@ -107,7 +107,6 @@
 					fps: 60,
 					width: 1366,
 					height: 768,
-					groundHeight: 15,
 					maxScore: 1,
 					dummy: {
 						acceleration: 1,
@@ -123,6 +122,32 @@
 							'house'
 						],
 						selectedBackground: 'factory' //this value is actually randomized by the server
+					},
+					platform: {
+						sizes: {
+							large: {
+								width: 248,
+								height: 57
+							},
+							medium: {
+								width: 140,
+								height: 55
+							},
+							small: {
+								width: 96,
+								height: 53
+							}
+						},
+						initialSpeed: 0.6,
+						speedIncrease: 0.1,
+						minDistance: 40,
+						maxDistance: 250,
+						minHeight: 500,
+						maxHeight: 650,
+						chanceToFloat: 33, //%
+						floatSpeed: 1, //between 1 and -1
+						minFloatDistance: 30,
+						maxFloatDistance: 80
 					},
 					controls: {
 						up: {

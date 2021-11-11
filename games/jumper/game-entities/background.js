@@ -15,7 +15,6 @@ export default class Background extends Entity {
 		this.dx = -0.5;
 
 		this.selectedBackground = selectedBackground;
-		this.ground = this.canvas.height - this.game.groundHeight;
 
 		if (!game.isServer) {
 			this.image = game.images.background[selectedBackground];

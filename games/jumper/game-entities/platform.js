@@ -12,31 +12,28 @@ export default class Platform extends Entity {
 	 * @param {Number} x
 	 * @param {Number} y
 	 */
-	constructor(game, type, x, y) {
-		const sizeMap = {
-			large: {
-				width: 248,
-				height: 57
-			},
-			medium: {
-				width: 140,
-				height: 55
-			},
-			small: {
-				width: 96,
-				height: 53
-			}
-		};
-
-		super(game, game.contexts.background, sizeMap[type].width, sizeMap[type].height, x, y);
-
-		this.dx = -0.6;
-		this.dy = 0;
+	constructor(game, type, x, y, sizes, initialSpeed, speedIncrease, minDistance, maxDistance, minHeight, maxHeight, chanceToFloat, floatSpeed, minFloatDistance, maxFloatDistance) {
+		super(game, game.contexts.background, sizes[type].width, sizes[type].height, x, y);
 
 		this.type = type;
 
+		this.initialSpeed = initialSpeed;
+		this.speedIncrease = speedIncrease;
+		this.minDistance = minDistance;
+		this.maxDistance = maxDistance;
+		this.minHeight = minHeight;
+		this.maxHeight = maxHeight;
+
+		//floating related properties
 		this.floating = false;
 		this.startingPosition = this.center.y;
+		this.chanceToFloat = chanceToFloat;
+		this.floatSpeed = floatSpeed;
+		this.minFloatDistance = minFloatDistance;
+		this.maxFloatDistance = maxFloatDistance;
+
+		this.dx = this.initialSpeed * -1;
+		this.dy = 0;
 
 		if (!game.isServer) {
 			if (type === 'large') {
@@ -48,8 +45,9 @@ export default class Platform extends Entity {
 		}
 
 		// TODO: move this to the game object or something
+		// add a property to the config indicating how often to increase the platform speed
 		setInterval(() => {
-			this.dx = this.dx - 0.1;
+			this.dx = this.dx - this.speedIncrease;
 		}, 3000);
 	}
 
@@ -121,20 +119,14 @@ export default class Platform extends Entity {
 	 * Resets the platform poisiton by using the last platform as a reference
 	 */
 	reset() {
-		//TODO: move this to a config or something
-		const minHorizontalDifference = 40;
-		const maxHorizontalDifference = 250;
-		const minY = 500;
-		const maxY = 650;
-
 		const sortedPlatforms = [...this.game.platforms].sort((a, b) => {
 			return a.right - b.right;
 		});
 
 		const lastPlatform = _.last(sortedPlatforms);
 
-		this.x = lastPlatform.right + _.random(minHorizontalDifference, maxHorizontalDifference);
-		this.y = _.random(minY, maxY);
+		this.x = lastPlatform.right + _.random(this.minDistance, this.maxDistance);
+		this.y = _.random(this.minHeight, this.maxHeight);
 		this.startingPosition = this.center.y;
 
 		this.randomizeFloatParameters();
@@ -145,11 +137,11 @@ export default class Platform extends Entity {
 	 */
 	randomizeFloatParameters() {
 		this.dy = 0;
-		this.floating = _.sample([true, false, false]); // 33% chance?
+		this.floating = _.random(0, 100) <= this.chanceToFloat;
 
 		if (this.floating) {
-			this.dy = _.random(-1, 1, true);
-			this.floatDistance = _.random(30, 80);
+			this.dy = _.random(this.floatSpeed * -1, this.floatSpeed, true);
+			this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
 		}
 	}
 

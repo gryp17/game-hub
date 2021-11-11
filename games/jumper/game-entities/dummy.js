@@ -148,6 +148,9 @@ export default class Dummy extends Entity {
 	 * Resets the dummy position
 	 */
 	reset() {
+		//raise the jumping flag in order to display the "jumping" sprite image while falling down
+		this.jumping = true;
+
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = 0;
 		this.dx = 0;
@@ -263,6 +266,10 @@ export default class Dummy extends Entity {
 	processInputs(inputs) {
 		//update the idle status
 		if (!inputs.left && !inputs.right) {
+			//this helps with the dummy control while in the air
+			if (this.jumping) {
+				this.dx = 0;
+			}
 			this.idle = true;
 		} else {
 			this.idle = false;

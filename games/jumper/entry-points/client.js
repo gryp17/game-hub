@@ -24,8 +24,6 @@ export default class Jumper extends GameClient {
 	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
 		super(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack });
 
-		this.groundHeight = config.groundHeight;
-
 		this.background;
 		this.platforms = [];
 		this.enemies = [];
@@ -49,15 +47,30 @@ export default class Jumper extends GameClient {
 	start() {
 		//game objects
 		this.background = new Background(this, this.config.background.selectedBackground);
+
+		const commonPlatformParams = [
+			this.config.platform.sizes,
+			this.config.platform.initialSpeed,
+			this.config.platform.speedIncrease,
+			this.config.platform.minDistance,
+			this.config.platform.maxDistance,
+			this.config.platform.minHeight,
+			this.config.platform.maxHeight,
+			this.config.platform.chanceToFloat,
+			this.config.platform.floatSpeed,
+			this.config.platform.minFloatDistance,
+			this.config.platform.maxFloatDistance
+		];
+
 		this.platforms = [
-			new Platform(this, 'large', 600, 530),
-			new Platform(this, 'medium', 900, 500),
-			new Platform(this, 'large', 1060, 520),
-			new Platform(this, 'small', 1320, 540),
-			new Platform(this, 'medium', 1460, 560),
-			new Platform(this, 'large', 1650, 570),
-			new Platform(this, 'small', 1920, 500),
-			new Platform(this, 'small', 2030, 540)
+			new Platform(this, 'large', 600, 530, ...commonPlatformParams),
+			new Platform(this, 'medium', 900, 500, ...commonPlatformParams),
+			new Platform(this, 'large', 1060, 520, ...commonPlatformParams),
+			new Platform(this, 'small', 1320, 540, ...commonPlatformParams),
+			new Platform(this, 'medium', 1460, 560, ...commonPlatformParams),
+			new Platform(this, 'large', 1650, 570, ...commonPlatformParams),
+			new Platform(this, 'small', 1920, 500, ...commonPlatformParams),
+			new Platform(this, 'small', 2030, 540, ...commonPlatformParams)
 		];
 
 		this.enemies = [
