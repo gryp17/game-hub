@@ -19,13 +19,13 @@ export default class Entity {
 		this.canvas = context.canvas;
 
 		//private properties that should only be accessed/modified using the getters
-		this._width = Math.floor(width);
-		this._height = Math.floor(height);
+		this._width = this.roundValue(width);
+		this._height = this.roundValue(height);
 
-		this._x = Math.floor(x);
-		this._y = Math.floor(y);
-		this._dx = Math.floor(dx);
-		this._dy = Math.floor(dy);
+		this._x = this.roundValue(x);
+		this._y = this.roundValue(y);
+		this._dx = this.roundValue(dx);
+		this._dy = this.roundValue(dy);
 	}
 
 	/**
@@ -33,7 +33,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set width(value) {
-		this._width = Math.floor(value);
+		this._width = this.roundValue(value);
 	}
 
 	/**
@@ -49,7 +49,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set height(value) {
-		this._height = Math.floor(value);
+		this._height = this.roundValue(value);
 	}
 
 	/**
@@ -65,7 +65,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set x(value) {
-		this._x = Math.floor(value);
+		this._x = this.roundValue(value);
 	}
 
 	/**
@@ -81,7 +81,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set y(value) {
-		this._y = Math.floor(value);
+		this._y = this.roundValue(value);
 	}
 
 	/**
@@ -97,7 +97,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set dx(value) {
-		this._dx = Math.floor(value);
+		this._dx = this.roundValue(value);
 	}
 
 	/**
@@ -113,7 +113,7 @@ export default class Entity {
 	 * @param {Number} value
 	 */
 	set dy(value) {
-		this._dy = Math.floor(value);
+		this._dy = this.roundValue(value);
 	}
 
 	/**
@@ -242,6 +242,15 @@ export default class Entity {
 		this.y = state.y;
 		this.dx = state.dx;
 		this.dy = state.dy;
+	}
+
+	/**
+	 * Rounds the value to one number after the decimal point
+	 * @param {Number} value
+	 * @returns {Number}
+	 */
+	roundValue(value) {
+		return parseFloat(value.toFixed(1));
 	}
 
 	/**
