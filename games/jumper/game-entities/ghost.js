@@ -20,7 +20,7 @@ export default class Ghost extends Entity {
 		this.fallingSpeed = -3;
 		this.deadRotationSpeed = 15;
 		this.deadAlphaSpeed = 0.01;
-		this.deadShrinkSpeed = 0.01;
+		this.deadShrinkSpeed = 1;
 		this.minSize = this.defaultSize / 5;
 
 		this.dx = this.speed;
@@ -36,16 +36,23 @@ export default class Ghost extends Entity {
 		}
 
 		setTimeout(() => {
-			this.dead = true;
+			this.die();
 		}, 2600);
 	}
 
-	move() {
-		if (this.dead) {
-			this.dx = this.deadSpeed;
-			this.dy = this.fallingSpeed;
-		}
+	/**
+	 * Makes the ghost die
+	 */
+	die() {
+		this.dead = true;
+		this.dx = this.deadSpeed;
+		this.dy = this.fallingSpeed;
+	}
 
+	/**
+	 * Makes the ghost move
+	 */
+	move() {
 		if (this.right < 0 || this.top < 0) {
 			this.reset();
 		}
@@ -53,6 +60,9 @@ export default class Ghost extends Entity {
 		super.move();
 	}
 
+	/**
+	 * Resets the ghost
+	 */
 	reset() {
 		this.dead = false;
 		this.width = this.defaultSize;
@@ -66,7 +76,7 @@ export default class Ghost extends Entity {
 	}
 
 	/**
-	 * Draws the dummy
+	 * Draws the ghost
 	 */
 	draw() {
 		//update the image with the correct sprite image
@@ -115,6 +125,8 @@ export default class Ghost extends Entity {
 		if (this.width > this.minSize) {
 			this.width = this.width - this.deadShrinkSpeed;
 			this.height = this.height - this.deadShrinkSpeed;
+
+			console.log(this.width, this.height);
 		}
 	}
 }

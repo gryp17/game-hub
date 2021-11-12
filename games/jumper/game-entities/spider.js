@@ -38,10 +38,6 @@ export default class Spider extends Entity {
 		this.spiderNet = new SpiderNet(game, this);
 
 		this.randomizeHangParameters();
-
-		setTimeout(() => {
-			// this.die();
-		}, 5000);
 	}
 
 	/**

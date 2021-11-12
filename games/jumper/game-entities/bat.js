@@ -33,19 +33,23 @@ export default class Bat extends Entity {
 		}
 
 		setTimeout(() => {
-			this.dead = true;
+			this.die();
 		}, 2600);
+	}
+
+	/**
+	 * Makes the bat die
+	 */
+	die() {
+		this.dead = true;
+		this.dx = this.deadSpeed;
+		this.dy = this.fallingSpeed;
 	}
 
 	/**
 	 * Moves the bat
 	 */
 	move() {
-		if (this.dead) {
-			this.dx = this.deadSpeed;
-			this.dy = this.fallingSpeed;
-		}
-
 		if (this.right < 0) {
 			this.reset();
 		}
