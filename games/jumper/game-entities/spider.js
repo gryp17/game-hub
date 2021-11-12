@@ -16,16 +16,18 @@ export default class Spider extends Entity {
 		//TODO: move this to config
 		this.speed = 1;
 		this.fallingSpeed = 8;
-		this.maxY = 300;
 
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
+
+		this.minHangPosition;
+		this.maxHangPosition;
+		this.hangTimeoutId;
 
 		this.idle = false;
 		this.dead = false;
 
 		if (!game.isServer) {
-			//TODO: add dead image and logic
 			this.deadImage = this.game.images.spider.dead;
 			this.idleImage = this.game.images.spider.idle;
 			this.movingSprite = new Sprite(this.game.images.spider.moving, 10, true);
@@ -35,8 +37,10 @@ export default class Spider extends Entity {
 
 		this.spiderNet = new SpiderNet(game, this);
 
+		this.randomizeHangParameters();
+
 		setTimeout(() => {
-			this.die();
+			// this.die();
 		}, 5000);
 	}
 
@@ -46,6 +50,15 @@ export default class Spider extends Entity {
 	die() {
 		this.dead = true;
 		this.dy = this.fallingSpeed;
+		clearTimeout(this.hangTimeoutId);
+	}
+
+	/**
+	 * Randomizes the hang parameters
+	 */
+	randomizeHangParameters() {
+		this.minHangPosition = _.random(0, this.height);
+		this.maxHangPosition = _.random(this.minHangPosition + 200, this.minHangPosition + 350);
 	}
 
 	/**
@@ -56,10 +69,8 @@ export default class Spider extends Entity {
 			this.reset();
 		}
 
-		//stop moving
-		if (!this.dead && this.bottom >= this.maxY) {
-			this.bottom = this.maxY;
-			this.idle = true;
+		if (!this.dead && !this.idle) {
+			this.hang();
 		}
 
 		super.move();
@@ -72,10 +83,54 @@ export default class Spider extends Entity {
 	 */
 	reset() {
 		this.dead = false;
+		this.idle = false;
 		this.x = this.canvas.width + _.random(50, 200);
-		this.y = 0;
+		this.y = this.height * -1;
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
+
+		clearTimeout(this.hangTimeoutId);
+		this.randomizeHangParameters();
+	}
+
+	/**
+	 * Triggers handing logic (makes the spider move up and down on its net)
+	 */
+	hang() {
+		//stop moving down
+		if (this.dy > 0 && this.bottom >= this.maxHangPosition) {
+			this.bottom = this.maxHangPosition;
+			this.dy = 0;
+			this.idle = true;
+
+			//start moving up after some delay
+			this.startMovingAfterDelay('up');
+		}
+
+		//stop moving up
+		if (this.dy < 0 && this.top <= this.minHangPosition) {
+			this.top = this.minHangPosition;
+			this.dy = 0;
+			this.idle = true;
+
+			//start moving down after some delay
+			this.startMovingAfterDelay('down');
+		}
+	}
+
+	/**
+	 * Waits X seconds and starts moving the spider in the specified direction
+	 * @param {String} direction
+	 */
+	startMovingAfterDelay(direction) {
+		//TODO: use config for the min and max values
+		const delay = _.random(1000, 6000);
+
+		clearTimeout(this.hangTimeoutId);
+		this.hangTimeoutId = setTimeout(() => {
+			this.idle = false;
+			this.dy = direction === 'up' ? this.speed * -1 : this.speed;
+		}, delay);
 	}
 
 	/**
@@ -98,7 +153,7 @@ export default class Spider extends Entity {
 	updateSprite() {
 		if (this.dead) {
 			this.image = this.deadImage;
-		} else if (this.idle) {
+		} else if (this.dy === 0) {
 			this.image = this.idleImage;
 		} else {
 			this.image = this.movingSprite.move();
