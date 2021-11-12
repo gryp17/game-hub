@@ -33,6 +33,8 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = jumpAcceleration;
 
+		this.deadSpeed = 5;
+
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
 		this.facingDirection = 'right';
@@ -43,7 +45,15 @@ export default class Dummy extends Entity {
 		this.jumpDeceleration = jumpAcceleration;
 		this.maxJumpHeight = maxJumpHeight;
 
+		//TODO: move this to the config
+		this.lives = 3;
+
 		this.previousUpState = false;
+
+		this.dead = false;
+		this.invincible = false;
+		this.invincibilityTimeout = 1500;
+		this.invincibilityTimeoutId;
 
 		this.idle = true;
 		this.jumping = false;
@@ -65,6 +75,10 @@ export default class Dummy extends Entity {
 				jumping: {
 					left: new Sprite(this.game.images.dummy[this.skin].left.jumping, 0, true),
 					right: new Sprite(this.game.images.dummy[this.skin].right.jumping, 0, true)
+				},
+				dead: {
+					left: new Sprite(this.game.images.dummy[this.skin].left.dead, 5, true),
+					right: new Sprite(this.game.images.dummy[this.skin].right.dead, 5, true)
 				}
 			};
 
@@ -113,15 +127,53 @@ export default class Dummy extends Entity {
 	}
 
 	/**
+	 * Makes the dummy die when touched by an enemy
+	 */
+	killedByEnemy() {
+		this.dead = true;
+		// this.invincible = true;
+
+		this.dx = 0;
+		this.dy = this.deadSpeed;
+	}
+
+	/**
+	 * Decreases the dummy lives
+	 */
+	liveLost() {
+		//TODO: handle this on the backend
+		this.lives--;
+
+		console.log(this.lives);
+
+		if (this.lives === 0) {
+			//TODO: game over
+			console.log('GAME OVER!');
+		}
+	}
+
+	/**
 	 * Resets the dummy position
 	 */
 	reset() {
+		this.dead = false;
+		this.flipping = false;
+
 		//raise the jumping flag in order to display the "jumping" sprite image while falling down
 		this.jumping = true;
 
 		this.x = (this.canvas.width / 2) - (this.width / 2);
 		this.y = 0;
 		this.dx = 0;
+		this.dy = this.jumpDeceleration;
+
+		//make the dummy invincible for X seconds
+		this.invincible = true;
+
+		clearInterval(this.invincibilityTimeoutId);
+		this.invincibilityTimeoutId = setTimeout(() => {
+			this.invincible = false;
+		}, this.invincibilityTimeout);
 	}
 
 	/**
@@ -166,7 +218,9 @@ export default class Dummy extends Entity {
 	 * Updates the image property with the correct sprite image
 	 */
 	updateSprite() {
-		if (this.jumping) {
+		if (this.dead) {
+			this.image = this.sprites.dead.move();
+		} else if (this.jumping) {
 			if (this.dy < 0) {
 				//jumping up image
 				this.image = this.sprites.jumping.moveTo(0);
@@ -232,6 +286,10 @@ export default class Dummy extends Entity {
 	 * @param {Object} inputs
 	 */
 	processInputs(inputs) {
+		if (this.dead) {
+			return;
+		}
+
 		//update the idle status
 		if (!inputs.left && !inputs.right) {
 			//this helps with the dummy control while in the air
@@ -281,10 +339,11 @@ export default class Dummy extends Entity {
 	 */
 	handleCollisions() {
 		const platforms = this.game.platforms;
+		const enemies = this.game.enemies;
 
 		//bottom end of scren
 		if (this.top >= this.canvas.height) {
-			//TODO: game over
+			this.liveLost();
 			this.reset();
 		}
 
@@ -296,6 +355,11 @@ export default class Dummy extends Entity {
 		//right end of screen
 		if (this.right >= this.canvas.width) {
 			this.right = this.canvas.width;
+		}
+
+		//skip the rest of the checks if the dummy is dead
+		if (this.dead) {
+			return;
 		}
 
 		//platforms
@@ -324,6 +388,21 @@ export default class Dummy extends Entity {
 
 				if (collisionWithPlatform === 'right') {
 					this.left = platform.right;
+				}
+			}
+		});
+
+		//enemies
+		enemies.forEach((enemy) => {
+			if (enemy.dead) {
+				return;
+			}
+
+			if (Utils.collidesWith(enemy.hitbox, this.hitbox)) {
+				if (this.flipping) {
+					enemy.die();
+				} else if (!this.invincible) {
+					this.killedByEnemy();
 				}
 			}
 		});

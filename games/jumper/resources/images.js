@@ -69,6 +69,10 @@ export default {
 				idle: [
 					'/game-images/jumper/dummy/green/left/idle/1.png',
 					'/game-images/jumper/dummy/green/left/idle/2.png'
+				],
+				dead: [
+					'/game-images/jumper/dummy/green/left/dead/1.png',
+					'/game-images/jumper/dummy/green/left/dead/2.png'
 				]
 			},
 			right: {
@@ -85,6 +89,10 @@ export default {
 				idle: [
 					'/game-images/jumper/dummy/green/right/idle/1.png',
 					'/game-images/jumper/dummy/green/right/idle/2.png'
+				],
+				dead: [
+					'/game-images/jumper/dummy/green/right/dead/1.png',
+					'/game-images/jumper/dummy/green/right/dead/2.png'
 				]
 			}
 		},
@@ -104,6 +112,10 @@ export default {
 				idle: [
 					'/game-images/jumper/dummy/yellow/left/idle/1.png',
 					'/game-images/jumper/dummy/yellow/left/idle/2.png'
+				],
+				dead: [
+					'/game-images/jumper/dummy/yellow/left/dead/1.png',
+					'/game-images/jumper/dummy/yellow/left/dead/2.png'
 				]
 			},
 			right: {
@@ -121,6 +133,10 @@ export default {
 				idle: [
 					'/game-images/jumper/dummy/yellow/right/idle/1.png',
 					'/game-images/jumper/dummy/yellow/right/idle/2.png'
+				],
+				dead: [
+					'/game-images/jumper/dummy/yellow/right/dead/1.png',
+					'/game-images/jumper/dummy/yellow/right/dead/2.png'
 				]
 			}
 		}
