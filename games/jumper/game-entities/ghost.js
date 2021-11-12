@@ -125,8 +125,6 @@ export default class Ghost extends Entity {
 		if (this.width > this.minSize) {
 			this.width = this.width - this.deadShrinkSpeed;
 			this.height = this.height - this.deadShrinkSpeed;
-
-			console.log(this.width, this.height);
 		}
 	}
 }
