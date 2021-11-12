@@ -7,17 +7,17 @@ export default class SpiderNet extends Entity {
 	/**
 	 * Creates a new spider net instance
 	 * @param {Object} game
-	 * @param {Object} source
+	 * @param {Object} spider
 	 */
-	constructor(game, source) {
+	constructor(game, spider) {
 		super(game, game.contexts.enemies);
 
-		this.source = source;
+		this.spider = spider;
 
 		this.width = 1;
-		this.height = this.source.center.y;
+		this.height = this.spider.center.y;
 
-		this.x = this.source.center.x;
+		this.x = this.spider.center.x;
 		this.y = 0;
 
 		if (!game.isServer) {
@@ -29,8 +29,8 @@ export default class SpiderNet extends Entity {
 	 * Moves the spider net
 	 */
 	move() {
-		this.height = this.source.center.y;
-		this.x = this.source.center.x;
+		this.height = this.spider.center.y;
+		this.x = this.spider.center.x;
 
 		super.move();
 	}
