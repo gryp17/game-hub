@@ -26,38 +26,6 @@ export default class SpiderNet extends Entity {
 	}
 
 	/**
-	 * Sets the x value
-	 * @param {Number} value
-	 */
-	set x(value) {
-		this._x = value;
-	}
-
-	/**
-	 * Returns the x value
-	 * @returns {Number}
-	 */
-	get x() {
-		return this._x;
-	}
-
-	/**
-	 * Sets the dx value
-	 * @param {Number} value
-	 */
-	set dx(value) {
-		this._dx = value;
-	}
-
-	/**
-	 * Returns the dx value
-	 * @returns {Number}
-	 */
-	get dx() {
-		return this._dx;
-	}
-
-	/**
 	 * Moves the spider net
 	 */
 	move() {
