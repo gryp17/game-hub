@@ -7,13 +7,13 @@ export default class Background extends Entity {
 	/**
 	 * Creates a background instance
 	 * @param {Object} game
+	 * @param {Number} speed
 	 * @param {String} selectedBackground
 	 */
-	constructor(game, selectedBackground) {
+	constructor(game, speed, selectedBackground) {
 		super(game, game.contexts.background);
 
-		//TODO: move this to the config
-		this.dx = -0.5;
+		this.dx = speed * -1;
 
 		this.selectedBackground = selectedBackground;
 

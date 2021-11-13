@@ -84,7 +84,11 @@ export default class Jumper extends GameClient {
 		];
 
 		//game objects
-		this.background = new Background(this, this.config.background.selectedBackground);
+		this.background = new Background(
+			this,
+			this.config.background.speed,
+			this.config.background.selectedBackground
+		);
 
 		this.platforms = [
 			new Platform(this, 'large', 600, 530, ...platformsConfig),

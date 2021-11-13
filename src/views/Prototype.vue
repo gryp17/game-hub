@@ -124,6 +124,7 @@
 						invincibilityDuration: 1500 //miliseconds
 					},
 					background: {
+						speed: 0.5,
 						availableBackgrounds: [
 							'forest',
 							'factory',
