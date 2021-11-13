@@ -8,13 +8,14 @@ export default class SpiderNet extends Entity {
 	 * Creates a new spider net instance
 	 * @param {Object} game
 	 * @param {Object} spider
+	 * @param {Number} width
 	 */
-	constructor(game, spider) {
+	constructor(game, spider, width) {
 		super(game, game.contexts.enemies);
 
 		this.spider = spider;
 
-		this.width = 1;
+		this.width = width;
 		this.height = this.spider.center.y;
 
 		this.x = this.spider.center.x;

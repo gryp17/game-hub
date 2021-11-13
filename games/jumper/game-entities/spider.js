@@ -9,13 +9,29 @@ export default class Spider extends Entity {
 	/**
 	 * Creates a new spider instance
 	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} speed
+	 * @param {Number} fallingSpeed
+	 * @param {Number} minSpawnDistance
+	 * @param {Number} maxSpawnDistance
+	 * @param {Number} minHangOffset
+	 * @param {Number} maxHangOffset
+	 * @param {Number} minHangTime
+	 * @param {Number} maxHangTime
 	 */
-	constructor(game, size, x, y) {
+	constructor(game, size, x, y, netWidth, speed, fallingSpeed, minSpawnDistance, maxSpawnDistance, minHangOffset, maxHangOffset, minHangTime, maxHangTime) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
-		//TODO: move this to config
-		this.speed = 1;
-		this.fallingSpeed = 8;
+		this.speed = speed;
+		this.fallingSpeed = fallingSpeed;
+		this.minSpawnDistance = minSpawnDistance;
+		this.maxSpawnDistance = maxSpawnDistance;
+		this.minHangOffset = minHangOffset;
+		this.maxHangOffset = maxHangOffset;
+		this.minHangTime = minHangTime;
+		this.maxHangTime = maxHangTime;
 
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
@@ -35,7 +51,7 @@ export default class Spider extends Entity {
 			this.image = this.idleImage;
 		}
 
-		this.spiderNet = new SpiderNet(game, this);
+		this.spiderNet = new SpiderNet(game, this, netWidth);
 
 		this.randomizeHangParameters();
 	}
@@ -54,7 +70,7 @@ export default class Spider extends Entity {
 	 */
 	randomizeHangParameters() {
 		this.minHangPosition = _.random(0, this.height);
-		this.maxHangPosition = _.random(this.minHangPosition + 200, this.minHangPosition + 350);
+		this.maxHangPosition = _.random(this.minHangPosition + this.minHangOffset, this.minHangPosition + this.maxHangOffset);
 	}
 
 	/**
@@ -80,7 +96,7 @@ export default class Spider extends Entity {
 	reset() {
 		this.dead = false;
 		this.idle = false;
-		this.x = this.canvas.width + _.random(50, 200);
+		this.x = this.canvas.width + _.random(this.minSpawnDistance, this.maxSpawnDistance);
 		this.y = this.height * -1;
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
@@ -119,8 +135,7 @@ export default class Spider extends Entity {
 	 * @param {String} direction
 	 */
 	startMovingAfterDelay(direction) {
-		//TODO: use config for the min and max values
-		const delay = _.random(1000, 6000);
+		const delay = _.random(this.minHangTime, this.maxHangTime);
 
 		clearTimeout(this.hangTimeoutId);
 		this.hangTimeoutId = setTimeout(() => {

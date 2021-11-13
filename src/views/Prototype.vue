@@ -168,6 +168,18 @@
 						minSpawnHeight: 100,
 						maxSpawnHeight: 350
 					},
+					spider: {
+						size: 80,
+						netWidth: 1,
+						speed: 1,
+						fallingSpeed: 8,
+						minSpawnDistance: 50,
+						maxSpawnDistance: 200,
+						minHangOffset: 200,
+						maxHangOffset: 350,
+						minHangTime: 1000, //miliseconds
+						maxHangTime: 6000
+					},
 					controls: {
 						up: {
 							keys: [38, 87] //arrow up, W
