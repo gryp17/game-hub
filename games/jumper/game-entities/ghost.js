@@ -34,10 +34,6 @@ export default class Ghost extends Entity {
 			this.flyingSprite = new Sprite(this.game.images.ghost.flying, 2, true);
 			this.image = this.flyingSprite.move();
 		}
-
-		setTimeout(() => {
-			this.die();
-		}, 2600);
 	}
 
 	/**

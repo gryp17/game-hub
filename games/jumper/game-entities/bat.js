@@ -31,10 +31,6 @@ export default class Bat extends Entity {
 
 			this.image = this.flyingSprite.move();
 		}
-
-		setTimeout(() => {
-			this.die();
-		}, 2600);
 	}
 
 	/**

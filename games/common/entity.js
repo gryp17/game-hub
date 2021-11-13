@@ -29,6 +29,13 @@ export default class Entity {
 	}
 
 	/**
+	 * Returns the entity class name
+	 */
+	get className() {
+		return this.constructor.name;
+	}
+
+	/**
 	 * Sets the width value after rounding it
 	 * @param {Number} value
 	 */

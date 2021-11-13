@@ -129,10 +129,8 @@ export default class Dummy extends Entity {
 	/**
 	 * Makes the dummy die when touched by an enemy
 	 */
-	killedByEnemy() {
+	hitByEnemy() {
 		this.dead = true;
-		// this.invincible = true;
-
 		this.dx = 0;
 		this.dy = this.deadSpeed;
 	}
@@ -411,11 +409,22 @@ export default class Dummy extends Entity {
 				return;
 			}
 
+			//check for spider net collisions
+			if (enemy.className === 'Spider') {
+				const spiderNet = enemy.spiderNet;
+
+				//touching the spider's net kills it
+				if (Utils.collidesWith(spiderNet.hitbox, this.hitbox)) {
+					enemy.die();
+					return;
+				}
+			}
+
 			if (Utils.collidesWith(enemy.hitbox, this.hitbox)) {
 				if (this.flipping) {
 					enemy.die();
 				} else if (!this.invincible) {
-					this.killedByEnemy();
+					this.hitByEnemy();
 				}
 			}
 		});
