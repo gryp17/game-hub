@@ -104,7 +104,20 @@ export default class Jumper extends GameClient {
 		this.enemies = [
 			new Spider(this, 80, 1200, 0),
 			new Ghost(this, 100, 1290, 300),
-			new Bat(this, 100, 1100, 200)
+			new Bat(
+				this,
+				this.config.bat.size,
+				1100,
+				200,
+				this.config.bat.speed,
+				this.config.bat.deadSpeed,
+				this.config.bat.fallingSpeed,
+				this.config.bat.deadRotationSpeed,
+				this.config.bat.minSpawnDistance,
+				this.config.bat.maxSpawnDistance,
+				this.config.bat.minSpawnHeight,
+				this.config.bat.maxSpawnHeight
+			)
 		];
 
 		this.dummies = [

@@ -157,6 +157,17 @@
 						minFloatDistance: 30,
 						maxFloatDistance: 80
 					},
+					bat: {
+						size: 100,
+						speed: 5,
+						deadSpeed: 3,
+						fallingSpeed: 6,
+						deadRotationSpeed: 2,
+						minSpawnDistance: 50,
+						maxSpawnDistance: 200,
+						minSpawnHeight: 100,
+						maxSpawnHeight: 350
+					},
 					controls: {
 						up: {
 							keys: [38, 87] //arrow up, W

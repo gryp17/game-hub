@@ -9,15 +9,29 @@ export default class Bat extends Entity {
 	/**
 	 * Creates a new bat instance
 	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} speed
+	 * @param {Number} deadSpeed
+	 * @param {Number} fallingSpeed
+	 * @param {Number} deadRotationSpeed
+	 * @param {Number} minSpawnDistance
+	 * @param {Number} maxSpawnDistance
+	 * @param {Number} minSpawnHeight
+	 * @param {Number} maxSpawnHeight
 	 */
-	constructor(game, size, x, y) {
+	constructor(game, size, x, y, speed, deadSpeed, fallingSpeed, deadRotationSpeed, minSpawnDistance, maxSpawnDistance, minSpawnHeight, maxSpawnHeight) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
-		//TODO: move this to config
-		this.speed = -5;
-		this.deadSpeed = -3;
-		this.fallingSpeed = 6;
-		this.deadRotationSpeed = 2;
+		this.speed = speed * -1;
+		this.deadSpeed = deadSpeed * -1;
+		this.fallingSpeed = fallingSpeed;
+		this.deadRotationSpeed = deadRotationSpeed;
+		this.minSpawnDistance = minSpawnDistance;
+		this.maxSpawnDistance = maxSpawnDistance;
+		this.minSpawnHeight = minSpawnHeight;
+		this.maxSpawnHeight = maxSpawnHeight;
 
 		this.dx = this.speed;
 		this.dy = 0;
@@ -59,8 +73,8 @@ export default class Bat extends Entity {
 	reset() {
 		this.dead = false;
 		this.angle = 0;
-		this.x = this.canvas.width + _.random(50, 200);
-		this.y = 200;
+		this.x = this.canvas.width + _.random(this.minSpawnDistance, this.maxSpawnDistance);
+		this.y = _.random(this.minSpawnHeight, this.maxSpawnHeight);
 		this.dy = 0;
 		this.dx = this.speed;
 	}
