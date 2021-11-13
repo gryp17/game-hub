@@ -33,7 +33,7 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = jumpAcceleration;
 
-		this.deadSpeed = 5;
+		this.deadSpeed = 7;
 
 		//the player's own character always uses the green skin
 		this.skin = this.controllable ? 'green' : 'yellow';
@@ -77,8 +77,8 @@ export default class Dummy extends Entity {
 					right: new Sprite(this.game.images.dummy[this.skin].right.jumping, 0, true)
 				},
 				dead: {
-					left: new Sprite(this.game.images.dummy[this.skin].left.dead, 5, true),
-					right: new Sprite(this.game.images.dummy[this.skin].right.dead, 5, true)
+					left: new Sprite(this.game.images.dummy[this.skin].left.dead, 10, true),
+					right: new Sprite(this.game.images.dummy[this.skin].right.dead, 10, true)
 				}
 			};
 
@@ -166,6 +166,7 @@ export default class Dummy extends Entity {
 		this.y = 0;
 		this.dx = 0;
 		this.dy = this.jumpDeceleration;
+		this.angle = 0;
 
 		//make the dummy invincible for X seconds
 		this.invincible = true;
@@ -196,7 +197,11 @@ export default class Dummy extends Entity {
 		}
 
 		if (this.flipping) {
-			this.rotate();
+			this.rotateWhenFlipping();
+		}
+
+		if (this.dead) {
+			this.rotateWhenDead();
 		}
 
 		super.move();
@@ -270,15 +275,23 @@ export default class Dummy extends Entity {
 	}
 
 	/**
-	 * Changes the image rotation angle
+	 * Triggers the flipping rotation animation
 	 */
-	rotate() {
+	rotateWhenFlipping() {
 		const rotationSpeed = this.facingDirection === 'left' ? -30 : 30;
 		this.angle = this.angle + rotationSpeed;
 
 		if (Math.abs(this.angle) >= 720) {
 			this.stopFlipping();
 		}
+	}
+
+	/**
+	 * Triggers the dead rotation animation
+	 */
+	rotateWhenDead() {
+		const rotationSpeed = this.facingDirection === 'left' ? 1 : -1;
+		this.angle = this.angle + rotationSpeed;
 	}
 
 	/**
