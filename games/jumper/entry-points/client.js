@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import GameClient from '../../common/game-client';
 import Keyboard from '../../common/inputs/keyboard';
+import Touchscreen from '../inputs/touchscreen';
 import Background from '../game-entities/background';
 import Platform from '../game-entities/platform';
 import Bat from '../game-entities/bat';
@@ -37,6 +38,7 @@ export default class Jumper extends GameClient {
 
 		//initialize the keyboard and touchscreen controls
 		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
+		this.touchscreen = new Touchscreen(this.gameControls, this.contexts.game.canvas);
 	}
 
 	/**
@@ -155,6 +157,7 @@ export default class Jumper extends GameClient {
 
 		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
+		this.touchscreen.listen();
 
 		//TODO: move this logic to the server and send the updated value to the clients
 		setInterval(() => {
@@ -170,6 +173,7 @@ export default class Jumper extends GameClient {
 	stop() {
 		//clear all input event listeners
 		this.keyboard.removeAllEventListeners();
+		this.touchscreen.removeAllEventListeners();
 
 		super.stop();
 	}
@@ -201,10 +205,11 @@ export default class Jumper extends GameClient {
 
 		//get both types of inputs
 		const keyboardInputs = this.keyboard.getInputs();
+		const touchscreenInputs = this.touchscreen.getInputs();
 
 		//and merge them
 		_.forOwn(this.gameControls, (data, key) => {
-			result[key] = keyboardInputs[key];
+			result[key] = keyboardInputs[key] || touchscreenInputs[key];
 		});
 
 		return result;

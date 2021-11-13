@@ -142,11 +142,11 @@ export default class Dummy extends Entity {
 		//TODO: handle this on the backend
 		this.lives--;
 
-		console.log(this.lives);
+		// console.log(this.lives);
 
 		if (this.lives === 0) {
 			//TODO: game over
-			console.log('GAME OVER!');
+			// console.log('GAME OVER!');
 		}
 	}
 
