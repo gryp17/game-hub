@@ -53,6 +53,13 @@ export default class Ghost extends Entity {
 			this.reset();
 		}
 
+		//apply the dead effects
+		if (this.dead) {
+			this.fade();
+			this.rotate();
+			this.shrink();
+		}
+
 		super.move();
 	}
 
@@ -89,13 +96,6 @@ export default class Ghost extends Entity {
 	 */
 	updateSprite() {
 		this.image = this.flyingSprite.move();
-
-		//apply the dead effects
-		if (this.dead) {
-			this.fade();
-			this.rotate();
-			this.shrink();
-		}
 	}
 
 	/**

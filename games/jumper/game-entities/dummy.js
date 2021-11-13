@@ -61,6 +61,7 @@ export default class Dummy extends Entity {
 
 		this.flipping = false;
 		this.angle = 0;
+		this.alpha = 1;
 
 		if (!game.isServer) {
 			this.availableSprites = {
@@ -153,7 +154,7 @@ export default class Dummy extends Entity {
 	/**
 	 * Resets the dummy position
 	 */
-	reset() {
+	reset(giveInvincibility = false) {
 		this.dead = false;
 		this.flipping = false;
 
@@ -165,14 +166,18 @@ export default class Dummy extends Entity {
 		this.dx = 0;
 		this.dy = this.jumpDeceleration;
 		this.angle = 0;
+		this.alpha = 1;
 
 		//make the dummy invincible for X seconds
-		this.invincible = true;
+		if (giveInvincibility) {
+			this.invincible = true;
 
-		clearInterval(this.invincibilityTimeoutId);
-		this.invincibilityTimeoutId = setTimeout(() => {
-			this.invincible = false;
-		}, this.invincibilityTimeout);
+			clearInterval(this.invincibilityTimeoutId);
+			this.invincibilityTimeoutId = setTimeout(() => {
+				this.invincible = false;
+				this.alpha = 1;
+			}, this.invincibilityTimeout);
+		}
 	}
 
 	/**
@@ -202,6 +207,10 @@ export default class Dummy extends Entity {
 			this.rotateWhenDead();
 		}
 
+		if (this.invincible) {
+			this.fade();
+		}
+
 		super.move();
 
 		this.handleCollisions();
@@ -214,7 +223,10 @@ export default class Dummy extends Entity {
 		//update the image with the correct sprite image
 		this.updateSprite();
 
+		this.context.save();
+		this.context.globalAlpha = this.alpha;
 		Utils.drawRotatedImage(this.context, this.image, this.angle, this.x, this.y, this.width, this.height);
+		this.context.restore();
 	}
 
 	/**
@@ -255,6 +267,17 @@ export default class Dummy extends Entity {
 		this.dy = this.jumpDeceleration;
 
 		this.stopFlipping();
+	}
+
+	/**
+	 * Changes the image alpha
+	 */
+	fade() {
+		if (this.alpha > 0.6) {
+			this.alpha = this.alpha - 0.1;
+		} else {
+			this.alpha = 1;
+		}
 	}
 
 	/**
@@ -355,7 +378,7 @@ export default class Dummy extends Entity {
 		//bottom end of scren
 		if (this.top >= this.canvas.height) {
 			this.liveLost();
-			this.reset();
+			this.reset(true);
 		}
 
 		//left end of screen
