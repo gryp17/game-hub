@@ -180,6 +180,19 @@
 						minHangTime: 1000, //miliseconds
 						maxHangTime: 6000
 					},
+					ghost: {
+						size: 100,
+						speed: 3,
+						deadSpeed: 1,
+						fallingSpeed: 3,
+						deadRotationSpeed: 15,
+						deadFadeSpeed: 0.01,
+						deadShrinkSpeed: 1,
+						minSpawnDistance: 50,
+						maxSpawnDistance: 200,
+						minSpawnHeight: 100,
+						maxSpawnHeight: 350
+					},
 					controls: {
 						up: {
 							keys: [38, 87] //arrow up, W

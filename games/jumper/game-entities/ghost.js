@@ -9,18 +9,35 @@ export default class Ghost extends Entity {
 	/**
 	 * Creates a new ghost instance
 	 * @param {Object} game
+	 * @param {Number} size
+	 * @param {Number} x
+	 * @param {Number} y
+	 * @param {Number} speed
+	 * @param {Number} deadSpeed
+	 * @param {Number} fallingSpeed
+	 * @param {Number} deadRotationSpeed
+	 * @param {Number} deadFadeSpeed
+	 * @param {Number} deadShrinkSpeed
+	 * @param {Number} minSpawnDistance
+	 * @param {Number} maxSpawnDistance
+	 * @param {Number} minSpawnHeight
+	 * @param {Number} maxSpawnHeight
 	 */
-	constructor(game, size, x, y) {
+	constructor(game, size, x, y, speed, deadSpeed, fallingSpeed, deadRotationSpeed, deadFadeSpeed, deadShrinkSpeed, minSpawnDistance, maxSpawnDistance, minSpawnHeight, maxSpawnHeight) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
-		//TODO: move this to config
 		this.defaultSize = size;
-		this.speed = -3;
-		this.deadSpeed = -1;
-		this.fallingSpeed = -3;
-		this.deadRotationSpeed = 15;
-		this.deadAlphaSpeed = 0.01;
-		this.deadShrinkSpeed = 1;
+		this.speed = speed * -1;
+		this.deadSpeed = deadSpeed * -1;
+		this.fallingSpeed = fallingSpeed * -1;
+		this.deadRotationSpeed = deadRotationSpeed;
+		this.deadFadeSpeed = deadFadeSpeed;
+		this.deadShrinkSpeed = deadShrinkSpeed;
+		this.minSpawnDistance = minSpawnDistance;
+		this.maxSpawnDistance = maxSpawnDistance;
+		this.minSpawnHeight = minSpawnHeight;
+		this.maxSpawnHeight = maxSpawnHeight;
+
 		this.minSize = this.defaultSize / 5;
 
 		this.dx = this.speed;
@@ -72,8 +89,8 @@ export default class Ghost extends Entity {
 		this.height = this.defaultSize;
 		this.angle = 0;
 		this.alpha = 1;
-		this.x = this.canvas.width + _.random(50, 200);
-		this.y = 320;
+		this.x = this.canvas.width + _.random(this.minSpawnDistance, this.maxSpawnDistance);
+		this.y = _.random(this.minSpawnHeight, this.maxSpawnHeight);
 		this.dy = 0;
 		this.dx = this.speed;
 	}
@@ -103,7 +120,7 @@ export default class Ghost extends Entity {
 	 */
 	fade() {
 		if (this.alpha > 0) {
-			this.alpha = (this.alpha - this.deadAlphaSpeed).toFixed(2);
+			this.alpha = (this.alpha - this.deadFadeSpeed).toFixed(2);
 		}
 	}
 

@@ -117,7 +117,22 @@ export default class Jumper extends GameClient {
 				this.config.spider.minHangTime,
 				this.config.spider.maxHangTime
 			),
-			new Ghost(this, 100, 1290, 300),
+			new Ghost(
+				this,
+				this.config.ghost.size,
+				1290,
+				300,
+				this.config.ghost.speed,
+				this.config.ghost.deadSpeed,
+				this.config.ghost.fallingSpeed,
+				this.config.ghost.deadRotationSpeed,
+				this.config.ghost.deadFadeSpeed,
+				this.config.ghost.deadShrinkSpeed,
+				this.config.ghost.minSpawnDistance,
+				this.config.ghost.maxSpawnDistance,
+				this.config.ghost.minSpawnHeight,
+				this.config.ghost.maxSpawnHeight
+			),
 			new Bat(
 				this,
 				this.config.bat.size,
