@@ -10,49 +10,44 @@ export default class Dummy extends Entity {
 	/**
 	 * Creates a new dummy instance
 	 * @param {Object} game
+	 * @param {Number} width
+	 * @param {Number} height
+	 * @param {Number} lives
+	 * @param {Number} invincibilityDuration
 	 * @param {Number} acceleration
 	 * @param {Number} maxSpeed
+	 * @param {Number} fallSpeed
+	 * @param {Number} fallSpeedDead
 	 * @param {Number} jumpAcceleration
 	 * @param {Number} maxJumpHeight
 	 * @param {Number} player
 	 * @param {Boolean} controllable
 	 * @param {Number} playerId
 	 */
-	constructor(game, acceleration, maxSpeed, jumpAcceleration, maxJumpHeight, player = 1, controllable = false, playerId = null) {
-		super(game, game.contexts.game);
+	constructor(game, width, height, lives, invincibilityDuration, acceleration, maxSpeed, fallSpeed, fallSpeedDead, jumpAcceleration, maxJumpHeight, player = 1, controllable = false, playerId = null) {
+		super(game, game.contexts.game, width, height);
 
 		this.player = player;
 		this.controllable = controllable;
 		this.playerId = playerId;
 
-		this.width = 90;
-		this.height = 150;
-		this.x = 0;
-		this.y = 0;
-
 		this.dx = 0;
-		this.dy = jumpAcceleration;
+		this.dy = fallSpeed;
 
-		this.deadSpeed = 7;
-
-		//the player's own character always uses the green skin
-		this.skin = this.controllable ? 'green' : 'yellow';
-		this.facingDirection = 'right';
-
+		this.fallSpeed = fallSpeed;
+		this.fallSpeedDead = fallSpeedDead;
 		this.acceleration = acceleration;
 		this.maxSpeed = maxSpeed;
-		this.jumpAcceleration = -jumpAcceleration;
-		this.jumpDeceleration = jumpAcceleration;
+		this.jumpAcceleration = jumpAcceleration * -1;
+		this.jumpDeceleration = fallSpeed;
 		this.maxJumpHeight = maxJumpHeight;
-
-		//TODO: move this to the config
-		this.lives = 3;
 
 		this.previousUpState = false;
 
 		this.dead = false;
 		this.invincible = false;
-		this.invincibilityTimeout = 1500;
+		this.lives = lives;
+		this.invincibilityDuration = invincibilityDuration;
 		this.invincibilityTimeoutId;
 
 		this.idle = true;
@@ -62,6 +57,10 @@ export default class Dummy extends Entity {
 		this.flipping = false;
 		this.angle = 0;
 		this.alpha = 1;
+
+		//the player's own character always uses the green skin
+		this.skin = this.controllable ? 'green' : 'yellow';
+		this.facingDirection = 'right';
 
 		if (!game.isServer) {
 			this.availableSprites = {
@@ -133,7 +132,7 @@ export default class Dummy extends Entity {
 	hitByEnemy() {
 		this.dead = true;
 		this.dx = 0;
-		this.dy = this.deadSpeed;
+		this.dy = this.fallSpeedDead;
 	}
 
 	/**
@@ -176,7 +175,7 @@ export default class Dummy extends Entity {
 			this.invincibilityTimeoutId = setTimeout(() => {
 				this.invincible = false;
 				this.alpha = 1;
-			}, this.invincibilityTimeout);
+			}, this.invincibilityDuration);
 		}
 	}
 
@@ -264,7 +263,7 @@ export default class Dummy extends Entity {
 	 */
 	touchedPlatform() {
 		this.jumping = false;
-		this.dy = this.jumpDeceleration;
+		this.dy = this.fallSpeed;
 
 		this.stopFlipping();
 	}

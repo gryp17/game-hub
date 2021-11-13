@@ -58,10 +58,7 @@ export default class Jumper extends GameClient {
 	 * Initializes the game entities and starts the game
 	 */
 	start() {
-		//game objects
-		this.background = new Background(this, this.config.background.selectedBackground);
-
-		const commonPlatformParams = [
+		const platformsConfig = [
 			this.config.platform.sizes,
 			this.config.platform.minDistance,
 			this.config.platform.maxDistance,
@@ -73,15 +70,31 @@ export default class Jumper extends GameClient {
 			this.config.platform.maxFloatDistance
 		];
 
+		const dummiesConfig = [
+			this.config.dummy.width,
+			this.config.dummy.height,
+			this.config.dummy.lives,
+			this.config.dummy.invincibilityDuration,
+			this.config.dummy.acceleration,
+			this.config.dummy.maxSpeed,
+			this.config.dummy.fallSpeed,
+			this.config.dummy.fallSpeedDead,
+			this.config.dummy.jumpAcceleration,
+			this.config.dummy.maxJumpHeight
+		];
+
+		//game objects
+		this.background = new Background(this, this.config.background.selectedBackground);
+
 		this.platforms = [
-			new Platform(this, 'large', 600, 530, ...commonPlatformParams),
-			new Platform(this, 'medium', 900, 500, ...commonPlatformParams),
-			new Platform(this, 'large', 1060, 520, ...commonPlatformParams),
-			new Platform(this, 'small', 1320, 540, ...commonPlatformParams),
-			new Platform(this, 'medium', 1460, 560, ...commonPlatformParams),
-			new Platform(this, 'large', 1650, 570, ...commonPlatformParams),
-			new Platform(this, 'small', 1920, 500, ...commonPlatformParams),
-			new Platform(this, 'small', 2030, 540, ...commonPlatformParams)
+			new Platform(this, 'large', 600, 530, ...platformsConfig),
+			new Platform(this, 'medium', 900, 500, ...platformsConfig),
+			new Platform(this, 'large', 1060, 520, ...platformsConfig),
+			new Platform(this, 'small', 1320, 540, ...platformsConfig),
+			new Platform(this, 'medium', 1460, 560, ...platformsConfig),
+			new Platform(this, 'large', 1650, 570, ...platformsConfig),
+			new Platform(this, 'small', 1920, 500, ...platformsConfig),
+			new Platform(this, 'small', 2030, 540, ...platformsConfig)
 		];
 
 		this.enemies = [
@@ -91,15 +104,7 @@ export default class Jumper extends GameClient {
 		];
 
 		this.dummies = [
-			new Dummy(
-				this,
-				this.config.dummy.acceleration,
-				this.config.dummy.maxSpeed,
-				this.config.dummy.jumpAcceleration,
-				this.config.dummy.maxJumpHeight,
-				1,
-				true
-			)
+			new Dummy(this, ...dummiesConfig, 1, true)
 		];
 
 		//listen for the keyboard and touchscreen events

@@ -112,10 +112,16 @@
 					speedIncrease: 0.1,
 					speedUpInterval: 3000, //miliseconds
 					dummy: {
+						width: 90,
+						height: 150,
 						acceleration: 1,
 						maxSpeed: 10,
+						fallSpeed: 12,
+						fallSpeedDead: 7,
 						jumpAcceleration: 12,
-						maxJumpHeight: 240
+						maxJumpHeight: 240,
+						lives: 3,
+						invincibilityDuration: 1500 //miliseconds
 					},
 					background: {
 						availableBackgrounds: [
