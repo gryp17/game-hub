@@ -83,7 +83,6 @@ export default class Touchscreen extends InputDevice {
 	 * @param {Object} e
 	 */
 	onTouchStart(e) {
-		e.preventDefault();
 		e.stopPropagation();
 
 		this.touchPositions = Object.values(e.touches).map((touch) => {
@@ -96,7 +95,6 @@ export default class Touchscreen extends InputDevice {
 	 * @param {Object} e
 	 */
 	onTouchEnd(e) {
-		e.preventDefault();
 		e.stopPropagation();
 
 		this.touchPositions = Object.values(e.touches).map((touch) => {
@@ -109,7 +107,6 @@ export default class Touchscreen extends InputDevice {
 	 * @param {Object} e
 	 */
 	onTouchMove(e) {
-		e.preventDefault();
 		e.stopPropagation();
 
 		this.touchPositions = Object.values(e.touches).map((touch) => {
