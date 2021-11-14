@@ -134,9 +134,7 @@ export default class Touchscreen extends InputDevice {
 	 */
 	onMouseUp(e) {
 		this.mousedown = false;
-		this.touchPositions = [
-			this.calculateTouchPosition(e.clientX, e.clientY)
-		];
+		this.touchPositions = [];
 	}
 
 	/**

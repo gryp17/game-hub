@@ -36,6 +36,18 @@ export default class Touchscreen extends TouchscreenBase {
 	}
 
 	/**
+	 * Mouseup event handler
+	 * @param {Object} e
+	 */
+	onMouseUp(e) {
+		//override the mouseup event for this particular game in order to be able to click and wait for the paddle to move there
+		this.mousedown = false;
+		this.touchPositions = [
+			this.calculateTouchPosition(e.clientX, e.clientY)
+		];
+	}
+
+	/**
 	 * Touchend event handler
 	 * @param {Object} e
 	 */
