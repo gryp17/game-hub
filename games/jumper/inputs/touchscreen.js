@@ -4,43 +4,29 @@ import TouchscreenBase from '../../common/inputs/touchscreen';
  * Touchscreen class that handles all touchscreen inputs
  */
 export default class Touchscreen extends TouchscreenBase {
-	constructor(controls, canvas) {
-		super(controls, canvas);
-
-		this.touchPositions = [];
-	}
-
-	/**
-	 *  Registers the touchscreen event listeners
-	 */
-	listen() {
-		super.listen();
-
-		//touchend
-		this.addEventListener('touchend', this.onTouchEnd);
-	}
-
 	/**
 	 * Returns all input statuses
 	 * @returns {Object}
 	 */
 	getInputs() {
+		const noInputs = this.touchPositions.length === 0;
+		const isMultitouch = this.touchPositions.length > 1;
+
 		//set all inputs to false by default
 		_.forOwn(this.controls, (data, key) => {
 			this.inputs[key] = false;
 		});
 
-		if (this.touchPositions.length === 0) {
+		if (noInputs) {
 			return this.inputs;
 		}
 
 		//up (multitouch)
-		if (this.touchPositions.length > 1) {
+		if (isMultitouch) {
 			this.inputs.up = true;
 		}
 
 		const canvasCenter = this.canvas.attr('width') / 2;
-		// const canvasMiddle = this.canvas.attr('height') / 2;
 		const target = this.touchPositions[0];
 
 		//left
@@ -53,62 +39,6 @@ export default class Touchscreen extends TouchscreenBase {
 			this.inputs.right = true;
 		}
 
-		//up
-		/*
-		THIS WORKS MORE OR LESS
-		if (target.y < canvasMiddle) {
-			this.inputs.up = true;
-		}
-		*/
-
 		return this.inputs;
-	}
-
-	/**
-	 * Touchstart event handler
-	 * @param {Object} e
-	 */
-	onTouchStart(e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		this.touchPositions = [];
-
-		_.forOwn(e.touches, (touch) => {
-			const touchPosition = this.calculateTouchPosition(touch.clientX, touch.clientY);
-			this.touchPositions.push(touchPosition);
-		});
-	}
-
-	/**
-	 * Touchend event handler
-	 * @param {Object} e
-	 */
-	onTouchEnd(e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		this.touchPositions = [];
-
-		_.forOwn(e.touches, (touch) => {
-			const touchPosition = this.calculateTouchPosition(touch.clientX, touch.clientY);
-			this.touchPositions.push(touchPosition);
-		});
-	}
-
-	/**
-	 * Touchmove event handler
-	 * @param {Object} e
-	 */
-	onTouchMove(e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		this.touchPositions = [];
-
-		_.forOwn(e.touches, (touch) => {
-			const touchPosition = this.calculateTouchPosition(touch.clientX, touch.clientY);
-			this.touchPositions.push(touchPosition);
-		});
 	}
 }

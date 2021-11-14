@@ -14,15 +14,15 @@ export default class Touchscreen extends TouchscreenBase {
 			this.inputs[key] = false;
 		});
 
-		if (this.touchPosition) {
+		if (this.touchPositions.length > 0) {
 			//use the paddle and touch positions to figure out when to stop moving up or down
 			const paddlePosition = paddle.center.y;
-			const target = this.touchPosition.y;
+			const target = this.touchPositions[0].y;
 			const difference = Math.abs(target - paddlePosition);
 
 			//target reached
 			if (difference < 20) {
-				this.touchPosition = null;
+				this.touchPositions = [];
 			} else if (target > paddlePosition) {
 				//go down
 				this.inputs.down = true;
@@ -33,5 +33,14 @@ export default class Touchscreen extends TouchscreenBase {
 		}
 
 		return this.inputs;
+	}
+
+	/**
+	 * Touchend event handler
+	 * @param {Object} e
+	 */
+	onTouchEnd(e) {
+		//override the touchend event in order not to trigger the default functionality
+		return false;
 	}
 }

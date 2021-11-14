@@ -14,7 +14,7 @@ export default class Touchscreen extends InputDevice {
 		super(controls, canvas);
 
 		this.mousedown = false;
-		this.touchPosition;
+		this.touchPositions = [];
 	}
 
 	/**
@@ -31,6 +31,9 @@ export default class Touchscreen extends InputDevice {
 	listen() {
 		//touchstart
 		this.addEventListener('touchstart', this.onTouchStart);
+
+		//touchend
+		this.addEventListener('touchend', this.onTouchEnd);
 
 		//touchmove
 		this.addEventListener('touchmove', this.onTouchMove);
@@ -82,7 +85,23 @@ export default class Touchscreen extends InputDevice {
 	onTouchStart(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientX, e.touches[0].clientY);
+
+		this.touchPositions = Object.values(e.touches).map((touch) => {
+			return this.calculateTouchPosition(touch.clientX, touch.clientY);
+		});
+	}
+
+	/**
+	 * Touchend event handler
+	 * @param {Object} e
+	 */
+	onTouchEnd(e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		this.touchPositions = Object.values(e.touches).map((touch) => {
+			return this.calculateTouchPosition(touch.clientX, touch.clientY);
+		});
 	}
 
 	/**
@@ -92,7 +111,10 @@ export default class Touchscreen extends InputDevice {
 	onTouchMove(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		this.touchPosition = this.calculateTouchPosition(e.touches[0].clientX, e.touches[0].clientY);
+
+		this.touchPositions = Object.values(e.touches).map((touch) => {
+			return this.calculateTouchPosition(touch.clientX, touch.clientY);
+		});
 	}
 
 	/**
@@ -101,7 +123,9 @@ export default class Touchscreen extends InputDevice {
 	 */
 	onMouseDown(e) {
 		this.mousedown = true;
-		this.touchPosition = this.calculateTouchPosition(e.clientX, e.clientY);
+		this.touchPositions = [
+			this.calculateTouchPosition(e.clientX, e.clientY)
+		];
 	}
 
 	/**
@@ -110,7 +134,9 @@ export default class Touchscreen extends InputDevice {
 	 */
 	onMouseUp(e) {
 		this.mousedown = false;
-		this.touchPosition = this.calculateTouchPosition(e.clientX, e.clientY);
+		this.touchPositions = [
+			this.calculateTouchPosition(e.clientX, e.clientY)
+		];
 	}
 
 	/**
@@ -119,7 +145,9 @@ export default class Touchscreen extends InputDevice {
 	 */
 	onMouseMove(e) {
 		if (this.mousedown) {
-			this.touchPosition = this.calculateTouchPosition(e.clientX, e.clientY);
+			this.touchPositions = [
+				this.calculateTouchPosition(e.clientX, e.clientY)
+			];
 		}
 	}
 }
