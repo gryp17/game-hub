@@ -7,12 +7,21 @@
 
 		<!-- game canvases are generated here automatically by each game -->
 		<div class="canvas-wrapper"></div>
+
+		<GameHUD
+			:sound="userSession.sound"
+			:music="userSession.music"
+			:lives="lives"
+			@set-sound="updateUserSoundPreferences({ sound: $event })"
+			@set-music="onToggleMusic"
+		/>
 	</div>
 </template>
 
 <script>
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import LoadingIndicator from '@/components/LoadingIndicator';
+	import GameHUD from '@/components/GameHUD';
 
 	import Jumper from '../../games/jumper/entry-points/client';
 
@@ -22,7 +31,8 @@
 
 	export default {
 		components: {
-			LoadingIndicator
+			LoadingIndicator,
+			GameHUD
 		},
 		data() {
 			return {
@@ -30,6 +40,19 @@
 				gameType: null,
 				gameClass: null,
 				game: null,
+				//hardcoded lives data
+				lives: [
+					{
+						id: 1,
+						username: 'Tester',
+						lives: 3
+					},
+					{
+						id: 2,
+						username: 'Hardcoded',
+						lives: 2
+					}
+				],
 				loading: true
 			};
 		},
