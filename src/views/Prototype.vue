@@ -214,7 +214,10 @@
 						minSpawnDistance: 50,
 						maxSpawnDistance: 200,
 						minSpawnHeight: 100,
-						maxSpawnHeight: 350
+						maxSpawnHeight: 350,
+						minFloatDistance: 60,
+						maxFloatDistance: 200,
+						floatSpeed: 0.5
 					},
 					controls: {
 						up: {

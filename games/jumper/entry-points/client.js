@@ -133,7 +133,10 @@ export default class Jumper extends GameClient {
 				this.config.ghost.minSpawnDistance,
 				this.config.ghost.maxSpawnDistance,
 				this.config.ghost.minSpawnHeight,
-				this.config.ghost.maxSpawnHeight
+				this.config.ghost.maxSpawnHeight,
+				this.config.ghost.minFloatDistance,
+				this.config.ghost.maxFloatDistance,
+				this.config.ghost.floatSpeed
 			),
 			new Bat(
 				this,

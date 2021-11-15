@@ -22,26 +22,39 @@ export default class Ghost extends Entity {
 	 * @param {Number} maxSpawnDistance
 	 * @param {Number} minSpawnHeight
 	 * @param {Number} maxSpawnHeight
+	 * @param {Number} minFloatDistance
+	 * @param {Number} maxFloatDistance
+	 * @param {Number} floatSpeed
 	 */
-	constructor(game, size, x, y, speed, deadSpeed, fallingSpeed, deadRotationSpeed, deadFadeSpeed, deadShrinkSpeed, minSpawnDistance, maxSpawnDistance, minSpawnHeight, maxSpawnHeight) {
+	constructor(game, size, x, y, speed, deadSpeed, fallingSpeed, deadRotationSpeed, deadFadeSpeed, deadShrinkSpeed, minSpawnDistance, maxSpawnDistance, minSpawnHeight, maxSpawnHeight, minFloatDistance, maxFloatDistance, floatSpeed) {
 		super(game, game.contexts.enemies, size, size, x, y);
 
 		this.defaultSize = size;
 		this.speed = speed * -1;
+
+		//dead animation parameters
 		this.deadSpeed = deadSpeed * -1;
 		this.fallingSpeed = fallingSpeed * -1;
 		this.deadRotationSpeed = deadRotationSpeed;
 		this.deadFadeSpeed = deadFadeSpeed;
 		this.deadShrinkSpeed = deadShrinkSpeed;
+
 		this.minSpawnDistance = minSpawnDistance;
 		this.maxSpawnDistance = maxSpawnDistance;
 		this.minSpawnHeight = minSpawnHeight;
 		this.maxSpawnHeight = maxSpawnHeight;
 
+		//float parameters
+		this.initialPosition = this.y;
+		this.minFloatDistance = minFloatDistance;
+		this.maxFloatDistance = maxFloatDistance;
+		this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
+		this.floatSpeed = floatSpeed;
+
 		this.minSize = this.defaultSize / 5;
 
 		this.dx = this.speed;
-		this.dy = 0;
+		this.dy = this.floatSpeed;
 
 		this.dead = false;
 		this.alpha = 1;
@@ -75,6 +88,8 @@ export default class Ghost extends Entity {
 			this.fade();
 			this.rotate();
 			this.shrink();
+		} else {
+			this.float();
 		}
 
 		super.move();
@@ -91,8 +106,11 @@ export default class Ghost extends Entity {
 		this.alpha = 1;
 		this.x = this.canvas.width + _.random(this.minSpawnDistance, this.maxSpawnDistance);
 		this.y = _.random(this.minSpawnHeight, this.maxSpawnHeight);
-		this.dy = 0;
+		this.dy = this.floatSpeed;
 		this.dx = this.speed;
+
+		this.initialPosition = this.y;
+		this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
 	}
 
 	/**
@@ -138,6 +156,17 @@ export default class Ghost extends Entity {
 		if (this.width > this.minSize) {
 			this.width = this.width - this.deadShrinkSpeed;
 			this.height = this.height - this.deadShrinkSpeed;
+		}
+	}
+
+	/**
+	 * Makes the ghost fly up and down
+	 */
+	float() {
+		if (this.dy > 0 && this.y >= this.initialPosition + this.floatDistance) {
+			this.dy = this.dy * -1;
+		} else if (this.dy < 0 && this.y <= this.initialPosition) {
+			this.dy = this.dy * -1;
 		}
 	}
 }
