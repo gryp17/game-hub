@@ -48,7 +48,7 @@ export default class Ghost extends Entity {
 		this.initialPosition = this.y;
 		this.minFloatDistance = minFloatDistance;
 		this.maxFloatDistance = maxFloatDistance;
-		this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
+		this.floatDistance = 0;
 		this.floatSpeed = floatSpeed;
 
 		this.minSize = this.defaultSize / 5;
@@ -64,6 +64,15 @@ export default class Ghost extends Entity {
 			this.flyingSprite = new Sprite(this.game.images.ghost.flying, 2, true);
 			this.image = this.flyingSprite.move();
 		}
+
+		this.randomizeFloatParameters();
+	}
+
+	/**
+	 * Randomizes the float parameters
+	 */
+	randomizeFloatParameters() {
+		this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
 	}
 
 	/**
