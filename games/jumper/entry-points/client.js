@@ -107,8 +107,8 @@ export default class Jumper extends GameClient {
 			new Spider(
 				this,
 				this.config.spider.size,
-				1200,
-				0,
+				1300,
+				this.config.spider.size * -1,
 				this.config.spider.netWidth,
 				this.config.spider.speed,
 				this.config.spider.fallingSpeed,
@@ -122,7 +122,7 @@ export default class Jumper extends GameClient {
 			new Ghost(
 				this,
 				this.config.ghost.size,
-				1290,
+				4000,
 				300,
 				this.config.ghost.speed,
 				this.config.ghost.deadSpeed,
@@ -141,7 +141,7 @@ export default class Jumper extends GameClient {
 			new Bat(
 				this,
 				this.config.bat.size,
-				1100,
+				4700,
 				200,
 				this.config.bat.speed,
 				this.config.bat.deadSpeed,
