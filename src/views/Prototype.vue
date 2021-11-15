@@ -21,7 +21,7 @@
 <script>
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import LoadingIndicator from '@/components/LoadingIndicator';
-	import GameHUD from '@/components/GameHUD';
+	import GameHUD from '@/components/game-hud/GameHUD';
 
 	import Jumper from '../../games/jumper/entry-points/client';
 

@@ -24,7 +24,7 @@
 	import { mapState, mapGetters, mapActions } from 'vuex';
 	import SocketIO from 'socket.io-client';
 	import LoadingIndicator from '@/components/LoadingIndicator';
-	import GameHUD from '@/components/GameHUD';
+	import GameHUD from '@/components/game-hud/GameHUD';
 	import GameOverModal from '@/components/modals/GameOverModal';
 
 	import config from '@/config';
