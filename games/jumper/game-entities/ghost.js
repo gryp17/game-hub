@@ -119,7 +119,7 @@ export default class Ghost extends Entity {
 		this.dx = this.speed;
 
 		this.initialPosition = this.y;
-		this.floatDistance = _.random(this.minFloatDistance, this.maxFloatDistance);
+		this.randomizeFloatParameters();
 	}
 
 	/**
