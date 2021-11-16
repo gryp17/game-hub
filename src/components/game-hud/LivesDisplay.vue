@@ -42,7 +42,7 @@
 
 		.player-info {
 			.username {
-				font-size: 16px;
+				font-size: 18px;
 			}
 
 			.lives {
@@ -57,6 +57,14 @@
 
 			+ .player-info {
 				margin-left: 25px;
+			}
+		}
+
+		@media (max-width: $small) {
+			.player-info {
+				.username {
+					font-size: 16px;
+				}
 			}
 		}
 
