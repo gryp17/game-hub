@@ -59,5 +59,9 @@
 				margin-left: 25px;
 			}
 		}
+
+		@media (max-width: $extra-small) {
+			display: none;
+		}
 	}
 </style>

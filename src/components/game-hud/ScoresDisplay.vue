@@ -34,17 +34,33 @@
 			text-align: left;
 
 			.username {
-				font-size: 32px;
+				font-size: 28px;
 			}
 
 			.score {
 				margin-top: 5px;
-				font-size: 28px;
+				font-size: 26px;
 			}
 
 			&:first-child {
 				text-align: right;
 			}
+		}
+
+		@media (max-width: $small) {
+			.player-info {
+				.username {
+					font-size: 20px;
+				}
+
+				.score {
+					font-size: 19px;
+				}
+			}
+		}
+
+		@media (max-width: $medium-small) {
+			display: none;
 		}
 	}
 </style>

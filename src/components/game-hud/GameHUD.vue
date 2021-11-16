@@ -100,6 +100,10 @@
 				background-color: $white;
 				opacity: 0.6;
 
+				svg {
+					margin-right: 0px;
+				}
+
 				+ .form-button {
 					margin-left: 10px;
 				}
@@ -107,6 +111,21 @@
 				&.active, &:hover {
 					border-color: $purple;
 					opacity: 1;
+				}
+			}
+		}
+
+		@media (max-width: $small) {
+			.audio-controls-wrapper {
+				.form-button {
+					padding: 5px;
+					width: 35px;
+					height: 35px;
+
+					svg {
+						width: 16px;
+						height: 16px;
+					}
 				}
 			}
 		}
