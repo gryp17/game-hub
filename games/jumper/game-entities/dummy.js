@@ -151,17 +151,18 @@ export default class Dummy extends Entity {
 
 	/**
 	 * Decreases the dummy lives
+	 * @returns {Number}
 	 */
 	liveLost() {
-		//TODO: handle this on the backend
 		this.lives--;
 
-		// console.log(this.lives);
-
 		if (this.lives === 0) {
-			//TODO: game over
-			// console.log('GAME OVER!');
+			//if player 1 loses all his lives player 2 wins and vice versa
+			const winner = this.player === 1 ? 2 : 1;
+			this.game.onPlayerScore(winner);
 		}
+
+		return this.lives;
 	}
 
 	/**
@@ -388,10 +389,15 @@ export default class Dummy extends Entity {
 		const platforms = this.game.platforms;
 		const enemies = this.game.enemies;
 
-		//bottom end of scren
+		//bottom end of screen
 		if (this.top >= this.canvas.height) {
-			this.liveLost();
-			this.reset(true);
+			if (this.game.isServer) {
+				const remainingLives = this.liveLost();
+
+				if (remainingLives > 0) {
+					this.reset(true);
+				}
+			}
 		}
 
 		//left end of screen
