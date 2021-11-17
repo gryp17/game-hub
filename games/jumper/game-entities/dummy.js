@@ -108,10 +108,7 @@ export default class Dummy extends Entity {
 	 */
 	get state() {
 		return {
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy,
+			...super.state,
 			player: this.player,
 			facingDirection: this.facingDirection,
 			dead: this.dead,

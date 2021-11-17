@@ -236,7 +236,9 @@ export default class Entity {
 			x: this.x,
 			y: this.y,
 			dx: this.dx,
-			dy: this.dy
+			dy: this.dy,
+			width: this.width,
+			height: this.height
 		};
 	}
 
@@ -249,6 +251,8 @@ export default class Entity {
 		this.y = state.y;
 		this.dx = state.dx;
 		this.dy = state.dy;
+		this.width = state.width;
+		this.height = state.height;
 	}
 
 	/**

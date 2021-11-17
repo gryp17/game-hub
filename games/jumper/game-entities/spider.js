@@ -60,22 +60,19 @@ export default class Spider extends Entity {
 	}
 
 	/**
-	 * Returns the dummy state
+	 * Returns the spider state
 	 * @returns {Object}
 	 */
 	get state() {
 		return {
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy,
+			...super.state,
 			dead: this.dead,
 			idle: this.idle
 		};
 	}
 
 	/**
-	 * Sets the dummy state
+	 * Sets the spider state
 	 * @param {Object} state
 	 */
 	set state(state) {

@@ -66,7 +66,34 @@ export default class Ghost extends Entity {
 			this.image = this.flyingSprite.move();
 		}
 
-		this.randomizeFloatParameters();
+		if (this.game.isServer) {
+			this.randomizeFloatParameters();
+		}
+	}
+
+	/**
+	 * Returns the ghost state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			...super.state,
+			dead: this.dead,
+			alpha: this.alpha,
+			angle: this.angle
+		};
+	}
+
+	/**
+	 * Sets the ghost state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+
+		this.dead = state.dead;
+		this.alpha = state.alpha;
+		this.angle = state.angle;
 	}
 
 	/**
@@ -120,7 +147,10 @@ export default class Ghost extends Entity {
 		this.dx = this.speed;
 
 		this.initialPosition = this.y;
-		this.randomizeFloatParameters();
+
+		if (this.game.isServer) {
+			this.randomizeFloatParameters();
+		}
 	}
 
 	/**

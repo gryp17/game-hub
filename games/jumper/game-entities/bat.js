@@ -49,6 +49,29 @@ export default class Bat extends Entity {
 	}
 
 	/**
+	 * Returns the bat state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			...super.state,
+			dead: this.dead,
+			angle: this.angle
+		};
+	}
+
+	/**
+	 * Sets the bat state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+
+		this.dead = state.dead;
+		this.angle = state.angle;
+	}
+
+	/**
 	 * Makes the bat die
 	 */
 	die() {

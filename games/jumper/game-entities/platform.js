@@ -53,6 +53,27 @@ export default class Platform extends Entity {
 	}
 
 	/**
+	 * Returns the platform state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			...super.state,
+			floating: this.floating
+		};
+	}
+
+	/**
+	 * Sets the platform state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+
+		this.floating = state.floating;
+	}
+
+	/**
 	 * Resets the platform poisiton by using the last platform as a reference
 	 */
 	reset() {

@@ -56,10 +56,7 @@ export default class Ball extends Entity {
 	 */
 	get state() {
 		return {
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy,
+			...super.state,
 			rotationSpeed: this.rotationSpeed,
 			angle: this.angle,
 			serving: this.serving,

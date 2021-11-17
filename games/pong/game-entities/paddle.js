@@ -47,11 +47,8 @@ export default class Paddle extends Entity {
 	 */
 	get state() {
 		return {
-			player: this.player,
-			x: this.x,
-			y: this.y,
-			dx: this.dx,
-			dy: this.dy
+			...super.state,
+			player: this.player
 		};
 	}
 
