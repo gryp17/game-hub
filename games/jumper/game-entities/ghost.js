@@ -116,7 +116,9 @@ export default class Ghost extends Entity {
 	 * Makes the ghost move
 	 */
 	move() {
-		if (this.right < 0 || this.top < 0) {
+		const isOutOfScreen = this.right < 0 || this.top < 0;
+
+		if (this.game.isServer && isOutOfScreen) {
 			this.reset();
 		}
 
@@ -147,10 +149,7 @@ export default class Ghost extends Entity {
 		this.dx = this.speed;
 
 		this.initialPosition = this.y;
-
-		if (this.game.isServer) {
-			this.randomizeFloatParameters();
-		}
+		this.randomizeFloatParameters();
 	}
 
 	/**

@@ -107,11 +107,13 @@ export default class Platform extends Entity {
 	 * Moves the platform
 	 */
 	move() {
+		const isOutOfScreen = this.right < 0;
+
 		//sync the platform speed with the updated game speed (maybe this should be done using the set state logic once the server is implemented)
 		this.dx = this.game.gameSpeed * -1;
 
 		//reset the position once the platform is outside of the viewpoer
-		if (this.right < 0) {
+		if (this.game.isServer && isOutOfScreen) {
 			this.reset();
 		}
 

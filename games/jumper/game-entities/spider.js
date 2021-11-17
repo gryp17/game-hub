@@ -103,7 +103,9 @@ export default class Spider extends Entity {
 	 * Moves the spider
 	 */
 	move() {
-		if (this.right < 0 || this.top > this.canvas.height) {
+		const isOutOfScreen = this.right < 0 || this.top > this.canvas.height;
+
+		if (this.game.isServer && isOutOfScreen) {
 			this.reset();
 		}
 
@@ -127,10 +129,8 @@ export default class Spider extends Entity {
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
 
-		if (this.game.isServer) {
-			clearTimeout(this.hangTimeoutId);
-			this.randomizeHangParameters();
-		}
+		clearTimeout(this.hangTimeoutId);
+		this.randomizeHangParameters();
 	}
 
 	/**

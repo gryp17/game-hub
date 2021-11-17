@@ -84,7 +84,9 @@ export default class Bat extends Entity {
 	 * Moves the bat
 	 */
 	move() {
-		if (this.right < 0) {
+		const isOutOfScreen = this.right < 0 || this.top > this.canvas.height;
+
+		if (this.game.isServer && isOutOfScreen) {
 			this.reset();
 		}
 
