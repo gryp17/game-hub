@@ -54,7 +54,35 @@ export default class Spider extends Entity {
 
 		this.spiderNet = new SpiderNet(game, this, netWidth);
 
-		this.randomizeHangParameters();
+		if (this.game.isServer) {
+			this.randomizeHangParameters();
+		}
+	}
+
+	/**
+	 * Returns the dummy state
+	 * @returns {Object}
+	 */
+	get state() {
+		return {
+			x: this.x,
+			y: this.y,
+			dx: this.dx,
+			dy: this.dy,
+			dead: this.dead,
+			idle: this.idle
+		};
+	}
+
+	/**
+	 * Sets the dummy state
+	 * @param {Object} state
+	 */
+	set state(state) {
+		super.state = state;
+
+		this.dead = state.dead;
+		this.idle = state.idle;
 	}
 
 	/**
@@ -102,8 +130,10 @@ export default class Spider extends Entity {
 		this.dx = this.game.background.dx;
 		this.dy = this.speed;
 
-		clearTimeout(this.hangTimeoutId);
-		this.randomizeHangParameters();
+		if (this.game.isServer) {
+			clearTimeout(this.hangTimeoutId);
+			this.randomizeHangParameters();
+		}
 	}
 
 	/**
@@ -117,7 +147,9 @@ export default class Spider extends Entity {
 			this.idle = true;
 
 			//start moving up after some delay
-			this.startMovingAfterDelay('up');
+			if (this.game.isServer) {
+				this.startMovingAfterDelay('up');
+			}
 		}
 
 		//stop moving up
@@ -127,7 +159,9 @@ export default class Spider extends Entity {
 			this.idle = true;
 
 			//start moving down after some delay
-			this.startMovingAfterDelay('down');
+			if (this.game.isServer) {
+				this.startMovingAfterDelay('down');
+			}
 		}
 	}
 

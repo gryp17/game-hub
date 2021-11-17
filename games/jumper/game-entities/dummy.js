@@ -185,10 +185,10 @@ export default class Dummy extends Entity {
 		this.alpha = 1;
 
 		//make the dummy invincible for X seconds
-		if (giveInvincibility) {
+		if (this.game.isServer && giveInvincibility) {
 			this.invincible = true;
 
-			clearInterval(this.invincibilityTimeoutId);
+			clearTimeout(this.invincibilityTimeoutId);
 			this.invincibilityTimeoutId = setTimeout(() => {
 				this.invincible = false;
 				this.alpha = 1;
