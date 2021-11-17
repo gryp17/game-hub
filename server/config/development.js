@@ -78,7 +78,8 @@ module.exports = {
 		matchmaking: 'matchmaking',
 		//ingame user statuses
 		pong: 'pong',
-		volley: 'volley'
+		volley: 'volley',
+		jumper: 'jumper'
 	},
 	gameStatuses: {
 		pending: 'pending',
@@ -216,6 +217,114 @@ module.exports = {
 					low: 3
 				}
 			}
+		},
+		jumper: {
+			code: 'jumper',
+			maxPlayers: 2,
+			fps: 60,
+			width: 1366,
+			height: 768,
+			maxScore: 1,
+			initialSpeed: 0.6,
+			speedIncrease: 0.1,
+			speedUpInterval: 3000, //miliseconds
+			dummy: {
+				width: 90,
+				height: 150,
+				acceleration: 1,
+				maxSpeed: 10,
+				fallSpeed: 12,
+				fallSpeedDead: 7,
+				jumpAcceleration: 12,
+				maxJumpHeight: 240,
+				lives: 3,
+				invincibilityDuration: 1500 //miliseconds
+			},
+			background: {
+				speed: 0.5,
+				availableBackgrounds: [
+					'forest',
+					'factory',
+					'graveyard',
+					'house'
+				],
+				selectedBackground: 'factory' //this value is actually randomized by the server
+			},
+			platform: {
+				sizes: {
+					large: {
+						width: 248,
+						height: 57
+					},
+					medium: {
+						width: 140,
+						height: 55
+					},
+					small: {
+						width: 96,
+						height: 53
+					}
+				},
+				minDistance: 40,
+				maxDistance: 250,
+				minHeight: 500,
+				maxHeight: 650,
+				chanceToFloat: 33, //%
+				floatSpeed: 1, //between 1 and -1
+				minFloatDistance: 30,
+				maxFloatDistance: 80
+			},
+			bat: {
+				size: 100,
+				speed: 5,
+				deadSpeed: 3,
+				fallingSpeed: 6,
+				deadRotationSpeed: 2,
+				minSpawnDistance: 1200,
+				maxSpawnDistance: 2000,
+				minSpawnHeight: 100,
+				maxSpawnHeight: 350
+			},
+			spider: {
+				size: 80,
+				netWidth: 1,
+				speed: 1,
+				fallingSpeed: 8,
+				minSpawnDistance: 100,
+				maxSpawnDistance: 400,
+				minHangOffset: 200,
+				maxHangOffset: 350,
+				minHangTime: 1000, //miliseconds
+				maxHangTime: 6000
+			},
+			ghost: {
+				size: 100,
+				speed: 3,
+				deadSpeed: 1,
+				fallingSpeed: 3,
+				deadRotationSpeed: 15,
+				deadFadeSpeed: 0.01,
+				deadShrinkSpeed: 1,
+				minSpawnDistance: 1000,
+				maxSpawnDistance: 1500,
+				minSpawnHeight: 100,
+				maxSpawnHeight: 350,
+				minFloatDistance: 60,
+				maxFloatDistance: 200,
+				floatSpeed: 0.5
+			},
+			controls: {
+				up: {
+					keys: [38, 87] //arrow up, W
+				},
+				left: {
+					keys: [37, 65] //left arrow, A
+				},
+				right: {
+					keys: [39, 68] //right arrow, D
+				}
+			},
+			configurableSettings: {}
 		}
 	}
 };

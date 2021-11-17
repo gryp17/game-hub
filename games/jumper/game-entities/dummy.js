@@ -113,7 +113,15 @@ export default class Dummy extends Entity {
 			dx: this.dx,
 			dy: this.dy,
 			player: this.player,
-			facingDirection: this.facingDirection
+			facingDirection: this.facingDirection,
+			dead: this.dead,
+			invincible: this.invincible,
+			lives: this.lives,
+			idle: this.idle,
+			jumping: this.jumping,
+			flipping: this.flipping,
+			angle: this.angle,
+			alpha: this.alpha
 		};
 	}
 
@@ -123,7 +131,16 @@ export default class Dummy extends Entity {
 	 */
 	set state(state) {
 		super.state = state;
+
 		this.facingDirection = state.facingDirection;
+		this.dead = state.dead;
+		this.invincible = state.invincible;
+		this.lives = state.lives;
+		this.idle = state.idle;
+		this.jumping = state.jumping;
+		this.flipping = state.flipping;
+		this.angle = state.angle;
+		this.alpha = state.alpha;
 	}
 
 	/**

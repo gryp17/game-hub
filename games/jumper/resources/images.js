@@ -52,7 +52,7 @@ export default {
 		idle: '/game-images/jumper/spider/idle.png',
 		dead: '/game-images/jumper/spider/dead.png'
 	},
-	spiderNet: './game-images/jumper/spider-net/spider-net.png',
+	spiderNet: '/game-images/jumper/spider-net/spider-net.png',
 	dummy: {
 		green: {
 			left: {

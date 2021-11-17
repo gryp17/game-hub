@@ -176,7 +176,8 @@ const actions = {
 		//TODO: update this list when more games are added
 		const gameStatuses = [
 			userStatuses.pong,
-			userStatuses.volley
+			userStatuses.volley,
+			userStatuses.jumper
 		];
 
 		//for each user generate 3 types of status (raw, formatted and avatar)

@@ -5,10 +5,12 @@ import { lobby } from '..';
 import cache from '../../services/cache';
 import Pong from '../../../games/pong/entry-points/server';
 import Volley from '../../../games/volley/entry-points/server';
+import Jumper from '../../../games/jumper/entry-points/server';
 
 const gameClasses = {
 	pong: Pong,
-	volley: Volley
+	volley: Volley,
+	jumper: Jumper
 };
 
 export default function (io, app) {

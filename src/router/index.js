@@ -73,10 +73,8 @@ const routes = [
 		beforeEnter: mustBeLoggedIn
 	},
 	{
-		path: '/prototype',
-		name: 'prototype',
-		component: () => import(/* webpackChunkName: "prototype" */ '@/views/Prototype.vue'),
-		beforeEnter: mustBeLoggedIn
+		path: '*',
+		redirect: '/lobby'
 	}
 ];
 

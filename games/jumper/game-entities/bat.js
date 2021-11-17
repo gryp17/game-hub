@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Entity from '../../common/entity';
 import Sprite from '../../common/sprite';
 import Utils from '../../common/utils';

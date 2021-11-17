@@ -1,49 +1,85 @@
-import _ from 'lodash';
-import GameClient from '../../common/game-client';
-import Keyboard from '../../common/inputs/keyboard';
-import Touchscreen from '../inputs/touchscreen';
+import GameServer from '../../common/game-server';
+import Dummy from '../game-entities/dummy';
 import Background from '../game-entities/background';
 import Platform from '../game-entities/platform';
 import Bat from '../game-entities/bat';
-import Ghost from '../game-entities/ghost';
 import Spider from '../game-entities/spider';
-import Dummy from '../game-entities/dummy';
-import gameImages from '../resources/images';
+import Ghost from '../game-entities/ghost';
 
 /**
- * Jumper client class
+ * Jumper server class
  */
-export default class Jumper extends GameClient {
+export default class Jumper extends GameServer {
 	/**
-	 * Creates a new jumper client instance
-	 * @param {Object} canvasIds
-	 * @param {String} canvasWrapper
-	 * @param {Object} images
+	 * Creates a new jumper server instance
+	 * @param {Number} id
 	 * @param {Object} config
-	 * @param {Number} player
+	 * @param {Object} customSettings
+	 * @param {Array} players
 	 * @param {Object} events
 	 */
-	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
-		super(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack });
+	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
+		const canvasIds = {
+			background: 'background-canvas',
+			game: 'game-canvas',
+			enemies: 'enemies-canvas'
+		};
+
+		super(id, config, customSettings, players, { onUpdate, onGameOver }, canvasIds);
+
+		this.gameSpeed = this.config.initialSpeed;
+		this.speedIncrease = this.config.speedIncrease;
+		this.speedUpInterval = this.config.speedUpInterval;
+		this.speedUpIntervalId;
 
 		this.background;
 		this.platforms = [];
 		this.enemies = [];
 		this.dummies = [];
-
-		this.gameSpeed = this.config.initialSpeed;
-
-		//initialize the keyboard and touchscreen controls
-		this.keyboard = new Keyboard(this.gameControls, this.contexts.game.canvas);
-		this.touchscreen = new Touchscreen(this.gameControls, this.contexts.game.canvas);
 	}
 
 	/**
-	 * Preloads all the game images and calls the provided callback when done
-	 * @param {Function} callback
+	 * Speeds up the game
 	 */
-	static preloadGameImages(callback) {
-		super.preloadGameImages(gameImages, callback);
+	speedUp() {
+		this.gameSpeed = parseFloat((this.gameSpeed + this.speedIncrease).toFixed(1));
+	}
+
+	/**
+	 * Merges the defaultConfig and the customSettings
+	 * @param {Object} defaultConfig
+	 * @param {Object} customSettings
+	 * @returns {Object}
+	 */
+	applySettings(defaultConfig, customSettings) {
+		const config = defaultConfig;
+		return config;
+	}
+
+	/**
+	 * Sends an update to the clients with the current game state
+	 */
+	onGameStateUpdate() {
+		const platformsState = this.platforms.map((platform) => {
+			return platform.state;
+		});
+
+		const dummiesState = this.dummies.map((dummy) => {
+			return dummy.state;
+		});
+
+		const enemiesState = this.enemies.map((enemy) => {
+			return enemy.state;
+		});
+
+		super.onGameStateUpdate({
+			platforms: platformsState,
+			dummies: dummiesState,
+			enemies: enemiesState,
+			gameSpeed: this.gameSpeed,
+			scores: this.scores,
+			gameOver: this.gameOver
+		});
 	}
 
 	/**
@@ -82,7 +118,6 @@ export default class Jumper extends GameClient {
 			this.config.background.selectedBackground
 		);
 
-		//the X and Y coordinates match the ones on the server, but they will get overwritten on the first game loop anyway
 		this.platforms = [
 			new Platform(this, 'large', 600, 530, ...platformsConfig),
 			new Platform(this, 'medium', 900, 500, ...platformsConfig),
@@ -145,124 +180,37 @@ export default class Jumper extends GameClient {
 			)
 		];
 
-		this.dummies = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
+		this.dummies = this.players.map((player, index) => {
 			const playerIndex = index + 1;
-			const controllable = this.player === playerIndex;
-			return new Dummy(
-				this,
-				...dummiesConfig,
-				playerIndex,
-				controllable
-			);
+			return new Dummy(this, ...dummiesConfig, playerIndex, true, player.socketId);
 		});
 
-		//listen for the keyboard and touchscreen events
-		this.keyboard.listen();
-		this.touchscreen.listen();
+		const gameLoop = () => {
+			this.platforms.forEach((platform) => {
+				platform.move();
+			});
 
-		super.start();
+			this.enemies.forEach((enemy) => {
+				enemy.move();
+			});
+
+			this.dummies.forEach((dummy) => {
+				dummy.move();
+			});
+		};
+
+		this.speedUpIntervalId = setInterval(() => {
+			this.speedUp();
+		}, this.speedUpInterval);
+
+		super.start(gameLoop);
 	}
 
 	/**
 	 * Stops the game
 	 */
 	stop() {
-		//clear all input event listeners
-		this.keyboard.removeAllEventListeners();
-		this.touchscreen.removeAllEventListeners();
-
+		clearInterval(this.speedUpIntervalId);
 		super.stop();
-	}
-
-	/**
-	 * Updates the game state with the data received from the server
-	 * @param {Object} data
-	 */
-	updateData({ events, platforms, dummies, enemies, gameSpeed, scores, gameOver }) {
-		platforms.forEach((platform, index) => {
-			this.platforms[index].state = platform;
-		});
-
-		dummies.forEach((dummy, index) => {
-			this.dummies[index].state = dummy;
-		});
-
-		enemies.forEach((enemy, index) => {
-			this.enemies[index].state = enemy;
-		});
-
-		this.gameSpeed = gameSpeed;
-
-		super.updateData({ events, scores, gameOver });
-	}
-
-	/**
-	 * Handles the server events
-	 * @param {Object} events
-	 */
-	handleServerEvents(events) {
-
-	}
-
-	/**
-	 * Returns the current inputs state
-	 * @returns {Object}
-	 */
-	getInputs() {
-		const result = {};
-
-		//get both types of inputs
-		const keyboardInputs = this.keyboard.getInputs();
-		const touchscreenInputs = this.touchscreen.getInputs();
-
-		//and merge them
-		_.forOwn(this.gameControls, (data, key) => {
-			result[key] = keyboardInputs[key] || touchscreenInputs[key];
-		});
-
-		return result;
-	}
-
-	/**
-	 * The game logic that runs every game tick
-	 */
-	gameLoop() {
-		super.gameLoop();
-
-		this.background.move();
-		this.platforms.forEach((platform) => {
-			platform.move();
-		});
-
-		this.enemies.forEach((enemy) => {
-			enemy.move();
-		});
-
-		this.dummies.forEach((dummy) => {
-			dummy.move();
-		});
-	}
-
-	/**
-	 * Draws the game entities
-	 */
-	drawGame() {
-		const drawEntities = () => {
-			this.background.draw();
-
-			this.platforms.forEach((platform) => {
-				platform.draw();
-			});
-
-			this.enemies.forEach((enemy) => {
-				enemy.draw();
-			});
-
-			this.dummies.forEach((dummy) => {
-				dummy.draw();
-			});
-		};
-
-		super.drawGame(drawEntities);
 	}
 }

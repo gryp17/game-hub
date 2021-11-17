@@ -31,10 +31,12 @@
 	import { showGameOverModal } from '@/services/modal';
 	import Pong from '../../games/pong/entry-points/client';
 	import Volley from '../../games/volley/entry-points/client';
+	import Jumper from '../../games/jumper/entry-points/client';
 
 	const gameClasses = {
 		pong: Pong,
-		volley: Volley
+		volley: Volley,
+		jumper: Jumper
 	};
 
 	export default {

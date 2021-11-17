@@ -20,6 +20,11 @@ export default (gameCode) => {
 			value: 'volley',
 			label: 'Volley',
 			icon: 'fas fa-volleyball-ball'
+		},
+		jumper: {
+			value: 'jumper',
+			label: 'Jumper',
+			icon: 'fas fa-running'
 		}
 	};
 
