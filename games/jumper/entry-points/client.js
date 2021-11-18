@@ -156,6 +156,11 @@ export default class Jumper extends GameClient {
 			);
 		});
 
+		//reorder the dummies so when drawing the entities the controllable dummy appears on top of the opponent's dummy
+		this.dummies.sort((a, b) => {
+			return a.controllable ? 1 : -1;
+		});
+
 		//listen for the keyboard and touchscreen events
 		this.keyboard.listen();
 		this.touchscreen.listen();
@@ -183,8 +188,13 @@ export default class Jumper extends GameClient {
 			this.platforms[index].state = platform;
 		});
 
-		dummies.forEach((dummy, index) => {
-			this.dummies[index].state = dummy;
+		//don't rely on the index and look up the correct dummy to update using the dummy.player property
+		dummies.forEach((state) => {
+			this.dummies.forEach((dummy) => {
+				if (dummy.player === state.player) {
+					dummy.state = state;
+				}
+			});
 		});
 
 		enemies.forEach((enemy, index) => {
