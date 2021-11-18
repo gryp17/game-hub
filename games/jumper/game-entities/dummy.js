@@ -156,6 +156,8 @@ export default class Dummy extends Entity {
 	liveLost() {
 		this.lives--;
 
+		this.game.triggerEvent('dead');
+
 		if (this.lives === 0) {
 			//if player 1 loses all his lives player 2 wins and vice versa
 			const winner = this.player === 1 ? 2 : 1;
@@ -271,6 +273,10 @@ export default class Dummy extends Entity {
 		this.jumping = true;
 		this.jumpingStartingPoint = this.y;
 		this.dy = this.jumpAcceleration;
+
+		if (this.game.isServer) {
+			this.game.triggerEvent('jump');
+		}
 	}
 
 	/**
@@ -299,6 +305,10 @@ export default class Dummy extends Entity {
 	 */
 	flip() {
 		this.flipping = true;
+
+		if (this.game.isServer) {
+			this.game.triggerEvent('flip');
+		}
 	}
 
 	/**

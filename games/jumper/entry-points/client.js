@@ -211,7 +211,38 @@ export default class Jumper extends GameClient {
 	 * @param {Object} events
 	 */
 	handleServerEvents(events) {
+		if (events.jump) {
+			this.playJumpSound();
+		}
 
+		if (events.flip) {
+			this.playFlipSound();
+		}
+
+		if (events.dead) {
+			this.playDeadSound();
+		}
+	}
+
+	/**
+	 * Plays the jump sound track
+	 */
+	playJumpSound() {
+		this.playTrack('jump', 0.3);
+	}
+
+	/**
+	 * Plays the flip sound track
+	 */
+	playFlipSound() {
+		this.playTrack('flip');
+	}
+
+	/**
+	 * Plays the dead sound track
+	 */
+	playDeadSound() {
+		this.playTrack('dead');
 	}
 
 	/**

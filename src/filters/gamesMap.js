@@ -24,7 +24,7 @@ export default (gameCode) => {
 		jumper: {
 			value: 'jumper',
 			label: 'Jumper',
-			icon: 'fas fa-running'
+			icon: 'fas fa-ghost'
 		}
 	};
 
