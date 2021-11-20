@@ -12,16 +12,19 @@ export default class Paddle extends Entity {
 	 * @param {Number} maxSpeed
 	 * @param {Number} player
 	 * @param {Boolean} controllable
-	 * @param {Number} playerId
+	 * @param {Object} playerData
 	 */
-	constructor(game, size, acceleration, maxSpeed, player = 1, controllable = false, playerId = null) {
+	constructor(game, size, acceleration, maxSpeed, player = 1, controllable = false, playerData = {}) {
 		super(game, game.contexts.game);
 
 		this.acceleration = acceleration;
 		this.maxSpeed = maxSpeed;
 		this.player = player;
 		this.controllable = controllable;
-		this.playerId = playerId;
+
+		this.socketId = playerData.socketId;
+		this.userId = playerData.id;
+		this.username = playerData.username;
 
 		this.width = this.canvas.width / 46;
 		this.height = this.canvas.height * (size / 100);
@@ -48,7 +51,9 @@ export default class Paddle extends Entity {
 	get state() {
 		return {
 			...super.state,
-			player: this.player
+			player: this.player,
+			userId: this.userId,
+			username: this.username
 		};
 	}
 
@@ -58,6 +63,8 @@ export default class Paddle extends Entity {
 	 */
 	set state(state) {
 		super.state = state;
+		this.userId = state.userId;
+		this.username = state.username;
 	}
 
 	/**
@@ -73,7 +80,7 @@ export default class Paddle extends Entity {
 	 */
 	move() {
 		if (this.controllable) {
-			const inputs = this.playerId ? this.game.inputs[this.playerId] : this.game.inputs;
+			const inputs = this.socketId ? this.game.inputs[this.socketId] : this.game.inputs;
 			this.processInputs(inputs);
 		}
 

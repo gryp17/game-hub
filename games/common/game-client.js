@@ -46,6 +46,16 @@ export default class GameClient {
 	}
 
 	/**
+	 * Returns the game HUD data that needs to be displayed (score/lives etc.)
+	 * @returns {Object}
+	 */
+	get hudData() {
+		return {
+			scores: Object.values(this.scores)
+		};
+	}
+
+	/**
 	 * Preloads all the game images and calls the provided callback when done
 	 * @param {Object} gameImages
 	 * @param {Function} callback

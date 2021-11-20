@@ -52,6 +52,9 @@
 					display: inline-block;
 					margin-right: 6px;
 					width: 22px;
+
+					//chrome blurry downscaled images hackfix
+					image-rendering: -webkit-optimize-contrast;
 				}
 			}
 

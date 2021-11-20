@@ -9,9 +9,10 @@
 		<div class="canvas-wrapper"></div>
 
 		<GameHUD
+			v-if="hudData"
+			:data="hudData"
 			:sound="userSession.sound"
 			:music="userSession.music"
-			:scores="scores"
 			@set-sound="updateUserSoundPreferences({ sound: $event })"
 			@set-music="onToggleMusic"
 		/>
@@ -39,6 +40,9 @@
 		jumper: Jumper
 	};
 
+	let GameClass;
+	let game;
+
 	export default {
 		components: {
 			LoadingIndicator,
@@ -49,8 +53,7 @@
 			return {
 				socket: null,
 				gameType: null,
-				gameClass: null,
-				game: null,
+				hudData: null,
 				loading: true
 			};
 		},
@@ -60,18 +63,7 @@
 			]),
 			...mapGetters('auth', [
 				'userSession'
-			]),
-			/**
-			 * Returns the current game scores
-			 * @returns {Array}
-			 */
-			scores() {
-				if (!this.game) {
-					return [];
-				}
-
-				return Object.values(this.game.scores);
-			}
+			])
 		},
 		/**
 		 * Sets the game type and class and preloads the game assets before starting the game
@@ -79,24 +71,24 @@
 		mounted() {
 			//sets the game type and game class
 			this.gameType = this.$route.params.game;
-			this.GameClass = gameClasses[this.gameType];
+			GameClass = gameClasses[this.gameType];
 
 			//if the game class is invalid redirect to the lobby
-			if (!this.GameClass) {
+			if (!GameClass) {
 				return this.$router.push({
 					name: 'lobby'
 				});
 			}
 
 			//preload the game images before connecting to the socket and starting the game
-			this.GameClass.preloadGameImages(this.initGame);
+			GameClass.preloadGameImages(this.initGame);
 		},
 		/**
 		 * Stops the game if it's still running and disconnects from the socket
 		 */
 		beforeDestroy() {
-			if (this.game) {
-				this.game.stop();
+			if (game) {
+				game.stop();
 			}
 
 			this.stopMusic();
@@ -130,7 +122,7 @@
 
 				//start the game
 				this.socket.on(this.socketEvents.game.startGame, ({ canvasIds, config, player }) => {
-					this.game = new this.GameClass(canvasIds, '.canvas-wrapper', gameImages, config, player, {
+					game = new GameClass(canvasIds, '.canvas-wrapper', gameImages, config, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: this.playMusic,
 						playTrack: (track, volume) => {
@@ -142,11 +134,18 @@
 					});
 
 					this.loading = false;
-					this.game.start();
+					game.start();
 				});
 
 				this.socket.on(this.socketEvents.game.updateData, (data) => {
-					this.game.updateData(data);
+					game.updateData(data);
+
+					const hudData = game.hudData;
+
+					//update the UI/HUD only if the data has changed
+					if (!_.isEqual(this.hudData, hudData)) {
+						this.hudData = game.hudData;
+					}
 				});
 
 				this.socket.on(this.socketEvents.game.gameOver, ({ winner, ragequit, score }) => {

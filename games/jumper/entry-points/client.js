@@ -39,6 +39,27 @@ export default class Jumper extends GameClient {
 	}
 
 	/**
+	 * Returns the HUD data
+	 * @returns {Object}
+	 */
+	get hudData() {
+		//order the dummies so the controllable player is always first in the list
+		const lives = [...this.dummies].sort((a, b) => {
+			return a.controllable ? -1 : 1;
+		}).map((dummy) => {
+			return {
+				id: dummy.userId,
+				username: dummy.username,
+				lives: dummy.lives
+			};
+		});
+
+		return {
+			lives
+		};
+	}
+
+	/**
 	 * Preloads all the game images and calls the provided callback when done
 	 * @param {Function} callback
 	 */

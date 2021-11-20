@@ -79,7 +79,15 @@ export default class Pong extends GameServer {
 	start() {
 		this.paddles = this.players.map((player, index) => {
 			const playerIndex = index + 1;
-			return new Paddle(this, this.config.paddle.size, this.config.paddle.acceleration, this.config.paddle.maxSpeed, playerIndex, true, player.socketId);
+			return new Paddle(
+				this,
+				this.config.paddle.size,
+				this.config.paddle.acceleration,
+				this.config.paddle.maxSpeed,
+				playerIndex,
+				true,
+				player
+			);
 		});
 
 		this.ball = new Ball(

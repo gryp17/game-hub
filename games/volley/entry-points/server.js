@@ -119,7 +119,7 @@ export default class Volley extends GameServer {
 				this.config.dummy.horizontalForce,
 				playerIndex,
 				true,
-				player.socketId
+				player
 			);
 		});
 

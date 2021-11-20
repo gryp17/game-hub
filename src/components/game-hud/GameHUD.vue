@@ -2,12 +2,13 @@
 	<div class="game-hud">
 
 		<LivesDisplay
-			v-if="lives"
-			:lives="lives"
+			v-if="data.lives"
+			:lives="data.lives"
 		/>
+
 		<ScoresDisplay
-			v-else
-			:scores="scores"
+			v-if="data.scores"
+			:scores="data.scores"
 		/>
 
 		<div class="audio-controls-wrapper">
@@ -36,8 +37,7 @@
 
 	export default {
 		props: {
-			scores: Array,
-			lives: Array,
+			data: Object,
 			sound: {
 				type: Boolean,
 				default: false

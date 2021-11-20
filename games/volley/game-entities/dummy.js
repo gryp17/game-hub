@@ -19,14 +19,17 @@ export default class Dummy extends Entity {
 	 * @param {Number} horizontalForce
 	 * @param {Number} player
 	 * @param {Boolean} controllable
-	 * @param {Number} playerId
+	 * @param {Object} playerData
 	 */
-	constructor(game, acceleration, maxSpeed, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerId = null) {
+	constructor(game, acceleration, maxSpeed, jumpAcceleration, minForce, verticalForce, horizontalForce, player = 1, controllable = false, playerData = {}) {
 		super(game, game.contexts.game);
 
 		this.player = player;
 		this.controllable = controllable;
-		this.playerId = playerId;
+
+		this.socketId = playerData.socketId;
+		this.userId = playerData.id;
+		this.username = playerData.username;
 
 		this.width = this.canvas.width / 12;
 		this.height = this.canvas.height / 4;
@@ -95,6 +98,8 @@ export default class Dummy extends Entity {
 		return {
 			...super.state,
 			player: this.player,
+			userId: this.userId,
+			username: this.username,
 			facingDirection: this.facingDirection
 		};
 	}
@@ -105,6 +110,8 @@ export default class Dummy extends Entity {
 	 */
 	set state(state) {
 		super.state = state;
+		this.userId = state.userId;
+		this.username = state.username;
 		this.facingDirection = state.facingDirection;
 	}
 
@@ -127,7 +134,7 @@ export default class Dummy extends Entity {
 	 */
 	move() {
 		if (this.controllable) {
-			const inputs = this.playerId ? this.game.inputs[this.playerId] : this.game.inputs;
+			const inputs = this.socketId ? this.game.inputs[this.socketId] : this.game.inputs;
 			this.processInputs(inputs);
 		}
 

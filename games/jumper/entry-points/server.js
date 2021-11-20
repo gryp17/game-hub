@@ -182,7 +182,7 @@ export default class Jumper extends GameServer {
 
 		this.dummies = this.players.map((player, index) => {
 			const playerIndex = index + 1;
-			return new Dummy(this, ...dummiesConfig, playerIndex, true, player.socketId);
+			return new Dummy(this, ...dummiesConfig, playerIndex, true, player);
 		});
 
 		const gameLoop = () => {
