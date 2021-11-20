@@ -36,6 +36,7 @@
 					<UserMenu
 						@logout="logout"
 						@edit-profile="showEditProfileModal"
+						@game-settings="showGameSettingsModal"
 					/>
 				</div>
 			</div>
@@ -72,6 +73,8 @@
 		<UserProfileModal />
 
 		<EditProfileModal />
+
+		<GameSettingsModal />
 	</div>
 </template>
 
@@ -83,6 +86,7 @@
 		showEditProfileModal,
 		showChallengeModal,
 		showMatchmakingPendingModal,
+		showGameSettingsModal,
 		hideChallengeModal,
 		hideChallengeSettingsModal,
 		hideMatchmakingPendingModal
@@ -99,6 +103,7 @@
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 	import UserProfileModal from '@/components/modals/user-profile/UserProfileModal';
 	import EditProfileModal from '@/components/modals/EditProfileModal';
+	import GameSettingsModal from '@/components/modals/GameSettingsModal';
 
 	export default {
 		components: {
@@ -112,6 +117,7 @@
 			MatchmakingPendingModal,
 			UserProfileModal,
 			EditProfileModal,
+			GameSettingsModal,
 			UserMenu
 		},
 		data() {
@@ -217,6 +223,12 @@
 			 */
 			showProfileModal(user) {
 				showProfileModal(user.id);
+			},
+			/**
+			 * Shows the game settings modal
+			 */
+			showGameSettingsModal() {
+				showGameSettingsModal();
 			},
 			/**
 			 * Sends a player challenge

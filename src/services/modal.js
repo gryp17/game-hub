@@ -6,7 +6,8 @@ const modals = {
 	challenge: 'challenge-modal',
 	challengeSettings: 'challenge-settings-modal',
 	matchmakingPending: 'matchmaking-pending-modal',
-	gameOver: 'game-over-modal'
+	gameOver: 'game-over-modal',
+	gameSettings: 'game-settings-modal'
 };
 
 /**
@@ -124,6 +125,21 @@ function hideGameOverModal() {
 	hideModal(modals.gameOver);
 }
 
+/**
+ * Shows the game settings modal
+ * @param {Object} params
+ */
+function showGameSettingsModal(params) {
+	showModal(modals.gameSettings, params);
+}
+
+/**
+ * Hides the game settings modal
+ */
+function hideGameSettingsModal() {
+	hideModal(modals.gameSettings);
+}
+
 export {
 	initModals,
 	showModal,
@@ -138,5 +154,7 @@ export {
 	showMatchmakingPendingModal,
 	hideMatchmakingPendingModal,
 	showGameOverModal,
-	hideGameOverModal
+	hideGameOverModal,
+	showGameSettingsModal,
+	hideGameSettingsModal
 };

@@ -18,6 +18,12 @@
 					Edit Profile
 				</div>
 				<div
+					@click="$emit('game-settings')"
+				>
+					<i class="fas fa-cog"></i>
+					Game settings
+				</div>
+				<div
 					@click="onLogout"
 				>
 					<i class="fas fa-sign-out-alt"></i>
