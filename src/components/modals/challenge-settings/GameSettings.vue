@@ -36,6 +36,12 @@
 						background: 'default',
 						netHeight: 'default',
 						hitLimit: 'default'
+					},
+					jumper: {
+						gameSpeed: 'default',
+						background: 'default',
+						lives: 'default',
+						platformsDistance: 'default'
 					}
 				}
 			};

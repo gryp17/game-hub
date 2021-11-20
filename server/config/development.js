@@ -324,7 +324,30 @@ module.exports = {
 					keys: [39, 68] //right arrow, D
 				}
 			},
-			configurableSettings: {}
+			configurableSettings: {
+				gameSpeed: {
+					slow: 6000,
+					default: 2000, //affects the speedUpInterval value
+					fast: 800
+				},
+				background: {
+					default: 'default',
+					forest: 'forest',
+					factory: 'factory',
+					graveyard: 'graveyard',
+					house: 'house'
+				},
+				lives: {
+					high: 5,
+					default: 3,
+					low: 1
+				},
+				platformsDistance: {
+					small: 150,
+					default: 240, //affects the maxDistance value
+					big: 320
+				}
+			}
 		}
 	}
 };

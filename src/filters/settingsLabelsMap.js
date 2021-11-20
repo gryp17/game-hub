@@ -18,6 +18,12 @@ export default (property, game) => {
 			background: 'Background',
 			netHeight: 'Net height',
 			hitLimit: 'Hit limit'
+		},
+		jumper: {
+			gameSpeed: 'Game speed',
+			background: 'Background',
+			lives: 'Lives',
+			platformsDistance: 'Platforms distance'
 		}
 	};
 

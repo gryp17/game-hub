@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import GameServer from '../../common/game-server';
 import Dummy from '../game-entities/dummy';
 import Background from '../game-entities/background';
@@ -52,7 +53,21 @@ export default class Jumper extends GameServer {
 	 * @returns {Object}
 	 */
 	applySettings(defaultConfig, customSettings) {
-		const config = defaultConfig;
+		//map each setting type to the path in the config that it corresponds to
+		const settingsPathMap = {
+			gameSpeed: 'speedUpInterval',
+			background: 'background.selectedBackground',
+			lives: 'dummy.lives',
+			platformsDistance: 'platform.maxDistance'
+		};
+
+		const config = super.applySettings(defaultConfig, customSettings, settingsPathMap);
+
+		//pick a random background if the default option was selected
+		if (!customSettings || customSettings.background === 'default') {
+			config.background.selectedBackground = _.sample(config.background.availableBackgrounds);
+		}
+
 		return config;
 	}
 
