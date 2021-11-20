@@ -41,8 +41,11 @@
 		text-shadow: 1px 1px 1px $gray;
 
 		.player-info {
+			flex: 1;
+			padding: 0px 15px;
+
 			.username {
-				font-size: 18px;
+				font-size: 28px;
 			}
 
 			.lives {
@@ -58,8 +61,8 @@
 				}
 			}
 
-			+ .player-info {
-				margin-left: 25px;
+			&:first-child {
+				text-align: right;
 			}
 		}
 
@@ -69,10 +72,6 @@
 					font-size: 16px;
 				}
 			}
-		}
-
-		@media (max-width: $extra-small) {
-			display: none;
 		}
 	}
 </style>

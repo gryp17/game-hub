@@ -58,9 +58,5 @@
 				}
 			}
 		}
-
-		@media (max-width: $medium-small) {
-			display: none;
-		}
 	}
 </style>
