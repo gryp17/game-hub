@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploads, errorCodes } from '../config';
+import { uploads, errorCodes, defaultControls } from '../config';
 import { User } from '../models';
 import { isLoggedIn } from '../middleware/authentication';
 import { validate } from '../middleware/validator';
@@ -78,6 +78,11 @@ router.post('/signup', validate(rules.signup), async (req, res) => {
 			password: hashedPassword,
 			username,
 			avatar: uploads.avatars.defaultAvatar
+		});
+
+		//add the settings record for the user
+		await userInstance.createSetting({
+			controls: defaultControls
 		});
 
 		const user = userInstance.toJSON();

@@ -166,7 +166,8 @@
 		async created() {
 			await Promise.all([
 				this.getUsers(),
-				this.getMatchmakingStatus()
+				this.getMatchmakingStatus(),
+				this.getSettings()
 			]);
 
 			this.getMessages({
@@ -186,6 +187,9 @@
 		methods: {
 			...mapActions('auth', [
 				'logout'
+			]),
+			...mapActions('settings', [
+				'getSettings'
 			]),
 			...mapActions('lobby', [
 				'getUsers',

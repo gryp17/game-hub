@@ -13,7 +13,9 @@
 			</div>
 			<div class="content center">
 
-				settings form
+				{{ sound }}
+				{{ music }}
+				{{ controls }}
 
 				<div class="buttons-wrapper">
 					<FormButton
@@ -29,7 +31,7 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex';
+	import { mapState } from 'vuex';
 	import { hideGameSettingsModal } from '@/services/modal';
 
 	export default {
@@ -39,8 +41,10 @@
 			};
 		},
 		computed: {
-			...mapGetters('auth', [
-				'userSession'
+			...mapState('settings', [
+				'controls',
+				'sound',
+				'music'
 			])
 		},
 		methods: {

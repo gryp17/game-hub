@@ -15,6 +15,7 @@ import matchmakingRoutes from './routes/matchmaking';
 import configRoutes from './routes/config';
 import messageRoutes from './routes/message';
 import gameRoutes from './routes/game';
+import settingsRoutes from './routes/settings';
 
 const app = module.exports = express();
 
@@ -64,6 +65,7 @@ app.use('/api/matchmaking', matchmakingRoutes);
 app.use('/api/config', configRoutes);
 app.use('/api/message', messageRoutes);
 app.use('/api/game', gameRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../dist/index.html'));

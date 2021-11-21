@@ -90,6 +90,20 @@ module.exports = {
 		win: 10,
 		loss: 1
 	},
+	defaultControls: {
+		up: {
+			keys: [38, 87] //arrow up, W
+		},
+		down: {
+			keys: [40, 83] //arrow down, S
+		},
+		left: {
+			keys: [37, 65] //left arrow, A
+		},
+		right: {
+			keys: [39, 68] //right arrow, D
+		}
+	},
 	games: {
 		pong: {
 			code: 'pong',

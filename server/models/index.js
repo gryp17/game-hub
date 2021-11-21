@@ -17,6 +17,7 @@ const User = require('./user').default(db);
 const Game = require('./game').default(db);
 const GameUser = require('./game-user').default(db);
 const Message = require('./message').default(db);
+const Settings = require('./settings').default(db);
 
 //setup relations
 User.belongsToMany(Game, {
@@ -35,6 +36,10 @@ Game.belongsTo(User, {
 });
 
 Message.belongsTo(User);
+
+User.hasOne(Settings);
+
+Settings.belongsTo(User);
 
 /**
  * Syncs the models and the mysql tables
@@ -73,11 +78,16 @@ const syncAndSeed = async () => {
 			//add all the seed users
 			const hashedPassword = await makeHash('1234');
 
-			await Promise.all(users.map((user) => {
-				return User.create({
+			await Promise.all(users.map(async (user) => {
+				const userInstance = await User.create({
 					...user,
 					avatar: config.uploads.avatars.defaultAvatar,
 					password: hashedPassword
+				});
+
+				//add the settings records for the user
+				return userInstance.createSetting({
+					controls: config.defaultControls
 				});
 			}));
 		}
@@ -91,6 +101,7 @@ export {
 	Game,
 	GameUser,
 	Message,
+	Settings,
 	sync,
 	syncAndSeed
 };
