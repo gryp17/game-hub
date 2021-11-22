@@ -29,10 +29,10 @@
 								{{ inputType }}
 							</td>
 							<td v-for="(keyCode, index) in data.keys" :key="index">
-								<FormInput
-									:value="keyCode | keyCodesMap"
-									@keydown="onKeyDown"
-									@keyup="onKeyUp($event, inputType, index)"
+								<ControlInput
+									v-model="data.keys[index]"
+									:valid-input-key-codes="validInputKeyCodes"
+									@input="onInput($event, inputType, index)"
 								/>
 							</td>
 						</tr>
@@ -60,11 +60,14 @@
 </template>
 
 <script>
-	import Vue from 'vue';
 	import { mapState } from 'vuex';
 	import { hideGameSettingsModal } from '@/services/modal';
+	import ControlInput from '@/components/modals/game-settings/ControlInput';
 
 	export default {
+		components: {
+			ControlInput
+		},
 		data() {
 			return {
 				inputs: {},
@@ -90,42 +93,29 @@
 				this.inputs = _.cloneDeep(this.controls);
 			},
 			/**
-			 * Handles the controls inputs keydown event
-			 * @param {Object} e
-			 */
-			onKeyDown(e) {
-				e.preventDefault();
-			},
-			/**
-			 * Handles the controls inputs keyup event
-			 * @param {Object} e
+			 * Called when the control input value changes
+			 * @param {Number} keyCode
 			 * @param {String} inputType
 			 * @param {Number} index
 			 */
-			onKeyUp(e, inputType, index) {
-				e.preventDefault();
-
-				//update the input key code (the key code gets mapped to it's name in the markup)
-				const keyCode = (e.which) ? e.which : e.keyCode;
-
-				if (this.keyIsValid(keyCode)) {
-					Vue.set(this.inputs[inputType].keys, index, keyCode);
+			onInput(keyCode, inputType, index) {
+				if (!keyCode) {
+					return;
 				}
 
-				//on backspace clear the input
-				if (keyCode === 8) {
-					Vue.set(this.inputs[inputType].keys, index, null);
-				}
+				//check if this keyCode was used for another input and clear it
+				_.forOwn(this.inputs, (data, type) => {
+					data.keys.forEach((key, keyIndex) => {
+						if (inputType === type && keyIndex === index) {
+							return;
+						}
 
-				//TODO: check if this code was already used somewhere else and set it to ''
-			},
-			/**
-			 * Checks if the key code is in the list of valid input key codes
-			 * @param {Number} keyCode
-			 * @returns {Boolean}
-			 */
-			keyIsValid(keyCode) {
-				return !!this.validInputKeyCodes[keyCode];
+						//clear the input value
+						if (key === keyCode) {
+							this.inputs[type].keys[keyIndex] = null;
+						}
+					});
+				});
 			},
 			/**
 			 * Submits the game settings modal
@@ -176,10 +166,6 @@
 						padding-left: 10px;
 						padding-right: 10px;
 						text-align: center;
-						text-transform: uppercase;
-					}
-
-					.form-input .form-control {
 						text-transform: uppercase;
 					}
 				}

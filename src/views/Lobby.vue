@@ -103,7 +103,7 @@
 	import MatchmakingPendingModal from '@/components/modals/MatchmakingPendingModal';
 	import UserProfileModal from '@/components/modals/user-profile/UserProfileModal';
 	import EditProfileModal from '@/components/modals/EditProfileModal';
-	import GameSettingsModal from '@/components/modals/GameSettingsModal';
+	import GameSettingsModal from '@/components/modals/game-settings/GameSettingsModal';
 
 	export default {
 		components: {
