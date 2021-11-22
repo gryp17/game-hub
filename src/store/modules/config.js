@@ -6,7 +6,8 @@ const getDefaultState = () => {
 		userStatuses: {},
 		availableGames: [],
 		socketEvents: {},
-		configurableSettings: {}
+		configurableSettings: {},
+		validInputKeyCodes: {}
 	};
 };
 
@@ -41,6 +42,9 @@ const mutations = {
 	},
 	SET_CONFIGURABLE_SETTINGS(state, configurableSettings) {
 		state.configurableSettings = configurableSettings;
+	},
+	SET_VALID_INPUT_KEY_CODES(state, validInputKeyCodes) {
+		state.validInputKeyCodes = validInputKeyCodes;
 	}
 };
 
@@ -64,6 +68,7 @@ const actions = {
 			context.commit('SET_AVAILABLE_GAMES', data.availableGames);
 			context.commit('SET_SOCKET_EVENTS', data.socketEvents);
 			context.commit('SET_CONFIGURABLE_SETTINGS', data.configurableSettings);
+			context.commit('SET_VALID_INPUT_KEY_CODES', data.validInputKeyCodes);
 			return data;
 		} catch (err) {
 			Vue.toasted.global.apiError({

@@ -72,6 +72,9 @@
 			};
 		},
 		computed: {
+			...mapState('config', [
+				'validInputKeyCodes'
+			]),
 			...mapState('settings', [
 				'controls',
 				'sound',
@@ -100,11 +103,29 @@
 			 * @param {Number} index
 			 */
 			onKeyUp(e, inputType, index) {
+				e.preventDefault();
+
 				//update the input key code (the key code gets mapped to it's name in the markup)
 				const keyCode = (e.which) ? e.which : e.keyCode;
-				Vue.set(this.inputs[inputType].keys, index, keyCode);
+
+				if (this.keyIsValid(keyCode)) {
+					Vue.set(this.inputs[inputType].keys, index, keyCode);
+				}
+
+				//on backspace clear the input
+				if (keyCode === 8) {
+					Vue.set(this.inputs[inputType].keys, index, null);
+				}
 
 				//TODO: check if this code was already used somewhere else and set it to ''
+			},
+			/**
+			 * Checks if the key code is in the list of valid input key codes
+			 * @param {Number} keyCode
+			 * @returns {Boolean}
+			 */
+			keyIsValid(keyCode) {
+				return !!this.validInputKeyCodes[keyCode];
 			},
 			/**
 			 * Submits the game settings modal

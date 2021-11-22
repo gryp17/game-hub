@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import express from 'express';
 import { sendResponse } from '../services/utils';
-import { userStatuses, gameCodes, socketEvents, games } from '../config';
+import { userStatuses, gameCodes, socketEvents, games, validInputKeyCodes } from '../config';
 
 const router = express.Router();
 
@@ -26,7 +26,8 @@ router.get('/', (req, res) => {
 		userStatuses,
 		availableGames: gameCodes,
 		socketEvents,
-		configurableSettings
+		configurableSettings,
+		validInputKeyCodes
 	});
 });
 
