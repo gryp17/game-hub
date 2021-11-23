@@ -57,6 +57,8 @@
 
 <style scoped lang="scss">
 	.control-input {
+		margin-bottom: 0px;
+
 		::v-deep .form-control {
 			text-transform: uppercase;
 		}

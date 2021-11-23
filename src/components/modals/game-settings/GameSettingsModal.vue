@@ -12,70 +12,97 @@
 				Game settings
 			</div>
 			<div class="content">
-
-				<h4 class="controls-title">Game Controls</h4>
-
-				<table class="controls-table">
-					<thead>
-						<tr>
-							<td>Input</td>
-							<td>Primary</td>
-							<td>Secondary</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(data, inputType) in inputs" :key="inputType">
-							<td>
-								{{ inputType }}
-							</td>
-							<td v-for="(keyCode, index) in data.keys" :key="index">
-								<ControlInput
-									v-model="data.keys[index]"
-									:valid-input-key-codes="validInputKeyCodes"
-									@input="onInput($event, inputType, index)"
-								/>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<br/>
-				<br/>
-
-				{{ sound }}
-				{{ music }}
-				{{ inputs }}
-
-				<div class="buttons-wrapper">
-					<FormButton
-						:disabled="submitting"
-						@click="submit"
+				<Tabs
+					ref="tabs"
+					cache-lifetime="0"
+					class="light"
+					:options="{ useUrlFragment: false }"
+				>
+					<Tab
+						name="Game controls"
 					>
-						Save
-					</FormButton>
-				</div>
+						<table class="controls-table">
+							<thead>
+								<tr>
+									<td>Input</td>
+									<td>Primary</td>
+									<td>Secondary</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="(data, inputType) in inputs" :key="inputType">
+									<td>
+										{{ inputType }}
+									</td>
+									<td v-for="(keyCode, index) in data.keys" :key="index">
+										<ControlInput
+											v-model="data.keys[index]"
+											:valid-input-key-codes="validInputKeyCodes"
+											@input="onInput($event, inputType, index)"
+										/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</Tab>
+					<Tab
+						name="Sound"
+					>
+						<FormSwitch v-model="audio.sound">
+							Sound effects
+						</FormSwitch>
+
+						<FormSwitch v-model="audio.music">
+							Background music
+						</FormSwitch>
+					</Tab>
+
+					<div class="buttons-wrapper">
+						<FormButton
+							:disabled="submitting"
+							@click="submit"
+						>
+							Save
+						</FormButton>
+
+						<FormButton
+							outline
+							@click="reset"
+						>
+							Reset
+						</FormButton>
+					</div>
+				</Tabs>
 			</div>
 		</modal>
 	</div>
 </template>
 
 <script>
+	import { Tabs, Tab } from 'vue-tabs-component';
 	import { mapState } from 'vuex';
 	import { hideGameSettingsModal } from '@/services/modal';
 	import ControlInput from '@/components/modals/game-settings/ControlInput';
 
 	export default {
 		components: {
+			Tabs,
+			Tab,
 			ControlInput
 		},
 		data() {
 			return {
 				inputs: {},
+				audio: {
+					sound: true,
+					music: true
+				},
 				submitting: false
 			};
 		},
 		computed: {
 			...mapState('config', [
+				'defaultControls',
 				'validInputKeyCodes'
 			]),
 			...mapState('settings', [
@@ -91,6 +118,8 @@
 			 */
 			onBeforeOpen(e) {
 				this.inputs = _.cloneDeep(this.controls);
+				this.audio.sound = this.sound;
+				this.audio.music = this.music;
 			},
 			/**
 			 * Called when the control input value changes
@@ -132,6 +161,21 @@
 				this.submitting = false;
 			},
 			/**
+			 * Resets the settings to their default values
+			 */
+			reset() {
+				const currentTab = this.$refs.tabs.lastActiveTabHash;
+
+				if (currentTab === '#game-controls') {
+					this.inputs = _.cloneDeep(this.defaultControls);
+				}
+
+				if (currentTab === '#sound') {
+					this.audio.sound = true;
+					this.audio.music = true;
+				}
+			},
+			/**
 			 * Closes the modal
 			 */
 			closeModal() {
@@ -144,12 +188,14 @@
 <style lang="scss">
 	.game-settings-modal {
 		.content {
-			.controls-title {
-				margin: 15px 0px;
-				text-align: center;
+			padding: 5px;
+
+			.tabs-component-panels {
+				padding: 10px;
 			}
 
 			.controls-table {
+				margin-bottom: 5px;
 				width: 100%;
 
 				thead {
@@ -161,13 +207,22 @@
 				}
 
 				tbody {
-					td:first-child {
-						padding-bottom: 18px;
-						padding-left: 10px;
-						padding-right: 10px;
-						text-align: center;
-						text-transform: uppercase;
+					td {
+						padding-bottom: 5px;
+
+						&:first-child {
+							padding-left: 10px;
+							padding-right: 10px;
+							text-align: center;
+							text-transform: uppercase;
+						}
 					}
+				}
+			}
+
+			.buttons-wrapper {
+				.form-button {
+					min-width: 70px;
 				}
 			}
 		}
