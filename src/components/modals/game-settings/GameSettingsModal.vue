@@ -10,6 +10,14 @@
 		>
 			<div class="header">
 				Game settings
+
+				<FormButton
+					transparent
+					class="close-btn"
+					@click="closeModal"
+				>
+					<i class="fas fa-times"></i>
+				</FormButton>
 			</div>
 			<div class="content">
 				<Tabs
