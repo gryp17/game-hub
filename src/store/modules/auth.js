@@ -135,24 +135,6 @@ const actions = {
 		}
 	},
 	/**
-	 * Updates the user sound preferences
-	 * @param {Object} context
-	 * @param {Object} data
-	 * @returns {Promise}
-	 */
-	async updateUserSoundPreferences(context, data) {
-		const formData = new FormData();
-
-		['sound', 'music'].forEach((key) => {
-			const value = data[key];
-			if (_.has(data, key)) {
-				formData.append(key, value);
-			}
-		});
-
-		return context.dispatch('updateUser', formData);
-	},
-	/**
 	 * Logs out the user
 	 * @param {Object} context
 	 */

@@ -11,10 +11,10 @@
 		<GameHUD
 			v-if="hudData"
 			:data="hudData"
-			:sound="userSession.sound"
-			:music="userSession.music"
-			@set-sound="updateUserSoundPreferences({ sound: $event })"
-			@set-music="onToggleMusic"
+			:sound="sound"
+			:music="music"
+			@set-sound="onToggleSoundPreferences('sound', $event)"
+			@set-music="onToggleSoundPreferences('music', $event)"
 		/>
 
 		<GameOverModal />
@@ -61,6 +61,11 @@
 			...mapState('config', [
 				'socketEvents'
 			]),
+			...mapState('settings', [
+				'controls',
+				'sound',
+				'music'
+			]),
 			...mapGetters('auth', [
 				'userSession'
 			])
@@ -101,8 +106,8 @@
 				'playMusic',
 				'stopMusic'
 			]),
-			...mapActions('auth', [
-				'updateUserSoundPreferences'
+			...mapActions('settings', [
+				'updateSettings'
 			]),
 			/**
 			 * Connects to the socket.io server and listens for it's events
@@ -163,18 +168,22 @@
 				});
 			},
 			/**
-			 * Sets the user music value
+			 * Sets the user's sound/music preferences
+			 * @param {String} field (sound | music)
 			 * @param {Boolean} value
-			 * @returns {Promise}
 			 */
-			async onToggleMusic(value) {
-				await this.updateUserSoundPreferences({ music: value });
+			async onToggleSoundPreferences(field, value) {
+				await this.updateSettings({
+					[field]: value
+				});
 
 				//try to play/stop the music when the value changes
-				if (value) {
-					this.playMusic();
-				} else {
-					this.stopMusic();
+				if (field === 'music') {
+					if (value) {
+						this.playMusic();
+					} else {
+						this.stopMusic();
+					}
 				}
 			},
 			/**

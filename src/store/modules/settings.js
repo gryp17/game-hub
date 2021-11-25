@@ -61,8 +61,15 @@ const actions = {
 	 * @returns {Promise}
 	 */
 	async updateSettings(context, settings) {
+		//if the sound or music values weren't provided use their current values
+		const params = {
+			sound: context.state.sound,
+			music: context.state.music,
+			...settings
+		};
+
 		try {
-			const { data } = await SettingsHttpService.updateSettings(settings);
+			const { data } = await SettingsHttpService.updateSettings(params);
 
 			//throw the errors and show them using a toast instead of handling them in a form or something
 			if (data && data.errors) {

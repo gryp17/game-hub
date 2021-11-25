@@ -11,7 +11,7 @@ const router = express.Router();
 
 const rules = {
 	updateSettings: {
-		controls: 'required',
+		controls: 'optional',
 		sound: ['required', 'boolean'],
 		music: ['required', 'boolean']
 	}
@@ -122,17 +122,27 @@ router.get('/', isLoggedIn, async (req, res) => {
 router.put('/', isLoggedIn, validate(rules.updateSettings), async (req, res) => {
 	const { controls, sound, music } = req.body;
 
-	//validate and sanitize the controls object schema
-	const result = validateControlsSchema(controls);
+	const updatedFields = {
+		sound,
+		music
+	};
 
-	if (!result.valid) {
-		return sendError(res, {
-			controls: errorCodes.invalidSchema
-		});
+	//the controls object is optional so do the controls validations only if the controls object was provided
+	if (controls) {
+		//validate and sanitize the controls object schema
+		const result = validateControlsSchema(controls);
+
+		if (!result.valid) {
+			return sendError(res, {
+				controls: errorCodes.invalidSchema
+			});
+		}
+
+		//validate the input keys (make sure they are in the valid keys list)
+		const validControls = validateInputKeys(result.data);
+
+		updatedFields.controls = validControls;
 	}
-
-	//validate the input keys (make sure they are in the valid keys list)
-	const validControls = validateInputKeys(result.data);
 
 	try {
 		const settingsInstance = await Settings.findOne({
@@ -141,11 +151,7 @@ router.put('/', isLoggedIn, validate(rules.updateSettings), async (req, res) => 
 			}
 		});
 
-		settingsInstance.set({
-			controls: validControls,
-			sound,
-			music
-		});
+		settingsInstance.set(updatedFields);
 
 		await settingsInstance.save();
 

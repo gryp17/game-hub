@@ -7,7 +7,7 @@ const actions = {
 	 * @param {Object} data
 	 */
 	playTrack(context, { track, volume }) {
-		const soundEnabled = context.rootGetters['auth/userSession'].sound;
+		const soundEnabled = context.rootState.settings.sound;
 
 		if (soundEnabled) {
 			AudioPlayer.throttledPlayTrack(track, volume);
@@ -19,7 +19,7 @@ const actions = {
 	 * @param {Float} volume
 	 */
 	playMusic(context, volume) {
-		const musicEnabled = context.rootGetters['auth/userSession'].music;
+		const musicEnabled = context.rootState.settings.music;
 
 		if (musicEnabled) {
 			AudioPlayer.playMusic(volume);
