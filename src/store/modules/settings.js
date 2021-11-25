@@ -53,6 +53,33 @@ const actions = {
 				message: `Get settings failed: ${err}`
 			});
 		}
+	},
+	/**
+	 * Updates the user's game settings
+	 * @param {Object} context
+	 * @param {Object} settings
+	 * @returns {Promise}
+	 */
+	async updateSettings(context, settings) {
+		try {
+			const { data } = await SettingsHttpService.updateSettings(settings);
+
+			//throw the errors and show them using a toast instead of handling them in a form or something
+			if (data && data.errors) {
+				const errors = Object.values(data.errors).join(', ');
+				throw new Error(errors);
+			}
+
+			context.commit('SET_CONTROLS', data.controls);
+			context.commit('SET_SOUND', data.sound);
+			context.commit('SET_MUSIC', data.music);
+
+			return data;
+		} catch (err) {
+			Vue.toasted.global.apiError({
+				message: `Update settings failed: ${err}`
+			});
+		}
 	}
 };
 

@@ -29,6 +29,7 @@ module.exports = {
 		invalidBoolean: 'invalid_boolean',
 		invalidInteger: 'invalid_integer',
 		invalidEmail: 'invalid_email',
+		invalidSchema: 'invalid_schema',
 		strongPasswordLength: 'strong_password_length_', //strong_password_length_(\d+)
 		exceedsMaxFileSize: 'exceeds_max_file_size_', //exceeds_max_file_size_(\d+)
 		invalidFileExtension: 'invalid_file_extension_', //invalid_file_extension_[]

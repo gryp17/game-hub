@@ -80,7 +80,7 @@
 
 <script>
 	import { Tabs, Tab } from 'vue-tabs-component';
-	import { mapState } from 'vuex';
+	import { mapState, mapActions } from 'vuex';
 	import { hideGameSettingsModal } from '@/services/modal';
 	import ControlInput from '@/components/modals/game-settings/ControlInput';
 
@@ -112,6 +112,9 @@
 			])
 		},
 		methods: {
+			...mapActions('settings', [
+				'updateSettings'
+			]),
 			/**
 			 * Bootstraps the modal before its opened
 			 * @param {Object} e
@@ -156,7 +159,14 @@
 
 				this.submitting = true;
 
-				//TODO: call the api
+				const data = await this.updateSettings({
+					controls: this.inputs,
+					...this.audio
+				});
+
+				if (data && !data.errors) {
+					this.closeModal();
+				}
 
 				this.submitting = false;
 			},
@@ -221,6 +231,8 @@
 			}
 
 			.buttons-wrapper {
+				padding: 5px;
+
 				.form-button {
 					min-width: 70px;
 				}

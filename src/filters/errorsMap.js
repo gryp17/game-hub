@@ -9,6 +9,7 @@ export default (errorCode) => {
 		invalid_boolean: 'Invalid boolean value',
 		invalid_integer: 'Invalid number',
 		invalid_email: 'Invalid email',
+		invalid_schema: 'Invalid schema',
 		fields_dont_match: 'The fields don\'t match',
 		already_in_use: 'Already in use',
 		wrong_password: 'Wrong password',
