@@ -94,13 +94,16 @@
 			padding: 15px;
 
 			.form-button {
-				padding: 10px;
+				width: 43px;
+				height: 43px;
+				padding: 0px;
 				border-radius: 100%;
 				border: solid 2px lighten($purple, 10%);
 				background-color: $white;
 				opacity: 0.6;
 
 				svg {
+					width: 100%;
 					margin-right: 0px;
 				}
 
@@ -118,12 +121,11 @@
 		@media (max-width: $small) {
 			.audio-controls-wrapper {
 				.form-button {
-					padding: 5px;
 					width: 35px;
 					height: 35px;
 
 					svg {
-						width: 16px;
+						width: 13px;
 						height: 16px;
 					}
 				}
