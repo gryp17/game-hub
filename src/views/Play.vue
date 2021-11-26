@@ -127,7 +127,7 @@
 
 				//start the game
 				this.socket.on(this.socketEvents.game.startGame, ({ canvasIds, config, player }) => {
-					game = new GameClass(canvasIds, '.canvas-wrapper', gameImages, config, player, {
+					game = new GameClass(canvasIds, '.canvas-wrapper', gameImages, config, this.controls, player, {
 						onUpdateInputs: this.updateInputs,
 						playMusic: this.playMusic,
 						playTrack: (track, volume) => {

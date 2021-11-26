@@ -15,10 +15,11 @@ export default class GameClient {
 	 * @param {String} canvasWrapper
 	 * @param {Object} images
 	 * @param {Object} config
+	 * @param {Object} controls
 	 * @param {Number} player
 	 * @param {Object} events
 	 */
-	constructor(canvasIds, canvasWrapper, images, config, player, { onUpdateInputs, playMusic, playTrack }) {
+	constructor(canvasIds, canvasWrapper, images, config, controls, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
 		this.canvasIds = canvasIds;
 		this.canvasWrapper = canvasWrapper;
@@ -35,7 +36,7 @@ export default class GameClient {
 		this.playMusic = playMusic;
 		this.playTrack = playTrack;
 
-		this.gameControls = config.controls;
+		this.gameControls = controls;
 
 		//initialize the canvas/context objects and generate the canvas HTML elements
 		this.contexts = {};

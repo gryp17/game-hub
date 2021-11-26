@@ -190,14 +190,6 @@ module.exports = {
 				acceleration: 2,
 				maxSpeed: 8
 			},
-			controls: {
-				up: {
-					keys: [38, 87] //arrow up, W
-				},
-				down: {
-					keys: [40, 83] //arrow down, S
-				}
-			},
 			configurableSettings: {
 				gameLength: {
 					short: 5,
@@ -260,17 +252,6 @@ module.exports = {
 					'garden'
 				],
 				selectedBackground: 'beach' //this value is actually randomized by the server
-			},
-			controls: {
-				up: {
-					keys: [38, 87] //arrow up, W
-				},
-				left: {
-					keys: [37, 65] //left arrow, A
-				},
-				right: {
-					keys: [39, 68] //right arrow, D
-				}
 			},
 			configurableSettings: {
 				gameLength: {
@@ -392,17 +373,6 @@ module.exports = {
 				minFloatDistance: 60,
 				maxFloatDistance: 200,
 				floatSpeed: 0.5
-			},
-			controls: {
-				up: {
-					keys: [38, 87] //arrow up, W
-				},
-				left: {
-					keys: [37, 65] //left arrow, A
-				},
-				right: {
-					keys: [39, 68] //right arrow, D
-				}
 			},
 			configurableSettings: {
 				gameSpeed: {
