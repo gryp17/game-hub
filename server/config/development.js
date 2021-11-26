@@ -178,6 +178,11 @@ module.exports = {
 			width: 1366,
 			height: 768,
 			maxScore: 10,
+			background: {
+				lineColor: '#b47afd',
+				lineWidth: 2,
+				lineDashHeightRatio: 25 //make sure this is an odd number
+			},
 			ball: {
 				size: 60,
 				initialSpeed: 9,

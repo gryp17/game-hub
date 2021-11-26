@@ -17,6 +17,7 @@ export default class Pong extends GameServer {
 	constructor(id, config, customSettings, players, { onUpdate, onGameOver }) {
 		//mocked contexts/canvas objects (not really used on the server apart from the canvas size)
 		const canvasIds = {
+			background: 'background-canvas',
 			game: 'game-canvas',
 			ball: 'ball-canvas'
 		};

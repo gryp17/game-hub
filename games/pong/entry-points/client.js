@@ -4,6 +4,7 @@ import Keyboard from '../../common/inputs/keyboard';
 import Touchscreen from '../inputs/touchscreen';
 import Paddle from '../game-entities/paddle';
 import Ball from '../game-entities/ball';
+import Background from '../game-entities/background';
 import gameImages from '../resources/images';
 
 /**
@@ -23,6 +24,7 @@ export default class Pong extends GameClient {
 	constructor(canvasIds, canvasWrapper, images, config, controls, player, { onUpdateInputs, playMusic, playTrack }) {
 		super(canvasIds, canvasWrapper, images, config, controls, player, { onUpdateInputs, playMusic, playTrack });
 
+		this.background;
 		this.paddles = [];
 		this.ball;
 
@@ -44,6 +46,13 @@ export default class Pong extends GameClient {
 	 */
 	start() {
 		//game objects
+		this.background = new Background(
+			this,
+			this.config.background.lineColor,
+			this.config.background.lineWidth,
+			this.config.background.lineDashHeightRatio
+		);
+
 		this.paddles = [...Array(this.config.maxPlayers).keys()].map((value, index) => {
 			const playerIndex = index + 1;
 			const controllable = this.player === playerIndex;
@@ -159,6 +168,8 @@ export default class Pong extends GameClient {
 	 */
 	drawGame() {
 		const drawEntities = () => {
+			this.background.draw();
+
 			this.paddles.forEach((paddle) => {
 				paddle.draw();
 			});
