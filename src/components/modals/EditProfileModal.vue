@@ -2,6 +2,7 @@
 	<div class="edit-profile-modal">
 		<modal
 			:adaptive="true"
+			:scrollable="true"
 			:width="'100%'"
 			:maxWidth="480"
 			:height="'auto'"

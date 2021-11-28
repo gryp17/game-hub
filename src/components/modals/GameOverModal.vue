@@ -2,6 +2,7 @@
 	<div class="game-over-modal">
 		<modal
 			:adaptive="true"
+			:scrollable="true"
 			:width="'100%'"
 			:maxWidth="570"
 			:height="'auto'"

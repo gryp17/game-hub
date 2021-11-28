@@ -2,6 +2,7 @@
 	<div class="challenge-modal">
 		<modal
 			:adaptive="true"
+			:scrollable="true"
 			:width="'100%'"
 			:maxWidth="520"
 			:height="'auto'"
