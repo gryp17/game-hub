@@ -71,6 +71,12 @@
 				.username {
 					font-size: 16px;
 				}
+
+				.lives {
+					img {
+						width: 18px;
+					}
+				}
 			}
 		}
 	}
