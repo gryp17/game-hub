@@ -28,7 +28,7 @@
 					:options="{ useUrlFragment: false }"
 				>
 					<Tab
-						name="Game controls"
+						name="Keyboard controls"
 					>
 						<table class="controls-table">
 							<thead>
@@ -185,7 +185,7 @@
 			reset() {
 				const currentTab = this.$refs.tabs.lastActiveTabHash;
 
-				if (currentTab === '#game-controls') {
+				if (currentTab === '#keyboard-controls') {
 					this.inputs = _.cloneDeep(this.defaultControls);
 				}
 
