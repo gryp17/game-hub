@@ -1,7 +1,17 @@
 # GameHub
 
-Multiplayer game portal written in VueJS that let's you play realtime javascript/canvas games against other players.
+Multiplayer game portal written in VueJS that let's you play realtime javascript/canvas games built with my own 2D game engine.
 It uses a MySQL database and Socket.io for the realtime communication between the clients.
+
+It has the following features:
+* 3 playable games as of today (Pong, Volley, Jumper)
+* Experience/rank based matchmaking
+* Configurable game settings before each game (game speed, game length and other parameters)
+* Configurable game controls and audio settings
+* Touchscreen and keyboard controls
+* Personalizable user profile (avatar, bio...)
+* Realtime chat in the lobby
+* User statuses
 
 ## Notable folders
 
