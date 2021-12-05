@@ -3,6 +3,8 @@
 Multiplayer game portal written in VueJS that let's you play realtime javascript/canvas games built with my own 2D game engine.
 It uses a MySQL database and Socket.io for the realtime communication between the clients.
 
+Currently live at: [https://game-hub.gryp.dev](https://game-hub.gryp.dev)
+
 It has the following features:
 * 3 playable games as of today (Pong, Volley, Jumper)
 * Experience/rank based matchmaking
