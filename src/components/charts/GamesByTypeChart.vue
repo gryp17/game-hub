@@ -25,7 +25,7 @@
 			 * @returns {Array}
 			 */
 			labels() {
-				const colors = ['#7289da', '#ffa78b', '#ff88de'];
+				const colors = ['#b47afd', '#7289da', '#ffa78b'];
 				const labels = [];
 
 				Object.keys(this.games).forEach((gameCode, index) => {
