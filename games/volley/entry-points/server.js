@@ -122,14 +122,16 @@ export default class Volley extends GameServer {
 				player
 			);
 		});
+		super.start();
+	}
 
-		const gameLoop = () => {
-			this.dummies.forEach((dummy) => {
-				dummy.move();
-			});
-			this.ball.move();
-		};
-
-		super.start(gameLoop);
+	/**
+	 * The game logic that runs every tick
+	 */
+	gameLoop() {
+		this.dummies.forEach((dummy) => {
+			dummy.move();
+		});
+		this.ball.move();
 	}
 }

@@ -26,7 +26,6 @@ export default class GameClient {
 		this.musicIsPlaying = false;
 		this.config = config;
 		this.player = player;
-		this.gameLoopInterval;
 		this.inputs;
 		this.images = images;
 		this.scores = {};
@@ -93,12 +92,8 @@ export default class GameClient {
 			context.show();
 		});
 
-		this.gameLoopInterval = setInterval(() => {
-			this.gameLoop();
-		}, 1000 / this.config.fps);
-
 		window.requestAnimFrame(() => {
-			this.drawGame();
+			this.gameLoop();
 		});
 	}
 
@@ -106,7 +101,7 @@ export default class GameClient {
 	 * Stops the game
 	 */
 	stop() {
-		clearInterval(this.gameLoopInterval);
+		throw new Error('Method "stop()" must be implemented.');
 	}
 
 	/**
@@ -140,6 +135,20 @@ export default class GameClient {
 	}
 
 	/**
+	 * Moves the game entities every tick
+	 */
+	moveEntities() {
+		throw new Error('Method "moveEntities()" must be implemented.');
+	}
+
+	/**
+	 * Draws the game entities every tick
+	 */
+	drawEntities() {
+		throw new Error('Method "drawEntities()" must be implemented.');
+	}
+
+	/**
 	 * The game logic that runs every game tick
 	 */
 	gameLoop() {
@@ -158,22 +167,18 @@ export default class GameClient {
 		//when any key has been pressed try to play the music tracks
 		//this is a firefox autoplay hack
 		this.tryToPlayMusic();
-	}
 
-	/**
-	 * Draws the game entities
-	 * @param {Function} drawEntities
-	 */
-	drawGame(drawEntities) {
 		//clear the whole canvas before drawing anything
 		_.forOwn(this.contexts, (value, key) => {
 			this.contexts[key].context.clearRect(0, 0, this.contexts[key].canvas.width, this.contexts[key].canvas.height);
 		});
 
-		drawEntities();
+		//move and draw the entities
+		this.moveEntities();
+		this.drawEntities();
 
 		window.requestAnimFrame(() => {
-			this.drawGame();
+			this.gameLoop();
 		});
 	}
 }

@@ -197,8 +197,6 @@ export default class Jumper extends GameClient {
 		//clear all input event listeners
 		this.keyboard.removeAllEventListeners();
 		this.touchscreen.removeAllEventListeners();
-
-		super.stop();
 	}
 
 	/**
@@ -287,11 +285,9 @@ export default class Jumper extends GameClient {
 	}
 
 	/**
-	 * The game logic that runs every game tick
+	 * Moves the game entities every tick
 	 */
-	gameLoop() {
-		super.gameLoop();
-
+	moveEntities() {
 		this.background.move();
 		this.platforms.forEach((platform) => {
 			platform.move();
@@ -307,25 +303,21 @@ export default class Jumper extends GameClient {
 	}
 
 	/**
-	 * Draws the game entities
+	 * Draws the game entities every tick
 	 */
-	drawGame() {
-		const drawEntities = () => {
-			this.background.draw();
+	drawEntities() {
+		this.background.draw();
 
-			this.platforms.forEach((platform) => {
-				platform.draw();
-			});
+		this.platforms.forEach((platform) => {
+			platform.draw();
+		});
 
-			this.enemies.forEach((enemy) => {
-				enemy.draw();
-			});
+		this.enemies.forEach((enemy) => {
+			enemy.draw();
+		});
 
-			this.dummies.forEach((dummy) => {
-				dummy.draw();
-			});
-		};
-
-		super.drawGame(drawEntities);
+		this.dummies.forEach((dummy) => {
+			dummy.draw();
+		});
 	}
 }

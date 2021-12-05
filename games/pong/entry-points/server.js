@@ -100,13 +100,16 @@ export default class Pong extends GameServer {
 			this.config.ball.rotationAcceleration
 		);
 
-		const gameLoop = () => {
-			this.paddles.forEach((paddle) => {
-				paddle.move();
-			});
-			this.ball.move();
-		};
+		super.start();
+	}
 
-		super.start(gameLoop);
+	/**
+	 * The game logic that runs every tick
+	 */
+	gameLoop() {
+		this.paddles.forEach((paddle) => {
+			paddle.move();
+		});
+		this.ball.move();
 	}
 }

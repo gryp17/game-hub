@@ -82,8 +82,6 @@ export default class Pong extends GameClient {
 		//clear all input event listeners
 		this.keyboard.removeAllEventListeners();
 		this.touchscreen.removeAllEventListeners();
-
-		super.stop();
 	}
 
 	/**
@@ -152,11 +150,9 @@ export default class Pong extends GameClient {
 	}
 
 	/**
-	 * The game logic that runs every game tick
+	 * Moves the game entities every tick
 	 */
-	gameLoop() {
-		super.gameLoop();
-
+	moveEntities() {
 		this.paddles.forEach((paddle) => {
 			paddle.move();
 		});
@@ -164,19 +160,15 @@ export default class Pong extends GameClient {
 	}
 
 	/**
-	 * Draws the game entities
+	 * Draws the game entities every tick
 	 */
-	drawGame() {
-		const drawEntities = () => {
-			this.background.draw();
+	drawEntities() {
+		this.background.draw();
 
-			this.paddles.forEach((paddle) => {
-				paddle.draw();
-			});
+		this.paddles.forEach((paddle) => {
+			paddle.draw();
+		});
 
-			this.ball.draw();
-		};
-
-		super.drawGame(drawEntities);
+		this.ball.draw();
 	}
 }

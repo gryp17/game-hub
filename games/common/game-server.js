@@ -152,11 +152,10 @@ export default class GameServer {
 
 	/**
 	 * Initializes the game entities and starts the game
-	 * @param {Function} gameLoop
 	 */
-	start(gameLoop) {
+	start() {
 		this.gameLoopInterval = setInterval(() => {
-			gameLoop();
+			this.gameLoop();
 			this.onGameStateUpdate();
 		}, 1000 / this.config.fps);
 	}
@@ -166,5 +165,12 @@ export default class GameServer {
 	 */
 	stop() {
 		clearInterval(this.gameLoopInterval);
+	}
+
+	/**
+	 * The game logic that runs every tick
+	 */
+	gameLoop() {
+		throw new Error('Method "gameLoop()" must be implemented.');
 	}
 }

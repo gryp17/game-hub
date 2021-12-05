@@ -200,25 +200,28 @@ export default class Jumper extends GameServer {
 			return new Dummy(this, ...dummiesConfig, playerIndex, true, player);
 		});
 
-		const gameLoop = () => {
-			this.platforms.forEach((platform) => {
-				platform.move();
-			});
-
-			this.enemies.forEach((enemy) => {
-				enemy.move();
-			});
-
-			this.dummies.forEach((dummy) => {
-				dummy.move();
-			});
-		};
-
 		this.speedUpIntervalId = setInterval(() => {
 			this.speedUp();
 		}, this.speedUpInterval);
 
-		super.start(gameLoop);
+		super.start();
+	}
+
+	/**
+	 * The game logic that runs every tick
+	 */
+	gameLoop() {
+		this.platforms.forEach((platform) => {
+			platform.move();
+		});
+
+		this.enemies.forEach((enemy) => {
+			enemy.move();
+		});
+
+		this.dummies.forEach((dummy) => {
+			dummy.move();
+		});
 	}
 
 	/**
