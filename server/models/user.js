@@ -17,7 +17,8 @@ export default (db) => {
 			defaultValue: 0
 		},
 		bio: {
-			type: Sequelize.STRING
+			type: Sequelize.STRING,
+			defaultValue: ''
 		},
 		avatar: {
 			type: Sequelize.STRING

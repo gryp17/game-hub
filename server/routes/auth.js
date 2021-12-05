@@ -88,7 +88,8 @@ router.post('/signup', validate(rules.signup), async (req, res) => {
 		const user = userInstance.toJSON();
 		delete user.password;
 
-		req.session.user = user;
+		//set the user session data (clone the user object in order not to include unnecessary data such as the game stats)
+		req.session.user = { ...user };
 
 		//calculate the game stats (pass an empty games list since the user just signed up)
 		user.gameStats = calculateGameStats(user.id, []);
