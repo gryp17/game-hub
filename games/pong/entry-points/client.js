@@ -82,6 +82,7 @@ export default class Pong extends GameClient {
 		//clear all input event listeners
 		this.keyboard.removeAllEventListeners();
 		this.touchscreen.removeAllEventListeners();
+		super.stop();
 	}
 
 	/**

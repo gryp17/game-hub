@@ -21,6 +21,7 @@ export default class GameClient {
 	 */
 	constructor(canvasIds, canvasWrapper, images, config, controls, player, { onUpdateInputs, playMusic, playTrack }) {
 		this.isServer = typeof window === 'undefined';
+		this.animationFrameId;
 		this.canvasIds = canvasIds;
 		this.canvasWrapper = canvasWrapper;
 		this.musicIsPlaying = false;
@@ -92,16 +93,19 @@ export default class GameClient {
 			context.show();
 		});
 
-		window.requestAnimFrame(() => {
+		this.animationFrameId = window.requestAnimFrame(() => {
 			this.gameLoop();
 		});
 	}
 
 	/**
-	 * Stops the game
+	 * Stops the game loop
 	 */
 	stop() {
-		throw new Error('Method "stop()" must be implemented.');
+		if (this.animationFrameId) {
+			cancelAnimationFrame(this.animationFrameId);
+			this.animationFrameId = null;
+		}
 	}
 
 	/**
@@ -177,7 +181,7 @@ export default class GameClient {
 		this.moveEntities();
 		this.drawEntities();
 
-		window.requestAnimFrame(() => {
+		this.animationFrameId = window.requestAnimFrame(() => {
 			this.gameLoop();
 		});
 	}
