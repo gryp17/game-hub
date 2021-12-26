@@ -12,21 +12,21 @@
 		/>
 
 		<div class="audio-controls-wrapper">
-			<FormButton
-				transparent
+			<GameHUDButton
+				title="Toggle sound effects"
 				:active="sound"
 				@click="setSoundPreference('sound', !sound)"
 			>
 				<i class="fas fa-volume-up"></i>
-			</FormButton>
+			</GameHUDButton>
 
-			<FormButton
-				transparent
+			<GameHUDButton
+				title="Toggle music"
 				:active="music"
 				@click="setSoundPreference('music', !music)"
 			>
 				<i class="fas fa-music"></i>
-			</FormButton>
+			</GameHUDButton>
 		</div>
 	</div>
 </template>
@@ -34,8 +34,14 @@
 <script>
 	import ScoresDisplay from '@/components/game-hud/ScoresDisplay';
 	import LivesDisplay from '@/components/game-hud/LivesDisplay';
+	import GameHUDButton from '@/components/game-hud/GameHUDButton';
 
 	export default {
+		components: {
+			ScoresDisplay,
+			LivesDisplay,
+			GameHUDButton
+		},
 		props: {
 			data: Object,
 			sound: {
@@ -46,10 +52,6 @@
 				type: Boolean,
 				default: false
 			}
-		},
-		components: {
-			ScoresDisplay,
-			LivesDisplay
 		},
 		data() {
 			return {
@@ -89,38 +91,15 @@
 
 		.audio-controls-wrapper {
 			position: absolute;
+			display: flex;
 			right: 0px;
 			top: 0px;
 			padding: 15px;
-
-			.form-button {
-				width: 43px;
-				height: 43px;
-				padding: 0px;
-				border-radius: 100%;
-				border: solid 2px lighten($purple, 10%);
-				background-color: $white;
-				opacity: 0.6;
-
-				svg {
-					width: 100%;
-					margin-right: 0px;
-				}
-
-				+ .form-button {
-					margin-left: 10px;
-				}
-
-				&.active, &:hover {
-					border-color: $purple;
-					opacity: 1;
-				}
-			}
 		}
 
 		@media (max-width: $small) {
 			.audio-controls-wrapper {
-				.form-button {
+				.game-hud-button {
 					width: 35px;
 					height: 35px;
 

@@ -29,6 +29,7 @@
 			position: absolute;
 			top: 0;
 			left: 0;
+			height: 100vh;
 			background-color: $gray-dark;
 			z-index: 9999;
 		}
